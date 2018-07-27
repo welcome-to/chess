@@ -157,9 +157,7 @@ class HumanPlayer(Algorithm):
 
     def make_turn(self, board):
         line = input()
-        if line == "tie":
-            return AskTie()
-        elif line.startswith('roque'): # FIXME: parse roque args
+        if line.startswith('roque'): # FIXME: parse roque args
             return Roque()
         else:
             return Move(*line.split(' ', 2))
@@ -199,12 +197,12 @@ class GameProcessor(object):
     def make_turn(self, turn):
         self.turns.append(deepcopy(turn))
 
-        if not is_correct(turn, board, current_player[1]):
+        if not is_correct(turn, self.board, self.current_player):
             print("Invalid move")
-            if current_player[1] == WHITE:
-                self.technical_winner = WHITE
-            else:
+            if self.current_player == WHITE:
                 self.technical_winner = BLACK
+            else:
+                self.technical_winner = WHITE
             return
 
         if type(turn) is Roque:
@@ -212,59 +210,31 @@ class GameProcessor(object):
             pass
         else: # move
             self.board.move(turn.start, turn.end)
-        self.boards.append(deepcopy(board))
+        self.boards.append(deepcopy(self.board))
 
         self.current_player, self.next_player = self.next_player, self.current_player
 
     def game_result(self):
         if self.technical_winner is not None:
             return self.technical_winner # dirty
-        return game_status(board, current_player)
+        return game_status(self.board, self.current_player)
 
 
 def play(first, second):
-    board = Board()
-    game_result = None
+    gp = GameProcessor()
 
-#    print(board)
-#    board.move(Coordinates.from_string("e2"), Coordinates.from_string("e4"))
-#    print(board)
+    current_player = first
+    next_player = second
 
-    current_player = first, WHITE
-    next_player = second, BLACK
-
-    boards = [deepcopy(board)]
-    turns = []
-
-    while game_result is None:
-        print(board)
-        print("Player: {0}, color: {1}".format(*current_player))
+    while gp.game_result() is None:
+        print(gp.board)
+        print("Player: {0}".format(current_player))
         print("Enter your turn. Example: 'e2 e4' or 'tie'")
-        turn = current_player[0].make_turn(deepcopy(board))
-        turns.append(deepcopy(turn))
-
-        if not is_correct(turn, board, current_player[1]):
-            print("Invalid move")
-            if current_player[1] == WHITE:
-                return BLACK_WIN
-            else:
-                return WHITE_WIN
-
-        if type(turn) is AskTie:
-            # FIXME
-            return TIE
-        elif type(turn) is Roque:
-            # FIXME
-            continue
-        else: # move
-            board.move(turn.start, turn.end)
-        boards.append(deepcopy(board))
-
-        game_result = game_status(board, current_player)
-
+        turn = current_player.make_turn(deepcopy(gp.board))
+        gp.make_turn(turn)
         current_player, next_player = next_player, current_player
 
-    return game_result
+    return gp.game_result()
 
 
 def print_result(game_result):
