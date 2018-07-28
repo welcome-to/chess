@@ -39,14 +39,21 @@ class AskTie(object):
     pass
 
 
-class Roque(object):
-    pass
-
-
 class Move(object):
-    def __init__(self, start, end):
+    """
+    def __init__(self, start, end, is_roque=False):
         self.start = Coordinates.from_string(start)
         self.end = Coordinates.from_string(end)
+        self.is_roque = is_roque
+    """
+
+    def __init__(self, line, is_roque=False):
+        self.start = Coordinates.from_string(line[:2])
+        self.end = Coordinates.from_string(line[2:])
+        self.is_roque = is_roque
+
+    def __repr__(self):
+        return str(self.start) + str(self.end)
 
 
 class Coordinates(object):
@@ -96,12 +103,19 @@ class Board(object):
         self.data[0][4] = Figure(WHITE, KING)
         self.data[7][4] = Figure(BLACK, KING)
 
+    def put(self, position, figure):
+        self.data[position.y][position.x] = figure
+
+    def pop(self, position):
+        figure = self.figure_on_position(position.x, position.y)
+        self.data[position.y][position.x] = None
+        return figure
+
     def move(self, start, end):
-        figure = self.figure_on_position(start.x, start.y)
+        figure = self.pop(start)
         if figure is None:
             raise InvalidMove("No figure at {0}".format(start))
-        self.data[end.y][end.x] = figure
-        self.data[start.y][start.x] = None
+        self.put(end, figure)
 
     def figure_on_position(self, x, y):
         return self.data[y][x]
@@ -148,7 +162,7 @@ def game_status(board, current_player):
 
 # is the `turn' correct at this position?
 def is_correct(turn, board, player_color):
-    if not type(turn) is Move:
+    if not turn.is_roque:
         return True
 
     figure = board.figure_on_position(turn.start.x, turn.start.y)
@@ -169,6 +183,16 @@ def convert_pawns(board):
             board.data[0][i] = Figure(BLACK, QUEEN)
 
 
+def make_castling(board, king_move):
+    castling_types = {'e1g1': 'h1f1', 'e1c1': 'a1d1', 'e8g8': 'h8f8', 'e8c8': 'a8d8'}
+    rook_move = Move(castling_types[str(king_move)])
+    try:
+        board.move(rook_move.start, rook_move.end)
+        board.move(king_move.start, king_move.end)
+    except:
+        raise InternalError("Castling suddenly failed")
+
+
 class GameProcessor(object):
     FILE_PATTERN = "./logs/game_{0}"
 
@@ -183,16 +207,13 @@ class GameProcessor(object):
         self.technical_winner = None
         #self.log_file = open(FILE_PATTERN.format(datetime.utcnow().strftime("%Y-%m-%d-%H:%M:%s")), "w")
 
-    # `turn' is a line, either like `e2 e4' or like `roque e1 h1'
-
-
+    # `turn' is a line, either like `e2e4' or like `re1h1'
     def make_turn(self, command):
         try:
-            if command.startswith('roque'): # FIXME: parse roque args
-                turn = Roque()
+            if command.startswith('r'):
+                turn = Move(command[1:], is_roque=True)
             else:
-                #turn = Move(*command.split(' ', 2))
-                turn = Move(command[:2], command[2:])
+                turn = Move(command)
         except:
             self._run_technical_defeat()
             return
@@ -203,9 +224,8 @@ class GameProcessor(object):
             self._run_technical_defeat()
             return
 
-        if type(turn) is Roque:
-            # FIXME: perform roque
-            pass
+        if turn.is_roque:
+            make_castling(self.board, turn)
         else: # move
             self.board.move(turn.start, turn.end)
         convert_pawns(self.board)
