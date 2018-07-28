@@ -92,8 +92,8 @@ class Board(object):
         self.data[7][5] = Figure(BLACK, BISHOP)
 
         self.data[0][3] = Figure(WHITE, QUEEN)
-        self.data[7][3] = Figure(WHITE, QUEEN)
-        self.data[0][4] = Figure(BLACK, KING)
+        self.data[7][3] = Figure(BLACK, QUEEN)
+        self.data[0][4] = Figure(WHITE, KING)
         self.data[7][4] = Figure(BLACK, KING)
 
     def move(self, start, end):

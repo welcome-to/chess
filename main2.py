@@ -129,8 +129,8 @@ def movementtolist(nowlist,move):
 #	global xdict
 	Yfrom=move[0]
 	Xfrom=int(move[1])-1
-	Yto=move[2]
-	Xto=int(move[3])-1
+	Yto=move[-2]
+	Xto=int(move[-1])-1
 	Yfrom = LETTER_TO_INDEX.get(Yfrom)
 	Yto = LETTER_TO_INDEX.get(Yto)
 	whatincell = nowlist[Xfrom][Yfrom].source
@@ -149,9 +149,9 @@ def game_result():
 	if result == None:
 		return [True]
 	elif result == WHITE_WIN:
-		return [False, 'White win']
+		return [False, 'White win!!!']
 	elif result == BLACK_WIN:
-		return [False, 'Black win']
+		return [False, 'Black win!!!']
 	else:
 		return [False, 'Tie']
 
