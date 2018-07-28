@@ -58,7 +58,15 @@ class Cell(BoxLayout):
 
 class ChessApp(App):
 	def build(self):
+		self.startscrean = BoxLayout(orientation = 'vertical')
 		self.gp = GameProcessor()
+		self.startscrean.add_widget(Label(text = 'Welcome to chess'))
+		self.startscrean.add_widget(Button(text = 'Начать игру', on_press = self.startgame,background_normal = '',background_color = [1,1,1,1], color = [0,0,0,1] ))		
+		self.main = BoxLayout(orientation='horizontal')
+		self.main.add_widget(self.startscrean)
+		return self.main
+	def startgame(self,butonobj):
+		self.main.remove_widget(self.startscrean)
 		self.celllist = []
 		self.lbllist = []
 		for i in range(8):
@@ -74,7 +82,7 @@ class ChessApp(App):
 				row.append(image)
 				self.celllist.append(cell)
 			self.lbllist.append(row)
-		self.main = BoxLayout(orientation='horizontal')
+		
 		self.board = GridLayout(cols = 8 , size_hint = (.75,1))
 		for i in range(64):
 			self.board.add_widget(self.celllist[i])
@@ -87,8 +95,6 @@ class ChessApp(App):
 		self.contorls.add_widget(inputpart)
 		self.main.add_widget(self.board)
 		self.main.add_widget(self.contorls)
-		return self.main
-
 
 
 	def on_enter(self,value):
