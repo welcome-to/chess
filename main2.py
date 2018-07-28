@@ -60,8 +60,8 @@ class ChessApp(App):
 	def build(self):
 		self.startscrean = BoxLayout(orientation = 'vertical')
 		self.gp = GameProcessor()
-		self.startscrean.add_widget(Label(text = 'Welcome to chess \n рокировка это R"Ход короля"'))
-		self.startscrean.add_widget(Button(text = 'Начать игру', on_press = self.startgame,background_normal = '',background_color = [1,1,1,1], color = [0,0,0,1] ))		
+		self.startscrean.add_widget(Label(text = 'Welcome to Chess'))
+		self.startscrean.add_widget(Button(text = 'start game', on_press = self.startgame,background_normal = '',background_color = [1,1,1,1], color = [0,0,0,1] ))		
 		self.main = BoxLayout(orientation='horizontal')
 		self.main.add_widget(self.startscrean)
 		return self.main
@@ -92,7 +92,7 @@ class ChessApp(App):
 		for i in range(81):
 			self.board.add_widget(self.celllist[i])
 		self.contorls = BoxLayout(orientation='vertical',size_hint = (.25,1))
-		self.contorls.add_widget(Button(text = 'Следующий Ход',background_color = [0,1,0,.1],background_normal = '',on_press = self.movement))
+		self.contorls.add_widget(Button(text = 'Next Move',background_color = [0,1,0,.3],background_normal = '',on_press = self.movement))
 		inputpart = BoxLayout(orientation = 'vertical')
 		self.textinput = TextInput(multiline = False, font_size = 32)
 		self.textinput.bind(on_text_validate = self.on_enter)
@@ -105,47 +105,14 @@ class ChessApp(App):
 	def on_enter(self,value):
 		move = value.text
 		make_turn(self.gp, move)
+		value.text = ''
+		boardlist = board(self.gp)
+		for i in range(8):
+			for j in range(8):
+				self.lbllist[i][j].source = boardlist[i][j]
 		a = game_result(self.gp)
 		if not a[0]:
 			self.gameover(a[1])
-		value.text = ''
-		if (move[0] == 'R') or (move[0] == 'r'):
-			rocuemove = move[1:].upper()
-			if rocuemove == 'E1G1':
-				self.lbllist[0][4].source = NOTHING
-				self.lbllist[0][6].source = 'img/w_king.png'
-				self.lbllist[0][7].source = NOTHING
-				self.lbllist[0][5].source = 'img/w_rook.png'
-			if rocuemove == 'E1C1':
-				self.lbllist[0][4].source = NOTHING
-				self.lbllist[0][2].source = 'img/w_king.png'
-				self.lbllist[0][0].source = NOTHING
-				self.lbllist[0][3].source = 'img/w_rook.png'
-			if rocuemove == 'E8G8':
-				self.lbllist[8][4].source = NOTHING
-				self.lbllist[8][6].source = 'img/b_king.png'
-				self.lbllist[8][7].source = NOTHING
-				self.lbllist[8][5].source = 'img/b_rook.png'
-			if rocuemove == 'E8C8':
-				self.lbllist[8][4].source = NOTHING
-				self.lbllist[8][2].source = 'img/b_king.png'
-				self.lbllist[8][0].source = NOTHING
-				self.lbllist[8][3].source = 'img/b_rook.png'
-			 
-			move = 'A1A1'
-		nowlist = []
-
-		for i in range(8):
-			row = []
-			for j in range(8):
-				row.append(self.lbllist[i][j])
-			nowlist.append(row)
-
-		boardlist = movementtolist(nowlist,move)
-
-		for i in range(8):
-			for j in range(8):
-				self.lbllist[i][j] = boardlist[i][j]
 
 	def gameover(self,reason):
 		self.main.remove_widget(self.board)
@@ -166,30 +133,6 @@ class ChessApp(App):
 			for j in range(8):
 				self.lbllist[i][j].source = boardlist[i][j]
 		game_result(self.gp)
-
-
-
-
-
-def movementtolist(nowlist,move):
-	Yfrom = move[0]
-	Xfrom = int(move[1])-1
-	Yto = move[-2]
-	Xto = int(move[-1])-1
-	Yfrom = LETTER_TO_INDEX.get(Yfrom)
-	Yto = LETTER_TO_INDEX.get(Yto)
-	whatincell = nowlist[Xfrom][Yfrom].source
-	
-	figure_color = whatincell[:5]
-	figure_type = whatincell[5:]
-
-	if figuretypeback.get(figure_type) == PAWN and Xto==7:
-		whatincell = figure_color + figuretype.get(QUEEN)
-
-	nowlist[Xfrom][Yfrom].source = NOTHING
-	nowlist[Xto][Yto].source = whatincell
-	return nowlist
-
 
 
 
