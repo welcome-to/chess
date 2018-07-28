@@ -27,7 +27,7 @@ GameProcessor = GameProcessor()
 Config.set('graphics','resizable','0')
 Config.set('graphics','width','800')
 Config.set('graphics','height','600')
-Config.set('kivy','window_icon','King-black.iso')
+
 
 
 Builder.load_string("""
@@ -70,7 +70,7 @@ class ChessApp(App):
 				if (i + j) % 2 == 0:
 					colorB = [1,0,0,1]
 				else:
-					colorB =[0,1,0,1]
+					colorB =[182/255,177/255,150/255,1]
 				cell = Cell(bcolor = colorB)
 				image = Image(source = sourcelist[i][j])
 				cell.add_widget(image)
@@ -134,9 +134,9 @@ def movementtolist(nowlist,move):
 	Yfrom = LETTER_TO_INDEX.get(Yfrom)
 	Yto = LETTER_TO_INDEX.get(Yto)
 	whatincell = nowlist[Xfrom][Yfrom].source
-	if ((whatincell == 'w_pawn.png')or(whatincell == 'b_pawn.png')) and Xto==7:
+	if ((whatincell == 'w_pawn.png')or(whatincell == 'img/b_pawn.png')) and Xto==7:
 		whatincell = whatincell[0]+'_queen.png' 
-	nowlist[Xfrom][Yfrom].source = 'nothing.png'
+	nowlist[Xfrom][Yfrom].source = 'img/nothing.png'
 	nowlist[Xto][Yto].source = whatincell
 	return nowlist
 
@@ -177,7 +177,7 @@ def board():
 			if dataseconditer[i][j] != None:
 				filename = figurecolor.get(int(dataseconditer[i][j][1])) + figuretype.get(dataseconditer[i][j][0])
 			else:
-				filename = 'nothing.png'
+				filename = 'img/nothing.png'
 			row.append(filename)
 		finaldata.append(row)
 	return finaldata

@@ -36,17 +36,17 @@ figuretype = {'S'    : '_pawn.png',
               'Q'   : '_queen.png',
               'K'    : '_king.png',
             }
-figurecolor = {0 : 'w',1 : 'b'}
+figurecolor = {0 : 'img/w',1 : 'img/b'}
 
 
 sourcelist = [
-['w_rook.png','w_knight.png','w_bishop.png','w_queen.png','w_king.png','w_bishop.png','w_knight.png','w_rook.png'],
-['w_pawn.png','w_pawn.png','w_pawn.png','w_pawn.png','w_pawn.png','w_pawn.png','w_pawn.png','w_pawn.png'],
-['nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png'],
-['nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png'],
-['nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png'],
-['nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png'],
-['b_pawn.png','b_pawn.png','b_pawn.png','b_pawn.png','b_pawn.png','b_pawn.png','b_pawn.png','b_pawn.png'],
-['b_rook.png','b_knight.png','b_bishop.png','b_queen.png','b_king.png','b_bishop.png','b_knight.png','b_rook.png']]
+['img/w_rook.png','img/w_knight.png','img/w_bishop.png','img/w_queen.png','img/w_king.png','img/w_bishop.png','img/w_knight.png','img/w_rook.png'],
+['img/w_pawn.png','img/w_pawn.png','img/w_pawn.png','img/w_pawn.png','img/w_pawn.png','img/w_pawn.png','img/w_pawn.png','img/w_pawn.png'],
+['img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png'],
+['img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png'],
+['img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png'],
+['img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png'],
+['img/b_pawn.png','img/b_pawn.png','img/b_pawn.png','img/b_pawn.png','img/b_pawn.png','img/b_pawn.png','img/b_pawn.png','img/b_pawn.png'],
+['img/b_rook.png','img/b_knight.png','img/b_bishop.png','img/b_queen.png','img/b_king.png','img/b_bishop.png','img/b_knight.png','img/b_rook.png']]
 
 
