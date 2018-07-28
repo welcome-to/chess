@@ -1,20 +1,5 @@
-
-WHITE = 0
-BLACK = 1
-
-PAWN = 'S'
-ROOK = 'E'
-KNIGHT = 'H'
-BISHOP = 'O'
-QUEEN = 'Q'
-KING = 'K'
-
-WHITE_WIN = 0
-BLACK_WIN = 1
-TIE = 2
-
 from copy import deepcopy
-
+from const import *
 
 class NotImplementedError(Exception):
     def __init__(self):
@@ -65,8 +50,6 @@ class Move(object):
 
 
 class Coordinates(object):
-    letter_to_index = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7}
-
     def __init__(self, x, y):
         self.x = x
         self.y = y
@@ -74,14 +57,12 @@ class Coordinates(object):
     @staticmethod
     def from_string(line):
         try:
-            return Coordinates(Coordinates.letter_to_index[line[0]], int(line[1]) - 1)
+            return Coordinates(LETTER_TO_INDEX[line[0]], int(line[1]) - 1)
         except:
             raise InvalidMove("Incorrect input: {0}".format(line))
 
     def __str__(self):
-        index_to_letter = dict(
-            map(lambda pair: (pair[1], pair[0]), Coordinates.letter_to_index.items())
-        )
+        index_to_letter = {0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f', 6: 'g', 7: 'h'}
         try:
             return "{0}{1}".format(index_to_letter[self.x], self.y + 1)
         except:
@@ -144,7 +125,7 @@ class Algorithm(object):
     def __init__(self, name):
         self.name = name
 
-    def make_turn(position):
+    def make_turn(self, position):
         raise NotImplementedError()
 
 
@@ -157,10 +138,7 @@ class HumanPlayer(Algorithm):
 
     def make_turn(self, board):
         line = input()
-        if line.startswith('roque'): # FIXME: parse roque args
-            return Roque()
-        else:
-            return Move(*line.split(' ', 2))
+        return line
 
 
 # has the game finished with a result? return this result if yes
@@ -194,15 +172,22 @@ class GameProcessor(object):
         self.technical_winner = None
         #self.log_file = open(FILE_PATTERN.format(datetime.utcnow().strftime("%Y-%m-%d-%H:%M:%s")), "w")
 
-    def make_turn(self, turn):
+    # `turn' is a line, either like `e2 e4' or like `roque e1 h1'
+    def make_turn(self, command):
+        try:
+            if command.startswith('roque'): # FIXME: parse roque args
+                turn = Roque()
+            else:
+                #turn = Move(*command.split(' ', 2))
+                turn = Move(command[:2], command[2:])
+        except:
+            self._run_technical_defeat()
+            return
+
         self.turns.append(deepcopy(turn))
 
         if not is_correct(turn, self.board, self.current_player):
-            print("Invalid move")
-            if self.current_player == WHITE:
-                self.technical_winner = BLACK
-            else:
-                self.technical_winner = WHITE
+            self._run_technical_defeat()
             return
 
         if type(turn) is Roque:
@@ -218,6 +203,14 @@ class GameProcessor(object):
         if self.technical_winner is not None:
             return self.technical_winner # dirty
         return game_status(self.board, self.current_player)
+
+    def _run_technical_defeat(self):
+        print("Invalid move")
+        if self.current_player == WHITE:
+            self.technical_winner = BLACK
+        else:
+            self.technical_winner = WHITE
+
 
 
 def play(first, second):

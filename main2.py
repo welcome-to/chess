@@ -14,30 +14,22 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
 from kivy.uix.widget import Widget
 from kivy.graphics import Color
-global xdict
-xdict = {'A' : 0,
-         'B' : 1,
-         'C' : 2,
-         'D' : 3,
-         'E' : 4,
-         'F' : 5,
-         'G' : 6,
-         'H' : 7}
+from run import GameProcessor
+from const import *
+
+
+global GameProcessor
+GameProcessor = GameProcessor()
+
+
+
 
 Config.set('graphics','resizable','0')
 Config.set('graphics','width','800')
 Config.set('graphics','height','600')
+Config.set('kivy','window_icon','King-black.iso')
 
-global sourcelist
-sourcelist = [
-['w_rook.png','w_knight.png','w_bishop.png','w_queen.png','w_king.png','w_bishop.png','w_knight.png','w_rook.png'],
-['w_pawn.png','w_pawn.png','w_pawn.png','w_pawn.png','w_pawn.png','w_pawn.png','w_pawn.png','w_pawn.png'],
-['nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png'],
-['nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png'],
-['nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png'],
-['nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png','nothing.png'],
-['b_pawn.png','b_pawn.png','b_pawn.png','b_pawn.png','b_pawn.png','b_pawn.png','b_pawn.png','b_pawn.png'],
-['b_rook.png','b_knight.png','b_bishop.png','b_queen.png','b_king.png','b_bishop.png','b_knight.png','b_rook.png']]
+
 Builder.load_string("""
 <LabelB>:
   bcolor: 1, 1, 1, 1
@@ -90,9 +82,9 @@ class ChessApp(App):
 		for i in range(64):
 			board.add_widget(self.celllist[i])
 		contorls = BoxLayout(orientation='vertical',size_hint = (.25,1))
-		contorls.add_widget(Button(text = 'Следующий ход',background_color = [0,1,0,.1],background_normal = '',on_press = self.movement2))
+		contorls.add_widget(Button(text = 'Следующий ход',background_color = [0,1,0,.1],background_normal = '',on_press = self.movement))
 		inputpart = BoxLayout(orientation = 'vertical')
-		self.textinput =TextInput(multiline = False)
+		self.textinput =TextInput(multiline = False,font_size = 32)
 		self.textinput.bind(on_text_validate = self.on_enter)
 		inputpart.add_widget(self.textinput)
 		contorls.add_widget(inputpart)
@@ -102,6 +94,11 @@ class ChessApp(App):
 	def on_enter(instance,value):
 		global app
 		move = value.text
+		make_turn(move)
+		a = game_result()
+		if a[0] == False:
+			instance.gameover(a[1])
+			return None
 		value.text = ''
 		nowlist = []
 		for i in range(8):
@@ -113,20 +110,29 @@ class ChessApp(App):
 		for i in range(8):
 			for j in range(8):
 				app.lbllist[i][j] = boardlist[i][j]
-	def gameover(self):
+	def gameover(self,reason):
 		self.stop()
+		print(reason)
 
-	def movement2(self,instance):
-		self.gameover()
+	def movement(self,instance):
+		boardlist = board()
+		for i in range(8):
+			for j in range(8):
+				self.lbllist[i][j].source = boardlist[i][j]
+		a = game_result()
+		if a[0] == False:
+			self.gameover(a[1])
+			return None
+
 
 def movementtolist(nowlist,move):
-	global xdict
+#	global xdict
 	Yfrom=move[0]
 	Xfrom=int(move[1])-1
 	Yto=move[2]
 	Xto=int(move[3])-1
-	Yfrom = xdict.get(Yfrom)
-	Yto = xdict.get(Yto)
+	Yfrom = LETTER_TO_INDEX.get(Yfrom)
+	Yto = LETTER_TO_INDEX.get(Yto)
 	whatincell = nowlist[Xfrom][Yfrom].source
 	if ((whatincell == 'w_pawn.png')or(whatincell == 'b_pawn.png')) and Xto==7:
 		whatincell = whatincell[0]+'_queen.png' 
@@ -134,8 +140,55 @@ def movementtolist(nowlist,move):
 	nowlist[Xto][Yto].source = whatincell
 	return nowlist
 
+
+
+
+def game_result():
+	global GameProcessor
+	result = GameProcessor.game_result()
+	if result == None:
+		return [True]
+	elif result == 1:
+		return [False, 'White win']
+	elif result == 2:
+		return [False, 'Black win']
+	else:
+		return [False, 'Tie']
+
+
+def board():
+	global GameProcessor
+	datafirstiter =GameProcessor.board.data 
+	dataseconditer = []
+	for i in range(8):
+		row = []
+		for j in range(8):
+			if datafirstiter[i][j] != None:
+				row.append(str(datafirstiter[i][j].type)+str(datafirstiter[i][j].color))
+			else:
+				row.append(None)
+		dataseconditer.append(row)
+	finaldata = []
+	global figurecolor
+	global figuretype
+	for i in range(8):
+		row =[]
+		for j in range(8):
+			if dataseconditer[i][j] != None:
+				filename = figurecolor.get(int(dataseconditer[i][j][1])) + figuretype.get(dataseconditer[i][j][0])
+			else:
+				filename = 'nothing.png'
+			row.append(filename)
+		finaldata.append(row)
+	return finaldata
+
+
+def make_turn(move):
+	global GameProcessor
+	GameProcessor.make_turn(move)
+
+
 if __name__ == '__main__':
 	global app
 	app=ChessApp()
 	app.run()
-	print('YYYY')
