@@ -62,21 +62,24 @@ class ChessApp(App):
 		self.startscrean = FloatLayout()
 		self.gp = GameProcessor()
 		self.startscrean.add_widget(LabelB(text = 'Welcome to Chess' , size_hint = [2,2], pos_hint = {'center_x': 0.5, 'center_y': 0.6} , bcolor = [.8,.7,.6,1] ) )
-		self.startscrean.add_widget(Button(text = 'start game', on_press = self.startgame,background_normal = '',background_color = [.3,.5,.7,1], color = [0,0,0,1],size_hint = [0.15,0.1],pos_hint = {'center_x': 0.5, 'center_y': 0.4} ))		
+		self.startscrean.add_widget(Button(text = 'Start game', on_press = self.startgame,background_normal = '',background_color = BUTTONCOLOR, color = [0,0,0,1],size_hint = [0.15,0.1],pos_hint = {'center_x': 0.5, 'center_y': 0.4} ))
+		self.startscrean.add_widget(Button(text = 'Exit', on_press = self.leave ,background_normal = '',background_color = BUTTONCOLOR, color = [0,0,0,1],size_hint = [0.15,0.1],pos_hint = {'center_x': 0.5, 'center_y': 0.29} ))		
 		self.main = BoxLayout(orientation='horizontal')
 		self.main.add_widget(self.startscrean)
 		return self.main
+	def leave(self,obj):
+		self.stop()
 	def startgame(self,butonobj):
 		self.main.remove_widget(self.startscrean)
-		self.celllist = [Label(text = '')]
+		self.celllist = [LabelB(text = '',bcolor = [.1,.1,.1,1])]
 		lineof = ['A','B','C','D','E','F','G','H']
 		for i in range(8):
-			self.celllist.append(Label(text = lineof[i]))
+			self.celllist.append(LabelB(text = lineof[i],bcolor = BUTTONCOLOR, font_size = 20))
 		
 		self.lbllist = []
 		for i in range(8):
 			row = []
-			self.celllist.append(Label(text = str(i+1)))
+			self.celllist.append(LabelB(text = str(i+1),bcolor = BUTTONCOLOR, font_size = 20))
 			for j in range(8):
 				if (i + j) % 2 == 0:
 					colorB = COLOROFCELL1
@@ -93,7 +96,7 @@ class ChessApp(App):
 		for i in range(81):
 			self.board.add_widget(self.celllist[i])
 		self.contorls = BoxLayout(orientation='vertical',size_hint = (.25,1))
-		self.contorls.add_widget(Button(text = 'Next Move',background_color = [0,1,0,.3],background_normal = '',on_press = self.movement))
+		self.contorls.add_widget(Button(text = 'Next Move',background_color = [.1,.1,.1,1],background_normal = '',on_press = self.movement))
 		inputpart = BoxLayout(orientation = 'vertical')
 		self.textinput = TextInput(multiline = False, font_size = 32)
 		self.textinput.bind(on_text_validate = self.on_enter)
