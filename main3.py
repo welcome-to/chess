@@ -1,3 +1,5 @@
+import os
+
 from kivy.app import App
 from kivy.uix.button import Button
 from kivy.config import Config
@@ -10,10 +12,14 @@ from kivy.factory import Factory
 from kivy.lang import Builder
 from kivy.properties import ListProperty
 from kivy.uix.textinput import TextInput
+from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
+from kivy.uix.widget import Widget
 from kivy.graphics import Color
 from run import GameProcessor
+
 from const import *
+import conf
 
 
 global GameProcessor
@@ -25,18 +31,18 @@ GameProcessor = GameProcessor()
 Config.set('graphics','resizable','0')
 Config.set('graphics','width','800')
 Config.set('graphics','height','600')
-
+Config.set('kivy','window_icon','King-black.iso')
 
 
 Builder.load_string("""
 <LabelB>:
-	bcolor: 1, 1, 1, 1
-	canvas.before:
-	Color:
-		rgba: self.bcolor
+  bcolor: 1, 1, 1, 1
+  canvas.before:
+    Color:
+      rgba: self.bcolor
     Rectangle:
-    	pos: self.pos
-    	size: self.size
+      pos: self.pos
+      size: self.size
 """)
 Builder.load_string("""
 <Cell>:
@@ -47,9 +53,8 @@ Builder.load_string("""
             pos: self.pos
             size: self.size
 """)
-
 class LabelB(Label):
-	bcolor = ListProperty([1,1,1,1])
+  bcolor = ListProperty([1,1,1,1])
 class Cell(BoxLayout):
 	bcolor = ListProperty([1,1,1,1])
 
@@ -67,11 +72,11 @@ class ChessApp(App):
 			row = []
 			for j in range(8):
 				if (i + j) % 2 == 0:
-					colorB = COLOROFCELL1
+					colorB = [1,0,0,1]
 				else:
-					colorB = COLOROFCELL2
+					colorB =[0,1,0,1]
 				cell = Cell(bcolor = colorB)
-				image = Image(source = sourcelist[i][j])
+				image = Image(source = os.path.join(conf.TILES_DIR, sourcelist[i][j]))
 				cell.add_widget(image)
 				row.append(image)
 				self.celllist.append(cell)
@@ -81,19 +86,17 @@ class ChessApp(App):
 		for i in range(64):
 			board.add_widget(self.celllist[i])
 		contorls = BoxLayout(orientation='vertical',size_hint = (.25,1))
-		contorls.add_widget(Button(text = 'Следующий Ход',background_color = [0,1,0,.1],background_normal = '',on_press = self.movement))
+		contorls.add_widget(Button(text = 'Следующий ход',background_color = [0,1,0,.1],background_normal = '',on_press = self.movement))
 		inputpart = BoxLayout(orientation = 'vertical')
-		self.textinput = TextInput(multiline = False, font_size = 32)
+		self.textinput =TextInput(multiline = False,font_size = 32)
 		self.textinput.bind(on_text_validate = self.on_enter)
 		inputpart.add_widget(self.textinput)
 		contorls.add_widget(inputpart)
 		self.main.add_widget(board)
 		self.main.add_widget(contorls)
 		return self.main
-
-
-
 	def on_enter(instance,value):
+		global app
 		move = value.text
 		make_turn(move)
 		a = game_result()
@@ -102,24 +105,18 @@ class ChessApp(App):
 			return None
 		value.text = ''
 		nowlist = []
-
 		for i in range(8):
 			row = []
 			for j in range(8):
-				row.append(instance.lbllist[i][j])
+				row.append(app.lbllist[i][j])
 			nowlist.append(row)
-
 		boardlist = movementtolist(nowlist,move)
-
 		for i in range(8):
 			for j in range(8):
-				instance.lbllist[i][j] = boardlist[i][j]
-
-
+				app.lbllist[i][j] = boardlist[i][j]
 	def gameover(self,reason):
 		self.stop()
 		print(reason)
-
 
 	def movement(self,instance):
 		boardlist = board()
@@ -132,25 +129,18 @@ class ChessApp(App):
 			return None
 
 
-
-
-
 def movementtolist(nowlist,move):
-	Yfrom = move[0]
-	Xfrom = int(move[1])-1
-	Yto = move[-2]
-	Xto = int(move[-1])-1
+#	global xdict
+	Yfrom=move[0]
+	Xfrom=int(move[1])-1
+	Yto=move[-2]
+	Xto=int(move[-1])-1
 	Yfrom = LETTER_TO_INDEX.get(Yfrom)
 	Yto = LETTER_TO_INDEX.get(Yto)
 	whatincell = nowlist[Xfrom][Yfrom].source
-	
-	figure_color = whatincell[:5]
-	figure_type = whatincell[5:]
-
-	if figuretypeback.get(figure_type) == PAWN and Xto==7:
-		whatincell = figure_color + figuretype.get(QUEEN)
-
-	nowlist[Xfrom][Yfrom].source = NOTHING
+	if ((whatincell == './tiles/w_pawn.png')or(whatincell == './tiles/b_pawn.png')) and Xto==7:
+		whatincell = whatincell[0]+'_queen.png' 
+	nowlist[Xfrom][Yfrom].source = './tiles/nothing.png'
 	nowlist[Xto][Yto].source = whatincell
 	return nowlist
 
@@ -172,15 +162,27 @@ def game_result():
 
 def board():
 	global GameProcessor
-	datafirstiter = GameProcessor.board.data 
-	finaldata = []
+	datafirstiter =GameProcessor.board.data 
+	dataseconditer = []
 	for i in range(8):
 		row = []
 		for j in range(8):
 			if datafirstiter[i][j] != None:
-				row.append(figurecolor[(datafirstiter[i][j].color)]+figuretype[datafirstiter[i][j].type])
+				row.append(str(datafirstiter[i][j].type)+str(datafirstiter[i][j].color))
 			else:
-				row.append(NOTHING)
+				row.append(None)
+		dataseconditer.append(row)
+	finaldata = []
+	global figurecolor
+	global figuretype
+	for i in range(8):
+		row =[]
+		for j in range(8):
+			if dataseconditer[i][j] != None:
+				filename = figurecolor.get(int(dataseconditer[i][j][1])) + figuretype.get(dataseconditer[i][j][0])
+			else:
+				filename = os.path.join(conf.TILES_DIR, 'nothing.png')
+			row.append(filename)
 		finaldata.append(row)
 	return finaldata
 
