@@ -148,9 +148,9 @@ def game_result():
 	result = GameProcessor.game_result()
 	if result == None:
 		return [True]
-	elif result == 1:
+	elif result == WHITE_WIN:
 		return [False, 'White win']
-	elif result == 2:
+	elif result == BLACK_WIN:
 		return [False, 'Black win']
 	else:
 		return [False, 'Tie']
