@@ -3,6 +3,7 @@ from kivy.uix.button import Button
 from kivy.config import Config
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.label import Label
 from kivy.graphics import Color
 from random import randint
@@ -30,11 +31,11 @@ Builder.load_string("""
 <LabelB>:
 	bcolor: 1, 1, 1, 1
 	canvas.before:
-	Color:
-		rgba: self.bcolor
-    Rectangle:
-    	pos: self.pos
-    	size: self.size
+		Color:
+			rgba: self.bcolor
+	    Rectangle:
+    		pos: self.pos
+    		size: self.size
 """)
 Builder.load_string("""
 <Cell>:
@@ -58,10 +59,10 @@ class Cell(BoxLayout):
 
 class ChessApp(App):
 	def build(self):
-		self.startscrean = BoxLayout(orientation = 'vertical')
+		self.startscrean = FloatLayout()
 		self.gp = GameProcessor()
-		self.startscrean.add_widget(Label(text = 'Welcome to Chess'))
-		self.startscrean.add_widget(Button(text = 'start game', on_press = self.startgame,background_normal = '',background_color = [1,1,1,1], color = [0,0,0,1] ))		
+		self.startscrean.add_widget(LabelB(text = 'Welcome to Chess' , size_hint = [1,1], pos_hint = {'center_x': 0.5, 'center_y': 0.6} , bcolor = [.8,.7,.6,1] ) )
+		self.startscrean.add_widget(Button(text = 'start game', on_press = self.startgame,background_normal = '',background_color = [.3,.5,.7,1], color = [0,0,0,1],size_hint = [0.15,0.1],pos_hint = {'center_x': 0.5, 'center_y': 0.4} ))		
 		self.main = BoxLayout(orientation='horizontal')
 		self.main.add_widget(self.startscrean)
 		return self.main
