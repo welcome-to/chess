@@ -147,27 +147,6 @@ class ChessApp(App):
 			for j in range(8):
 				self.lbllist[i][j] = boardlist[i][j]
 
-		if move[1:] == 'E1G1':
-			self.lbllist[0][4].source = NOTHING
-			self.lbllist[0][6].source = 'img/w_king.png'
-			self.lbllist[0][7].source = NOTHING
-			self.lbllist[0][5].source = 'img/w_rook.png'
-		if move[1:] == 'E1C1':
-			self.lbllist[0][4].source = NOTHING
-			self.lbllist[0][2].source = 'img/w_king.png'
-			self.lbllist[0][0].source = NOTHING
-			self.lbllist[0][3].source = 'img/w_rook.png'
-		if move[1:] == 'E8G8':
-			self.lbllist[8][4].source = NOTHING
-			self.lbllist[8][6].source = 'img/b_king.png'
-			self.lbllist[8][7].source = NOTHING
-			self.lbllist[8][5].source = 'img/b_rook.png'
-		if move[1:] == 'E8C8':
-			self.lbllist[8][4].source = NOTHING
-			self.lbllist[8][2].source = 'img/b_king.png'
-			self.lbllist[8][0].source = NOTHING
-			self.lbllist[8][3].source = 'img/b_rook.png'
-
 	def gameover(self,reason):
 		self.main.remove_widget(self.board)
 		self.main.remove_widget(self.contorls)
