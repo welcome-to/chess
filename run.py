@@ -158,6 +158,17 @@ def is_correct(turn, board, player_color):
     return True
 
 
+def convert_pawns(board):
+    for i in range(8):
+        figure = board.figure_on_position(i, 7)
+        if figure is not None and figure.type == PAWN: # it can be only white
+            board.data[7][i] = Figure(WHITE, QUEEN)
+
+        figure = board.figure_on_position(i, 0)
+        if figure is not None and figure.type == PAWN:
+            board.data[0][i] = Figure(BLACK, QUEEN)
+
+
 class GameProcessor(object):
     FILE_PATTERN = "./logs/game_{0}"
 
@@ -197,6 +208,7 @@ class GameProcessor(object):
             pass
         else: # move
             self.board.move(turn.start, turn.end)
+        convert_pawns(self.board)
         self.boards.append(deepcopy(self.board))
 
         self.current_player, self.next_player = self.next_player, self.current_player
