@@ -16,6 +16,11 @@ WHITE_WIN = 0
 BLACK_WIN = 1
 TIE = 2
 
+WHITE_WIN_IMAGE = 'img/kkk.jpg'
+BLACK_WIN_IMAGE = 'img/mandela.jpg'
+TIE_IMAGE = 'tie.jpg'
+
+
 LETTER_TO_INDEX = {'A' : 0,
          'B' : 1,
          'C' : 2,
