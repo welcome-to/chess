@@ -61,7 +61,7 @@ class ChessApp(App):
 	def build(self):
 		self.startscrean = FloatLayout()
 		self.gp = GameProcessor()
-		self.startscrean.add_widget(LabelB(text = 'Welcome to Chess' , size_hint = [1,1], pos_hint = {'center_x': 0.5, 'center_y': 0.6} , bcolor = [.8,.7,.6,1] ) )
+		self.startscrean.add_widget(LabelB(text = 'Welcome to Chess' , size_hint = [2,2], pos_hint = {'center_x': 0.5, 'center_y': 0.6} , bcolor = [.8,.7,.6,1] ) )
 		self.startscrean.add_widget(Button(text = 'start game', on_press = self.startgame,background_normal = '',background_color = [.3,.5,.7,1], color = [0,0,0,1],size_hint = [0.15,0.1],pos_hint = {'center_x': 0.5, 'center_y': 0.4} ))		
 		self.main = BoxLayout(orientation='horizontal')
 		self.main.add_widget(self.startscrean)
@@ -120,11 +120,16 @@ class ChessApp(App):
 		self.main.remove_widget(self.contorls)
 		if reason == WHITE_WIN:
 			source = WHITE_WIN_IMAGE
+			text = 'You win like a real white man'
 		elif reason == BLACK_WIN:
 			source = BLACK_WIN_IMAGE
+			text = 'pridumay sama'
 		else:
 			source = TIE_IMAGE
-		self.main.add_widget(Image(source = source))
+			text = 'potom'
+		self.main.orientation = 'vertical'
+		self.main.add_widget(LabelB(text = text, size_hint  = (1,.3), bcolor = [0,0,0,1], color = [1,0,0,1], font_size = 32))
+		self.main.add_widget(Image(source = source, size_hint = (1,.7)))
 		print(reason)
 
 
