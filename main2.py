@@ -75,18 +75,18 @@ class ChessApp(App):
 				self.celllist.append(cell)
 			self.lbllist.append(row)
 		self.main = BoxLayout(orientation='horizontal')
-		board = GridLayout(cols = 8 , size_hint = (.75,1))
+		self.board = GridLayout(cols = 8 , size_hint = (.75,1))
 		for i in range(64):
-			board.add_widget(self.celllist[i])
-		contorls = BoxLayout(orientation='vertical',size_hint = (.25,1))
-		contorls.add_widget(Button(text = 'Следующий Ход',background_color = [0,1,0,.1],background_normal = '',on_press = self.movement))
+			self.board.add_widget(self.celllist[i])
+		self.contorls = BoxLayout(orientation='vertical',size_hint = (.25,1))
+		self.contorls.add_widget(Button(text = 'Следующий Ход',background_color = [0,1,0,.1],background_normal = '',on_press = self.movement))
 		inputpart = BoxLayout(orientation = 'vertical')
 		self.textinput = TextInput(multiline = False, font_size = 32)
 		self.textinput.bind(on_text_validate = self.on_enter)
 		inputpart.add_widget(self.textinput)
-		contorls.add_widget(inputpart)
-		self.main.add_widget(board)
-		self.main.add_widget(contorls)
+		self.contorls.add_widget(inputpart)
+		self.main.add_widget(self.board)
+		self.main.add_widget(self.contorls)
 		return self.main
 
 
@@ -115,7 +115,9 @@ class ChessApp(App):
 
 
 	def gameover(self,reason):
-		self.stop()
+		self.main.remove_widget(self.board)
+		self.main.remove_widget(self.contorls)
+		self.main.add_widget(Label(text = reason,font_size = 72,color = [1,0,0,1]))
 		print(reason)
 
 
