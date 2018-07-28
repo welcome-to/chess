@@ -95,9 +95,8 @@ class ChessApp(App):
 		move = value.text
 		make_turn(self.gp, move)
 		a = game_result(self.gp)
-		if a[0] == False:
+		if not a[0]:
 			self.gameover(a[1])
-			return None
 		value.text = ''
 		nowlist = []
 
@@ -117,7 +116,13 @@ class ChessApp(App):
 	def gameover(self,reason):
 		self.main.remove_widget(self.board)
 		self.main.remove_widget(self.contorls)
-		self.main.add_widget(Label(text = reason,font_size = 72,color = [1,0,0,1]))
+		if reason == WHITE_WIN:
+			source = WHITE_WIN_IMAGE
+		elif reason == BLACK_WIN:
+			source = BLACK_WIN_IMAGE
+		else:
+			source = TIE_IMAGE
+		self.main.add_widget(Image(source = source))
 		print(reason)
 
 
@@ -126,10 +131,7 @@ class ChessApp(App):
 		for i in range(8):
 			for j in range(8):
 				self.lbllist[i][j].source = boardlist[i][j]
-		a = game_result(self.gp)
-		if a[0] == False:
-			self.gameover(a[1])
-			return None
+		game_result(self.gp)
 
 
 
@@ -162,11 +164,11 @@ def game_result(GameProcessor):
 	if result == None:
 		return [True]
 	elif result == WHITE_WIN:
-		return [False, 'White win!!!']
+		return[False, WHITE_WIN]
 	elif result == BLACK_WIN:
-		return [False, 'Black win!!!']
+		return [False, BLACK_WIN]
 	else:
-		return [False, 'Tie']
+		return [False, TIE]
 
 
 def board(GameProcessor):
