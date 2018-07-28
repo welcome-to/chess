@@ -162,7 +162,7 @@ def game_status(board, current_player):
 
 # is the `turn' correct at this position?
 def is_correct(turn, board, player_color):
-    if not turn.is_roque:
+    if turn.is_roque:
         return True
 
     figure = board.figure_on_position(turn.start.x, turn.start.y)
