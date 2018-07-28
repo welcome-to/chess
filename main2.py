@@ -16,8 +16,6 @@ from run import GameProcessor
 from const import *
 
 
-global GameProcessor
-GameProcessor = GameProcessor()
 
 
 
@@ -60,9 +58,9 @@ class Cell(BoxLayout):
 
 class ChessApp(App):
 	def build(self):
+		self.gp = GameProcessor()
 		self.celllist = []
 		self.lbllist = []
-		global sourcelist
 		for i in range(8):
 			row = []
 			for j in range(8):
@@ -93,12 +91,12 @@ class ChessApp(App):
 
 
 
-	def on_enter(instance,value):
+	def on_enter(self,value):
 		move = value.text
-		make_turn(move)
-		a = game_result()
+		make_turn(self.gp, move)
+		a = game_result(self.gp)
 		if a[0] == False:
-			instance.gameover(a[1])
+			self.gameover(a[1])
 			return None
 		value.text = ''
 		nowlist = []
@@ -106,14 +104,14 @@ class ChessApp(App):
 		for i in range(8):
 			row = []
 			for j in range(8):
-				row.append(instance.lbllist[i][j])
+				row.append(self.lbllist[i][j])
 			nowlist.append(row)
 
 		boardlist = movementtolist(nowlist,move)
 
 		for i in range(8):
 			for j in range(8):
-				instance.lbllist[i][j] = boardlist[i][j]
+				self.lbllist[i][j] = boardlist[i][j]
 
 
 	def gameover(self,reason):
@@ -122,11 +120,11 @@ class ChessApp(App):
 
 
 	def movement(self,instance):
-		boardlist = board()
+		boardlist = board(self.gp)
 		for i in range(8):
 			for j in range(8):
 				self.lbllist[i][j].source = boardlist[i][j]
-		a = game_result()
+		a = game_result(self.gp)
 		if a[0] == False:
 			self.gameover(a[1])
 			return None
@@ -157,8 +155,7 @@ def movementtolist(nowlist,move):
 
 
 
-def game_result():
-	global GameProcessor
+def game_result(GameProcessor):
 	result = GameProcessor.game_result()
 	if result == None:
 		return [True]
@@ -170,8 +167,7 @@ def game_result():
 		return [False, 'Tie']
 
 
-def board():
-	global GameProcessor
+def board(GameProcessor):
 	datafirstiter = GameProcessor.board.data 
 	finaldata = []
 	for i in range(8):
@@ -185,12 +181,9 @@ def board():
 	return finaldata
 
 
-def make_turn(move):
-	global GameProcessor
+def make_turn(GameProcessor, move):
 	GameProcessor.make_turn(move)
 
 
 if __name__ == '__main__':
-	global app
-	app=ChessApp()
-	app.run()
+	ChessApp().run()
