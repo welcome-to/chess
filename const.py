@@ -1,12 +1,16 @@
 WHITE = 0
 BLACK = 1
 
-PAWN = 'S'
-ROOK = 'E'
-KNIGHT = 'H'
-BISHOP = 'O'
-QUEEN = 'Q'
-KING = 'K'
+
+COLOROFCELL1 = [1,0,0,1]
+COLOROFCELL2 = [182/255,177/255,150/255,1]
+
+PAWN = 'PAWN'
+ROOK = 'ROOK'
+KNIGHT = 'KNIGHT'
+BISHOP = 'BISHOP'
+QUEEN = 'QUEEN'
+KING = 'KING'
 
 WHITE_WIN = 0
 BLACK_WIN = 1
@@ -29,14 +33,25 @@ LETTER_TO_INDEX = {'A' : 0,
          'g' : 6,
          'h' : 7}
 
-figuretype = {'S'    : '_pawn.png',
-              'E'    : '_rook.png',
-              'H'  : '_knight.png',
-              'O'  : '_bishop.png',
-              'Q'   : '_queen.png',
-              'K'    : '_king.png',
-            }
-figurecolor = {0 : 'img/w',1 : 'img/b'}
+NOTHING = 'img/nothing.png'
+figuretypeback = {
+  '_pawn.png'   : PAWN,
+  '_rook.png'   : ROOK,
+  '_knight.png' : KNIGHT,
+  '_bishop.png' : BISHOP,
+  '_queen.png'  : QUEEN,
+  '_king.png'   : KING
+}
+
+figuretype = {
+              PAWN    : '_pawn.png',
+              ROOK    : '_rook.png',
+              KNIGHT  : '_knight.png',
+              BISHOP  : '_bishop.png',
+              QUEEN   : '_queen.png',
+              KING    : '_king.png'
+             }
+figurecolor = {WHITE : 'img/w',BLACK : 'img/b'}
 
 
 sourcelist = [

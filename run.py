@@ -173,6 +173,8 @@ class GameProcessor(object):
         #self.log_file = open(FILE_PATTERN.format(datetime.utcnow().strftime("%Y-%m-%d-%H:%M:%s")), "w")
 
     # `turn' is a line, either like `e2 e4' or like `roque e1 h1'
+
+
     def make_turn(self, command):
         try:
             if command.startswith('roque'): # FIXME: parse roque args
@@ -228,6 +230,7 @@ def play(first, second):
         current_player, next_player = next_player, current_player
 
     return gp.game_result()
+
 
 
 def print_result(game_result):
