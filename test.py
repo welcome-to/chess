@@ -14,6 +14,16 @@ class TestAll(unittest.TestCase):
         self.assertEqual(coord.y, 1)
         self.assertEqual(str(coord), word)
 
+        a1 = Coordinates.from_string('a1')
+        self.assertEqual(a1.left(), None)
+        self.assertTrue(a1.valid())
+        self.assertEqual(str(a1.right()), 'b1')
+        self.assertEqual(a1.bottom(), None)
+        self.assertEqual(str(a1.top()), 'a2')
+        self.assertEqual(a1.top_left(), None)
+        self.assertEqual(str(a1.top_right()), 'b2')
+
+
     def test_possible_moves(self):
         pass
 
