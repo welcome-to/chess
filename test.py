@@ -1,6 +1,8 @@
 import unittest
 
-from run import Coordinates
+from Board import Coordinates
+
+from operations import possible_moves_king
 
 
 class TestAll(unittest.TestCase):
@@ -10,6 +12,9 @@ class TestAll(unittest.TestCase):
         self.assertEqual(coord.x, 4)
         self.assertEqual(coord.y, 1)
         self.assertEqual(str(coord), word)
+
+    def test_possible_moves(self):
+        moves = 
 
 
 if __name__ == "__main__":

@@ -41,13 +41,37 @@ def make_castling(board, king_move):
         raise InternalError("Castling suddenly failed")
 
 
-def possible_moves(figure, board, previous_move):
+# this is a class-functor. it can be used as a function: instance(arg) === __call__(self, arg).
+class NotBeatingSameColor(object):
+    def __init__(self, board, initial_position):
+        pass
+
+    def __call__(self, final_position):
+        return True
+
+
+def possible_moves(board, position, player_color, previous_move):
+    figure = board.figure_on_position(position)
+    if figure is None:
+        return []
+
     type_to_handler = {
-        PAWN: possible_moves_pawn,
-        ROOK: possible_moves_rook,
-        KNIGHT: possible_moves_knight,
-        BISHOP: possible_moves_bishop,
-        QUEEN: possible_moves_queen,
-        KING: possible_moves_king
+        PAWN: raw_possible_moves_pawn,
+        ROOK: raw_possible_moves_rook,
+        KNIGHT: raw_possible_moves_knight,
+        BISHOP: raw_possible_moves_bishop,
+        QUEEN: raw_possible_moves_queen,
+        KING: raw_possible_moves_king
     }
-    return type_to_handler[figure.type](figure, board, previous_move)
+    not_beating_same_color = NotBeatingSameColor(board, position)
+    not_crossing_occupied_field = NotCrossingOccupiesField(board, position)
+
+    moves = type_to_handler[figure.type](position)
+    moves = filter(not_beating_same_color, moves)
+    moves = filter(not_crossing_occupied_field, moves)
+    return moves
+
+
+def raw_possible_moves_king(position):
+    x,y = position.x, position.y
+    full = [(x-1, y-1), (x, y-1), (x+1, y-1)] # ...
