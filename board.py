@@ -94,20 +94,11 @@ class Board(object):
                     all_figures.append((self.data[row][cell],Coordinates(row,cell)))
         return all_figures
 
-
     def white_figures():
-        white_figures = []
-        for i in self.all_figures():
-            if i[0].color == WHITE:
-                white_figures.append(i)
-        return white_figures
+        return filter(lambda item: item[0].color == WHITE, self.all_figures())
 
     def black_figures():
-        black_figures = []
-        for i in self.all_figures():
-            if i[0].color == BLACK:
-                black_figures.append(i)
-        return black_figures
+        return filter(lambda item: item[0].color == BLACK, self.all_figures())
 
     def __str__(self):
         return '\n'.join(reversed(
