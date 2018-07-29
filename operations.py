@@ -1,4 +1,4 @@
-from board import Figure, Move
+from board import Figure, Move, Coordinates
 from const import *
 from exception import InternalError
 
@@ -14,9 +14,11 @@ def is_correct(turn, board, player_color):
         return True
 
     figure = board.figure_on_position(turn.start.x, turn.start.y)
-    if figure is None or figure.color != player_color:
+    if ((figure is None) or (figure.color != player_color)):
         return False
-
+    listofmoves = possible_moves(board,turn.start,player_color,None)
+    if not (turn.end in listofmoves):
+        return False
     return True
 
 
@@ -48,16 +50,16 @@ class NotBeatingSameColor(object):
             figureset = board.white_figures()
         else:
             figureset = board.black_figures()
-        self.positionset
-        for i in figurset:
-            self.positionset.append(figurset[i][1])
+        self.positionset = []
+        for i in figureset:
+            self.positionset.append(i[1])
 
     def __call__(self, final_position):
         if not (final_position in self.positionset):
             return True
         else:
             return False
-class NotCrossingoccupiesFields(object):
+class NotCrossingOccupiesField(object):
     def __init__(self,board,initial_position):
         pass
     def __call__(self,final_position):
@@ -66,7 +68,7 @@ class NotCrossingoccupiesFields(object):
 
 
 def possible_moves(board, position, player_color, previous_move):
-    figure = board.figure_on_position(position)
+    figure = board.figure_on_position(position.x,position.y)
     if figure is None:
         return []
 
@@ -86,18 +88,21 @@ def possible_moves(board, position, player_color, previous_move):
     moves = filter(not_crossing_occupied_field, moves)
     return moves
 
-def cordfromlist(list):
-    for i in range(len(list)):
-        list[i] = Coordinates(list[i][0],list[i][1])
+def cordfromlist(listofcord):
+    for i in range(len(listofcord)):
+        print(list[i])
+        cord = Coordinates(list[i][0],list[i][0])
+        list[i] = cord
 
 
-
+def raw_possible_moves_pawn(position):
+    pass
 def raw_possible_moves_king(position):
     x,y = position.x, position.y
-    full = [(x-1,y-1),(x-1,y),(x-1,y+1),(x,y-1),(x,y+1),(x+1,y-1),(x+1,y)(x+1,y+1)]
-    for i in range(len(full)):
-        if ((full[i][0] > 7) or (full[i][0] < 0) or (full[i][1] > 7) or (full[i][1] < 0)):
-            full.pop(i)
+    full = [(x-1,y-1),(x-1,y),(x-1,y+1),(x,y-1),(x,y+1),(x+1,y-1),(x+1,y),(x+1,y+1)]
+    for items in full:
+        if ((items[0] > 7) or (items[0] < 0) or (items[1] > 7) or (items[1] < 0)):
+            full.remove(items)
     return full
 
 def raw_possible_moves_rook(position):
@@ -119,18 +124,20 @@ def raw_possible_moves_rook(position):
     while byy > 0:
         byy -= 1
         full.append((x,byy))
+    return full
 def raw_possible_moves_knight(position):
     x,y = position.x, position.y
     full = [(x+2,y+1),(x+2,y-1),(x-2,y+1),(x-2,y-1),(x+1,y+2),(x+1,y-2),(x-1,y+2),(x-1,y-2)]
-    for i in range(len(full)):
-        if ((full[i][0] > 7) or (full[i][0] < 0) or (full[i][1] > 7) or (full[i][1] < 0)):
-            full.pop(i)
+    for items in full:
+        if ((items[0] > 7) or (items[0] < 0) or (items[1] > 7) or (items[1] < 0)):
+            full.remove(items)
     return full
 
 def raw_possible_moves_bishop(position):
     x,y = position.x, position.y
     byx = x
     byy = y
+    full = []
     while  (byx < 7) and (byy < 7):
         byx += 1
         byy += 1
