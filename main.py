@@ -138,9 +138,9 @@ class ChessApp(App):
 			text = 'pridumay sama'
 		else:
 			source = TIE_IMAGE
-			text = 'potom'
+			text = 'All animals are equal, but some animals are more equal than others.'
 		self.main.orientation = 'vertical'
-		self.main.add_widget(LabelB(text = text, size_hint  = (1,.3), bcolor = [0,0,0,1], color = [1,0,0,1], font_size = 32))
+		self.main.add_widget(LabelB(text = text, size_hint  = (1,.3), bcolor = [0,0,0,1], color = [1,0,0,1], font_size = 25))
 		self.main.add_widget(Image(source = source, size_hint = (1,.7)))
 		print(reason)
 
