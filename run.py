@@ -40,13 +40,6 @@ class AskTie(object):
 
 
 class Move(object):
-    """
-    def __init__(self, start, end, is_roque=False):
-        self.start = Coordinates.from_string(start)
-        self.end = Coordinates.from_string(end)
-        self.is_roque = is_roque
-    """
-
     def __init__(self, line, is_roque=False):
         self.start = Coordinates.from_string(line[:2])
         self.end = Coordinates.from_string(line[2:])
@@ -108,13 +101,13 @@ class Board(object):
 
     def pop(self, position):
         figure = self.figure_on_position(position.x, position.y)
+        if figure is None:
+            raise InvalidMove("No figure at {0}".format(start))
         self.data[position.y][position.x] = None
         return figure
 
     def move(self, start, end):
         figure = self.pop(start)
-        if figure is None:
-            raise InvalidMove("No figure at {0}".format(start))
         self.put(end, figure)
 
     def figure_on_position(self, x, y):
