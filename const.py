@@ -21,7 +21,14 @@ WHITE_WIN_IMAGE = 'img/kkk.jpg'
 BLACK_WIN_IMAGE = 'img/mandela.jpg'
 TIE_IMAGE = 'tie.jpg'
 
-
+INDEX_TO_LATTER = {0:'A',
+1:'b',
+2:'c',
+3:'d',
+4:'e',
+5:'f',
+6:'g',
+7:'h'}
 LETTER_TO_INDEX = {'A' : 0,
          'B' : 1,
          'C' : 2,
