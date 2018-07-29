@@ -43,10 +43,26 @@ def make_castling(board, king_move):
 # this is a class-functor. it can be used as a function: instance(arg) === __call__(self, arg).
 class NotBeatingSameColor(object):
     def __init__(self, board, initial_position):
-        pass
+        figurecolor = board.figure_on_position(initial_position.x,initial_position.y).color
+        if figurecolor == WHITE:
+            figureset = board.white_figures()
+        else:
+            figureset = board.black_figures()
+        self.positionset
+        for i in figurset:
+            self.positionset.append(figurset[i][1])
 
     def __call__(self, final_position):
+        if not (final_position in self.positionset):
+            return True
+        else:
+            return False
+class NotCrossingoccupiesFields(object):
+    def __init__(self,board,initial_position):
+        pass
+    def __call__(self,final_position):
         return True
+        
 
 
 def possible_moves(board, position, player_color, previous_move):
@@ -65,10 +81,15 @@ def possible_moves(board, position, player_color, previous_move):
     not_beating_same_color = NotBeatingSameColor(board, position)
     not_crossing_occupied_field = NotCrossingOccupiesField(board, position)
 
-    moves = type_to_handler[figure.type](position)
+    moves = cordfromlist(type_to_handler[figure.type](position))
     moves = filter(not_beating_same_color, moves)
     moves = filter(not_crossing_occupied_field, moves)
     return moves
+
+def cordfromlist(list):
+    for i in range(len(list)):
+        list[i] = Coordinates(list[i][0],list[i][1])
+
 
 
 def raw_possible_moves_king(position):
@@ -78,6 +99,7 @@ def raw_possible_moves_king(position):
         if ((full[i][0] > 7) or (full[i][0] < 0) or (full[i][1] > 7) or (full[i][1] < 0)):
             full.pop(i)
     return full
+
 def raw_possible_moves_rook(position):
     x,y = position.x,position.y
     full = []
