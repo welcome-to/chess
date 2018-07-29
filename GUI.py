@@ -14,6 +14,7 @@ from kivy.uix.image import Image
 from kivy.graphics import Color
 from run import GameProcessor
 from const import *
+from Widgets import LabelB,Cell,ButtonRC
 
 
 # Window configuration
@@ -22,36 +23,7 @@ Config.set('graphics','width','600')
 Config.set('graphics','height','600')
 
 
-Builder.load_string("""
-<LabelB>:
-	bcolor: 1, 1, 1, 1
-	canvas.before:
-		Color:
-			rgba: self.bcolor
-	    Rectangle:
-    		pos: self.pos
-    		size: self.size
-""")
-Builder.load_string("""
-<Cell>:
-    canvas:
-        Color:
-            rgba: self.bcolor
-        Rectangle:
-            pos: self.pos
-            size: self.size
-""")
 
-class LabelB(Label):
-	bcolor = ListProperty([1,1,1,1])
-class Cell(FloatLayout):
-	bcolor = ListProperty([1,1,1,1])
-class ButtonRC(Button):
-	def loadroadandcolumn(self,row,column):
-		self.row = row
-		self.column = column
-	def getrowandcolumn(self):
-		return (self.row,self.column)
 		
 class MainApp(App):
 	def build(self):

@@ -1,4 +1,4 @@
-from GUI.py import ChessApp
+from GUI import MainApp
 
 
 if __name__ == '__main__':
