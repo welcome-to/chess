@@ -73,4 +73,66 @@ def possible_moves(board, position, player_color, previous_move):
 
 def raw_possible_moves_king(position):
     x,y = position.x, position.y
-    full = [(x-1, y-1), (x, y-1), (x+1, y-1)] # ...
+    full = [(x-1,y-1),(x-1,y),(x-1,y+1),(x,y-1),(x,y+1),(x+1,y-1),(x+1,y)(x+1,y+1)]
+    for i in range(len(full)):
+        if ((full[i][0] > 7) or (full[i][0] < 0) or (full[i][1] > 7) or (full[i][1] < 0)):
+            full.pop(i)
+    return full
+def raw_possible_moves_rook(position):
+    x,y = position.x,position.y
+    full = []
+    byx = x
+    while byx < 7:
+        byx +=1
+        full.append((byx,y))
+    byx = x
+    while byx > 0:
+        byx -= 1
+        full.append((byx,y))
+    byy = y
+    while byy < 7:
+        byy +=1
+        full.append((x,byy))
+    byy = y
+    while byy > 0:
+        byy -= 1
+        full.append((x,byy))
+def raw_possible_moves_knight(position):
+    x,y = position.x, position.y
+    full = [(x+2,y+1),(x+2,y-1),(x-2,y+1),(x-2,y-1),(x+1,y+2),(x+1,y-2),(x-1,y+2),(x-1,y-2)]
+    for i in range(len(full)):
+        if ((full[i][0] > 7) or (full[i][0] < 0) or (full[i][1] > 7) or (full[i][1] < 0)):
+            full.pop(i)
+    return full
+
+def raw_possible_moves_bishop(position):
+    x,y = position.x, position.y
+    byx = x
+    byy = y
+    while  (byx < 7) and (byy < 7):
+        byx += 1
+        byy += 1
+        full.append((byx,byy))
+    byx = x
+    byy = y
+    while  (byx > 0) and (byy > 0):
+        byx -= 1
+        byy -= 1
+        full.append((byx,byy))
+    byx = x
+    byy = y
+    while  (byx < 7) and (byy > 0):
+        byx += 1
+        byy -= 1
+        full.append((byx,byy))
+    byx = x
+    byy = y
+    while  (byx > 0) and (byy < 7):
+        byx -= 1
+        byy += 1
+        full.append((byx,byy))
+    return full
+
+def raw_possible_moves_queen(position):
+    full = raw_possible_moves_rook(position).extend(raw_possible_moves_bishop(position))
+    return full
