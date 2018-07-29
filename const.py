@@ -21,6 +21,8 @@ WHITE_WIN_IMAGE = 'img/kkk.jpg'
 BLACK_WIN_IMAGE = 'img/mandela.jpg'
 TIE_IMAGE = 'tie.jpg'
 
+lineof = ['A','B','C','D','E','F','G','H']
+
 INDEX_TO_LATTER = {0:'A',
 1:'b',
 2:'c',

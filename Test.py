@@ -54,19 +54,57 @@ class ButtonRC(Button):
 		
 class MainApp(App):
 	def build(self):
-		self.startscrean = FloatLayout(size_hint = (1,1), pos_hint = {'center_x': 0.5, 'center_y': 0.5})
 		self.gp = GameProcessor()
-		self.startscrean.add_widget(LabelB(text = 'Welcome to Chess' , size_hint = [2,2], pos_hint = {'center_x': 0.5, 'center_y': 0.6} , bcolor = [.8,.7,.6,1] ) )
-		self.startscrean.add_widget(Button(text = 'Start game', on_press = self.startgame,background_normal = '',background_color = BUTTONCOLOR, color = [0,0,0,1],size_hint = [0.25,0.1],pos_hint = {'center_x': 0.5, 'center_y': 0.5} ))
-		self.startscrean.add_widget(Button(text = 'Exit', on_press = self.leave ,background_normal = '',background_color = BUTTONCOLOR, color = [0,0,0,1],size_hint = [0.25,0.1],pos_hint = {'center_x': 0.5, 'center_y': 0.28} ))
-		self.loging = Button(text = 'Save game log', on_press = self.log ,background_normal = '',background_color = BUTTONCOLOR, color = [0,0,0,1],size_hint = [0.25,0.1],pos_hint = {'center_x': 0.5, 'center_y': 0.39} )
-		self.startscrean.add_widget(self.loging)
+
+
+		self.startscrean = FloatLayout(size_hint = (1,1),
+		                               pos_hint = {'center_x': 0.5, 'center_y': 0.5})
+
+		welcome   = LabelB(text = 'Welcome to Chess',
+		                   size_hint = [2,2],
+		                   pos_hint = {'center_x': 0.5, 'center_y': 0.6},
+		                   bcolor = [.8,.7,.6,1])
+
+		startgame = Button(text = 'Start game',
+		                   on_press = self.startgame,
+		                   background_normal = '',
+		                   background_color = BUTTONCOLOR,
+		                   color = [0,0,0,1],
+		                   size_hint = [0.25,0.1],
+		                   pos_hint = {'center_x': 0.5, 'center_y': 0.5})
+
+		loging    = Button(text = 'Save game log',
+		                   on_press = self.log,
+		                   background_normal = '',
+		                   background_color = BUTTONCOLOR,
+		                   color = [0,0,0,1],
+		                   size_hint = [0.25,0.1],
+		                   pos_hint = {'center_x': 0.5, 'center_y': 0.39})
+
+		exit      = Button(text = 'Exit',
+		                   on_press = self.leave,
+		                   background_normal = '',
+		                   background_color = BUTTONCOLOR,
+		                   color = [0,0,0,1],
+		                   size_hint = [0.25,0.1],
+		                   pos_hint = {'center_x': 0.5, 'center_y': 0.28})
+
+		self.startscrean.add_widget(welcome)
+		self.startscrean.add_widget(startgame)
+		self.startscrean.add_widget(exit)
+		self.startscrean.add_widget(loging)
 		self.main = FloatLayout()
 		self.main.add_widget(self.startscrean)
 		
 		return self.main
+
+
+
 	def leave(self,obj):
 		self.stop()
+
+
+
 	def log(self,button):
 		if button.text == 'Save game log':
 			self.gp.savelog(True)
@@ -74,18 +112,21 @@ class MainApp(App):
 		else:
 			self.gp.savelog(False)
 			self.loging.text = 'Save game log'
+
+
+
 	def startgame(self,button):
 		self.main.remove_widget(self.startscrean)
 		self.countofmove = 0
-		self.celllist = [Button(text = 'Next',background_color = [.1,.1,.1,1])]
-		lineof = ['A','B','C','D','E','F','G','H']
+		celllist = [Button(text = 'Next',background_color = [.1,.1,.1,1])]
+
 		for i in range(8):
-			self.celllist.append(LabelB(text = lineof[i],bcolor = BUTTONCOLOR, font_size = 20))
+			celllist.append(LabelB(text = lineof[i],bcolor = BUTTONCOLOR, font_size = 20))
 		
 		self.lbllist = []
 		for i in range(8):
 			row = []
-			self.celllist.append(LabelB(text = str(i+1),bcolor = BUTTONCOLOR, font_size = 20))
+			celllist.append(LabelB(text = str(i+1),bcolor = BUTTONCOLOR, font_size = 20))
 			for j in range(8):
 				if (i + j) % 2 == 0:
 					colorB = COLOROFCELL1
@@ -98,13 +139,16 @@ class MainApp(App):
 				cell.add_widget(image)
 				cell.add_widget(button)
 				row.append(image)
-				self.celllist.append(cell)
+				celllist.append(cell)
 			self.lbllist.append(row)
 		
 		self.board = GridLayout(cols = 9,size_hint = (1,1),pos_hint = {'center_x': 0.5, 'center_y': 0.5})
+
 		for i in range(81):
-			self.board.add_widget(self.celllist[i])
+			self.board.add_widget(celllist[i])
+
 		self.main.add_widget(self.board)
+
 	def gameover(self,reason):
 		self.main.remove_widget(self.board)
 		if reason == WHITE_WIN:
@@ -116,7 +160,6 @@ class MainApp(App):
 		else:
 			source = TIE_IMAGE
 			text = 'potom'
-		self.main.orientation = 'vertical'
 		self.main.add_widget(Image(source = source, size_hint = (1,1)))
 		print(reason)
 
