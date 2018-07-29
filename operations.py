@@ -32,7 +32,6 @@ def convert_pawns(board):
 
 
 def make_castling(board, king_move):
-    castling_types = {'e1g1': 'h1f1', 'e1c1': 'a1d1', 'e8g8': 'h8f8', 'e8c8': 'a8d8'}
     rook_move = Move(castling_types[str(king_move)])
     try:
         board.move(rook_move.start, rook_move.end)

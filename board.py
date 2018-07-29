@@ -87,13 +87,27 @@ class Board(object):
         return self.data[y][x]
 
     def all_figures():
-        raise NotImplementedError()
+        all_figures = []
+        for row in range(8):
+            for cell in range(8):
+                if self.data[row][cell] != None:
+                    all_figures.append((self.data[row][cell],Coordinates(row,cell)))
+        return all_figures
+
 
     def white_figures():
-        raise NotImplementedError()
+        white_figures = []
+        for i in self.all_figures():
+            if i[0].color == WHITE:
+                white_figures.append(i)
+        return white_figures
 
     def black_figures():
-        raise NotImplementedError()
+        black_figures = []
+        for i in self.all_figures():
+            if i[0].color == BLACK:
+                black_figures.append(i)
+        return black_figures
 
     def __str__(self):
         return '\n'.join(reversed(

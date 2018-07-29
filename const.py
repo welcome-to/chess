@@ -23,14 +23,17 @@ TIE_IMAGE = 'tie.jpg'
 
 lineof = ['A','B','C','D','E','F','G','H']
 
-INDEX_TO_LATTER = {0:'A',
-1:'b',
-2:'c',
-3:'d',
-4:'e',
-5:'f',
-6:'g',
-7:'h'}
+castling_types = {'e1g1': 'h1f1', 'e1c1': 'a1d1', 'e8g8': 'h8f8', 'e8c8': 'a8d8'}
+KING_MOVE  = ['e1g1','e1c1','e8g8','e8c8']
+
+INDEX_TO_LATTER = {0:'a',
+1 : 'b',
+2 : 'c',
+3 : 'd',
+4 :'e',
+5 :'f',
+6 :'g',
+7 :'h'}
 LETTER_TO_INDEX = {'A' : 0,
          'B' : 1,
          'C' : 2,

@@ -43,8 +43,8 @@ class GameProcessor(object):
     # `turn' is a line, either like `e2e4' or like `re1h1'
     def make_turn(self, command):
         try:
-            if command.startswith('r'):
-                turn = Move(command[1:], is_roque=True)
+            if command in KING_MOVE:
+                turn = Move(command, is_roque = True)
             else:
                 turn = Move(command)
         except:
