@@ -86,7 +86,7 @@ class Board(object):
     def figure_on_position(self, x, y):
         return self.data[y][x]
 
-    def all_figures():
+    def all_figures(self):
         all_figures = []
         for row in range(8):
             for cell in range(8):
@@ -94,10 +94,10 @@ class Board(object):
                     all_figures.append((self.data[row][cell],Coordinates(row,cell)))
         return all_figures
 
-    def white_figures():
+    def white_figures(self):
         return filter(lambda item: item[0].color == WHITE, self.all_figures())
 
-    def black_figures():
+    def black_figures(self):
         return filter(lambda item: item[0].color == BLACK, self.all_figures())
 
     def __str__(self):
