@@ -244,6 +244,8 @@ class GameProcessor(object):
             self.technical_winner = BLACK
         else:
             self.technical_winner = WHITE
+    def savelog(self,bool):
+        pass
 
 
 

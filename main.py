@@ -62,13 +62,22 @@ class ChessApp(App):
 		self.startscrean = FloatLayout()
 		self.gp = GameProcessor()
 		self.startscrean.add_widget(LabelB(text = 'Welcome to Chess' , size_hint = [2,2], pos_hint = {'center_x': 0.5, 'center_y': 0.6} , bcolor = [.8,.7,.6,1] ) )
-		self.startscrean.add_widget(Button(text = 'Start game', on_press = self.startgame,background_normal = '',background_color = BUTTONCOLOR, color = [0,0,0,1],size_hint = [0.15,0.1],pos_hint = {'center_x': 0.5, 'center_y': 0.4} ))
-		self.startscrean.add_widget(Button(text = 'Exit', on_press = self.leave ,background_normal = '',background_color = BUTTONCOLOR, color = [0,0,0,1],size_hint = [0.15,0.1],pos_hint = {'center_x': 0.5, 'center_y': 0.29} ))		
+		self.startscrean.add_widget(Button(text = 'Start game', on_press = self.startgame,background_normal = '',background_color = BUTTONCOLOR, color = [0,0,0,1],size_hint = [0.15,0.1],pos_hint = {'center_x': 0.5, 'center_y': 0.5} ))
+		self.startscrean.add_widget(Button(text = 'Exit', on_press = self.leave ,background_normal = '',background_color = BUTTONCOLOR, color = [0,0,0,1],size_hint = [0.15,0.1],pos_hint = {'center_x': 0.5, 'center_y': 0.28} ))
+		self.loging = Button(text = 'Save game log', on_press = self.log ,background_normal = '',background_color = BUTTONCOLOR, color = [0,0,0,1],size_hint = [0.15,0.1],pos_hint = {'center_x': 0.5, 'center_y': 0.39} )
+		self.startscrean.add_widget(self.loging)		
 		self.main = BoxLayout(orientation='horizontal')
 		self.main.add_widget(self.startscrean)
 		return self.main
 	def leave(self,obj):
 		self.stop()
+	def log(self,button):
+		if button.text == 'Save game log':
+			self.gp.savelog(True)
+			self.loging.text = 'Don\'t save log'
+		else:
+			self.gp.savelog(False)
+			self.loging.text = 'Save game log'
 	def startgame(self,butonobj):
 		self.main.remove_widget(self.startscrean)
 		self.celllist = [LabelB(text = '',bcolor = [.1,.1,.1,1])]
