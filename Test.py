@@ -10,7 +10,6 @@ from random import randint
 from kivy.factory import Factory
 from kivy.lang import Builder
 from kivy.properties import ListProperty
-from kivy.uix.textinput import TextInput
 from kivy.uix.image import Image
 from kivy.graphics import Color
 from run import GameProcessor
