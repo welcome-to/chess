@@ -15,6 +15,7 @@ from kivy.graphics import Color
 from run import GameProcessor
 from const import *
 from Widgets import LabelB,Cell,ButtonRC
+from board import Coordinates
 
 
 # Window configuration
@@ -123,7 +124,7 @@ class MainApp(App):
 				cell.add_widget(button)
 				row.append(image)
 				celllist.append(cell)
-				
+
 			celllist.append(LabelB(text = str(i+1),
 				                   bcolor = BUTTONCOLOR,
 				                   font_size = 20))
