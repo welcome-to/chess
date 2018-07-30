@@ -83,16 +83,11 @@ def possible_moves(board, position, player_color, previous_move):
     not_beating_same_color = NotBeatingSameColor(board, position)
     not_crossing_occupied_field = NotCrossingOccupiesField(board, position)
 
-    moves = cordfromlist(type_to_handler[figure.type](position))
+    moves = type_to_handler[figure.type](position)
     moves = filter(not_beating_same_color, moves)
     moves = filter(not_crossing_occupied_field, moves)
     return moves
 
-def cordfromlist(listofcord):
-    for i in range(len(listofcord)):
-        print(list[i])
-        cord = Coordinates(list[i][0],list[i][0])
-        list[i] = cord
 
 
 def raw_possible_moves_pawn(position):
@@ -111,28 +106,25 @@ def raw_possible_moves_rook(position):
     byx = x
     while byx < 7:
         byx +=1
-        full.append((byx,y))
+        full.append(Coordinates(byx,y))
     byx = x
     while byx > 0:
         byx -= 1
-        full.append((byx,y))
+        full.append(Coordinates(byx,y))
     byy = y
     while byy < 7:
         byy +=1
-        full.append((x,byy))
+        full.append(Coordinates(x,byy))
     byy = y
     while byy > 0:
         byy -= 1
-        full.append((x,byy))
+        full.append(Coordinates(x,byy))
     return full
 def raw_possible_moves_knight(position):
-    x,y = position.x, position.y
-    full = [(x+2,y+1),(x+2,y-1),(x-2,y+1),(x-2,y-1),(x+1,y+2),(x+1,y-2),(x-1,y+2),(x-1,y-2)]
-    for items in full:
-        if ((items[0] > 7) or (items[0] < 0) or (items[1] > 7) or (items[1] < 0)):
-            full.remove(items)
-    return full
-
+    return list(filter(
+        lambda x: x is not None,
+        [position.top().top_right(),position.top().top_left(),position.bottom().bottom_right(),position.bottom().bottom_left(),
+         position.left().top_left(),position.left().bottom_left(),position.right().top_right(),position.right().bottom_right()]))
 def raw_possible_moves_bishop(position):
     x,y = position.x, position.y
     byx = x
@@ -141,25 +133,25 @@ def raw_possible_moves_bishop(position):
     while  (byx < 7) and (byy < 7):
         byx += 1
         byy += 1
-        full.append((byx,byy))
+        full.append(Coordinates(byx,byy))
     byx = x
     byy = y
     while  (byx > 0) and (byy > 0):
         byx -= 1
         byy -= 1
-        full.append((byx,byy))
+        full.append(Coordinates(byx,byy))
     byx = x
     byy = y
     while  (byx < 7) and (byy > 0):
         byx += 1
         byy -= 1
-        full.append((byx,byy))
+        full.append(Coordinates(byx,byy))
     byx = x
     byy = y
     while  (byx > 0) and (byy < 7):
         byx -= 1
         byy += 1
-        full.append((byx,byy))
+        full.append(Coordinates(byx,byy))
     return full
 
 def raw_possible_moves_queen(position):
