@@ -26,13 +26,13 @@ def is_correct(turn, board, player_color):
 
 def convert_pawns(board):
     for i in range(8):
-        figure = board.figure_on_position(Coordinatees(i, 7))
+        figure = board.figure_on_position(Coordinates(i, 7))
         if figure is not None and figure.type == PAWN: # it can be only white
-            board.data[7][i] = Figure(WHITE, QUEEN)
+            board.put(Coordinates(i,7), Figure(WHITE, QUEEN))
 
-        figure = board.figure_on_position(Coordinatees(i, 0))
+        figure = board.figure_on_position(Coordinates(i, 0))
         if figure is not None and figure.type == PAWN:
-            board.data[0][i] = Figure(BLACK, QUEEN)
+            board.put(Coordinates(i,0),Figure(BLACK, QUEEN))
 
 
 def make_castling(board, king_move):
