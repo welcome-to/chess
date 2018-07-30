@@ -97,13 +97,13 @@ def cordfromlist(listofcord):
 
 def raw_possible_moves_pawn(position):
     pass
+
 def raw_possible_moves_king(position):
-    x,y = position.x, position.y
-    full = [(x-1,y-1),(x-1,y),(x-1,y+1),(x,y-1),(x,y+1),(x+1,y-1),(x+1,y),(x+1,y+1)]
-    for items in full:
-        if ((items[0] > 7) or (items[0] < 0) or (items[1] > 7) or (items[1] < 0)):
-            full.remove(items)
-    return full
+    return list(filter(
+        lambda x: x is not None,
+        [position.left(), position.right(), position.top(), position.bottom(),
+         position.top_left(), position.top_right(), position.bottom_left(), position.bottom_right()]
+    ))
 
 def raw_possible_moves_rook(position):
     x,y = position.x,position.y
