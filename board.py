@@ -77,7 +77,7 @@ class Coordinates(object):
     def valid(self):
         return 0 <= self.x <= 7 and 0 <= self.y <= 7
 
-    def __str__(self):
+    def __repr__(self):
         index_to_letter = {0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f', 6: 'g', 7: 'h'}
         try:
             return "{0}{1}".format(index_to_letter[self.x], self.y + 1)
