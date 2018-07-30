@@ -28,9 +28,9 @@ class HumanPlayer(Algorithm):
 
 class GameProcessor(object):
     FILE_PATTERN = "./logs/game_{0}"
-    self.logdir = open(LOGDIR,'w')
 
     def __init__(self):
+        self.logdir = open(LOGDIR,'w')
         self.board = Board()
         self.boards = []
         self.turns = []

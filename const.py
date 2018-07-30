@@ -83,6 +83,6 @@ sourcelist = [
 ['img/b_rook.png','img/b_knight.png','img/b_bishop.png','img/b_queen.png','img/b_king.png','img/b_bishop.png','img/b_knight.png','img/b_rook.png']]
 
 
-LOGDIR = 'logs/log'
+LOGDIR = 'log.txt'
 
 
