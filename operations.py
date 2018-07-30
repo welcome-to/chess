@@ -103,22 +103,22 @@ def raw_possible_moves_king(position):
 def raw_possible_moves_rook(position):
     x,y = position.x,position.y
     full = []
-    byx = x
-    while byx < 7:
-        byx +=1
-        full.append(Coordinates(byx,y))
-    byx = x
-    while byx > 0:
-        byx -= 1
-        full.append(Coordinates(byx,y))
-    byy = y
-    while byy < 7:
-        byy +=1
-        full.append(Coordinates(x,byy))
-    byy = y
-    while byy > 0:
-        byy -= 1
-        full.append(Coordinates(x,byy))
+    cord = position.right()
+    while not (cord is None):
+        full.append(cord)
+        cord = cord.right()
+    cord = position.left()
+    while not (cord is None):
+        full.append(cord)
+        cord = cord.left()
+    cord = position.top()
+    while not (cord is None):
+        full.append(cord)
+        cord = cord.top()
+    cord = position.bottom()
+    while not(cord is None):
+        full.append(cord)
+        cord = cord.bottom()
     return full
 def raw_possible_moves_knight(position):
     return list(filter(
