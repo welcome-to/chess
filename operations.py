@@ -63,7 +63,7 @@ class NotBeatingSameColor(object):
             return False
 
 
-class NotCrossingOccupiesField(object):
+class NotCrossingOccupiedField(object):
     def __init__(self,board,initial_position):
         pass
     def __call__(self,final_position):
@@ -85,7 +85,7 @@ def possible_moves(board, position, player_color, previous_move):
         KING: raw_possible_moves_king
     }
     not_beating_same_color = NotBeatingSameColor(board, position)
-    not_crossing_occupied_field = NotCrossingOccupiesField(board, position)
+    not_crossing_occupied_field = NotCrossingOccupiedField(board, position)
 
     moves = type_to_handler[figure.type](position)
     moves = filter(not_beating_same_color, moves)
