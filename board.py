@@ -116,6 +116,8 @@ class Board(object):
 
     def figure_on_position(self, x, y):
         return self.data[y][x]
+    def figure_on_position1(self,coordinates):
+        return self.data[coordinates.x][coordinates.y]
 
     def all_figures(self):
         all_figures = []

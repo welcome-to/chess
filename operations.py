@@ -13,7 +13,7 @@ def is_correct(turn, board, player_color):
     if turn.is_roque:
         return True
 
-    figure = board.figure_on_position(turn.start.x, turn.start.y)
+    figure = board.figure_on_position1(turn.start)
     if ((figure is None) or (figure.color != player_color)):
         return False
     listofmoves = possible_moves(board,turn.start,player_color,None)
@@ -47,7 +47,7 @@ def make_castling(board, king_move):
 # this is a class-functor. it can be used as a function: instance(arg) === __call__(self, arg).
 class NotBeatingSameColor(object):
     def __init__(self, board, initial_position):
-        figurecolor = board.figure_on_position(initial_position.x,initial_position.y).color
+        figurecolor = board.figure_on_position1(initial_position).color
         if figurecolor == WHITE:
             figureset = board.white_figures()
         else:
@@ -72,7 +72,7 @@ class NotCrossingOccupiedField(object):
 
 
 def possible_moves(board, position, player_color, previous_move):
-    figure = board.figure_on_position(position.x,position.y)
+    figure = board.figure_on_position1(position)
     if figure is None:
         return []
 
