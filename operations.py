@@ -106,24 +106,23 @@ def raw_possible_moves_king(position):
 
 
 def raw_possible_moves_rook(position):
-    x,y = position.x,position.y
     full = []
-    cord = position.right()
-    while not (cord is None):
-        full.append(cord)
-        cord = cord.right()
-    cord = position.left()
-    while not (cord is None):
-        full.append(cord)
-        cord = cord.left()
-    cord = position.top()
-    while not (cord is None):
-        full.append(cord)
-        cord = cord.top()
-    cord = position.bottom()
-    while not(cord is None):
-        full.append(cord)
-        cord = cord.bottom()
+    coord = position.right()
+    while coord:
+        full.append(coord)
+        coord = coord.right()
+    coord = position.left()
+    while coord:
+        full.append(coord)
+        coord = coord.left()
+    coord = position.top()
+    while coord:
+        full.append(coord)
+        coord = coord.top()
+    coord = position.bottom()
+    while coord:
+        full.append(coord)
+        coord = coord.bottom()
     return full
 
 
@@ -136,29 +135,26 @@ def raw_possible_moves_knight(position):
 
 
 def raw_possible_moves_bishop(position):
-    x,y = position.x, position.y
-    byx = x
-    byy = y
     full = []
-    cord = position.top_right()
-    while not(cord is None):
-        full.append(cord)
-        cord = cord.top_right()
-    cord = position.bottom_right()
-    while not(cord is None):
-        full.append(cord)
-        cord = cord.bottom_right()
-    cord = position.top_left()
-    while not(cord is None):
-        full.append(cord)
-        cord = cord.top_left()
-    cord = position.bottom_left()
-    while not(cord is None):
-        full.append(cord)
-        cord = cord.bottom_left()
+    coord = position.top_right()
+    while coord:
+        full.append(coord)
+        coord = coord.top_right()
+    coord = position.bottom_right()
+    while coord:
+        full.append(coord)
+        coord = coord.bottom_right()
+    coord = position.top_left()
+    while coord:
+        full.append(coord)
+        coord = coord.top_left()
+    coord = position.bottom_left()
+    while coord:
+        full.append(coord)
+        coord = coord.bottom_left()
     return full
 
 
 def raw_possible_moves_queen(position):
-    full = raw_possible_moves_rook(position).extend(raw_possible_moves_bishop(position))
+    return raw_possible_moves_rook(position) + raw_possible_moves_bishop(position)
     return full
