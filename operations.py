@@ -116,19 +116,19 @@ def raw_possible_moves_king(position):
 def raw_possible_moves_rook(position,board):
     full = []
     coord = position.right()
-    while bool(coord):
+    while coord:
         full.append(coord)
         coord = coord.right()
     coord = position.left()
-    while bool(coord):
+    while coord:
         full.append(coord)
         coord = coord.left()
     coord = position.top()
-    while bool(coord):
+    while coord:
         full.append(coord)
         coord = coord.top()
     coord = position.bottom()
-    while bool(coord):
+    while coord:
         full.append(coord)
         coord = coord.bottom()
     return full
@@ -145,19 +145,19 @@ def raw_possible_moves_knight(position,board):
 def raw_possible_moves_bishop(position,board):
     full = []
     coord = position.top_right()
-    while bool(coord):
+    while coord:
         full.append(coord)
         coord = coord.top_right()
     coord = position.bottom_right()
-    while bool(coord):
+    while coord:
         full.append(coord)
         coord = coord.bottom_right()
     coord = position.top_left()
-    while bool(coord):
+    while coord:
         full.append(coord)
         coord = coord.top_left()
     coord = position.bottom_left()
-    while bool(coord):
+    while coord:
         full.append(coord)
         coord = coord.bottom_left()
     return full
