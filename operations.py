@@ -84,16 +84,24 @@ def possible_moves(board, position, player_color, previous_move):
         QUEEN: raw_possible_moves_queen,
         KING: raw_possible_moves_king
     }
+    given_args = {
+        PAWN: [position,board],
+        ROOK: [position,board],
+        KNIGHT: [position],
+        BISHOP: [position,board],
+        QUEEN: [position,board],
+        KING: [position]
+    }
     not_beating_same_color = NotBeatingSameColor(board, position)
     not_crossing_occupied_field = NotCrossingOccupiedField(board, position)
 
-    moves = type_to_handler[figure.type](position)
+    moves = type_to_handler[figure.type](*given_args[figure.type])
     moves = filter(not_beating_same_color, moves)
     moves = filter(not_crossing_occupied_field, moves)
     return moves
 
 
-def raw_possible_moves_pawn(position):
+def raw_possible_moves_pawn(position,board):
     pass
 
 
@@ -105,7 +113,7 @@ def raw_possible_moves_king(position):
     ))
 
 
-def raw_possible_moves_rook(position):
+def raw_possible_moves_rook(position,board):
     full = []
     coord = position.right()
     while coord:
@@ -126,7 +134,7 @@ def raw_possible_moves_rook(position):
     return full
 
 
-def raw_possible_moves_knight(position):
+def raw_possible_moves_knight(position,board):
     return list(filter(
         bool,
         [position.top().top_right(),position.top().top_left(),position.bottom().bottom_right(),position.bottom().bottom_left(),
@@ -134,7 +142,7 @@ def raw_possible_moves_knight(position):
     ))
 
 
-def raw_possible_moves_bishop(position):
+def raw_possible_moves_bishop(position,board):
     full = []
     coord = position.top_right()
     while coord:
@@ -155,6 +163,6 @@ def raw_possible_moves_bishop(position):
     return full
 
 
-def raw_possible_moves_queen(position):
-    return raw_possible_moves_rook(position) + raw_possible_moves_bishop(position)
+def raw_possible_moves_queen(position,board):
+    return raw_possible_moves_rook(position,board) + raw_possible_moves_bishop(position,board)
     return full
