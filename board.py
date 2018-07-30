@@ -13,9 +13,9 @@ class Figure(object):
 
 
 class Move(object):
-    def __init__(self, line, is_roque=False):
-        self.start = Coordinates.from_string(line[:2])
-        self.end = Coordinates.from_string(line[2:])
+    def __init__(self, cordpair, is_roque=False):
+        self.start = cordpair[0]
+        self.end = cordpair[0]
         self.is_roque = is_roque
 
     def __repr__(self):
