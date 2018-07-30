@@ -32,6 +32,7 @@ class GameProcessor(object):
     def __init__(self):
         self.logdir = open(LOGDIR,'w')
         self.board = Board()
+        self.log = False
         self.boards = []
         self.turns = []
         # outside make_turn `current player' is the one whose turn is next

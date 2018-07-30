@@ -17,8 +17,6 @@ def is_correct(turn, board, player_color):
     if ((figure is None) or (figure.color != player_color)):
         return False
     listofmoves = possible_moves(board,turn.start,player_color,None)
-    print(str(turn.end))
-    print(list(map(str,listofmoves)))
     if not turn.end in listofmoves:
         return False
     return True
@@ -102,10 +100,32 @@ def possible_moves(board, position, player_color, previous_move):
 
 
 def raw_possible_moves_pawn(position,board):
-    pass
+    pawn = board.figure_on_position(position)
+    full = []
+    if pawn.color == BLACK:
+        full.append(position.top())
+        if not pawn.has_moved:
+            full.append(position.top().top())
+        if not board.figure_on_position(position.top_left()) is None:
+            if board.figure_on_position(position.top_left()).color == WHITE:
+                full.append(position.top_left())
+        if not board.figure_on_position(position.top_right()) is None:
+            if board.figure_on_position(position.top_right()).color == WHITE:
+                full.append(position.top_right())
+    else:
+        print(2)
+        full.append(position.top())
+        if not pawn.has_moved:
+            full.append(position.bottom().bottom())
+        if not board.figure_on_position(position.bottom_left()) is None:
+            if board.figure_on_position(position.bottom_left()).color == BLACK:
+                full.append(position.bottom_left())
+        if not board.figure_on_position(position.bottom_right()) is None:
+            if board.figure_on_position(position.bottom_right()).color == BLACK:
+                full.append(position.bottom_right())
 
 
-def raw_possible_moves_king(position):
+def raw_possible_moves_king(position,board):
     return list(filter(
         bool,
         [position.left(), position.right(), position.top(), position.bottom(),
@@ -134,7 +154,7 @@ def raw_possible_moves_rook(position,board):
     return full
 
 
-def raw_possible_moves_knight(position,board):
+def raw_possible_moves_knight(position):
     return list(filter(
         bool,
         [position.top().top_right(),position.top().top_left(),position.bottom().bottom_right(),position.bottom().bottom_left(),
