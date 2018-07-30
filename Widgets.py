@@ -12,6 +12,7 @@ from kivy.lang import Builder
 from kivy.properties import ListProperty
 from kivy.uix.image import Image
 from kivy.graphics import Color
+from board import Coordinates
 
 
 
@@ -44,8 +45,7 @@ class Cell(FloatLayout):
 	bcolor = ListProperty([1,1,1,1])
 class ButtonRC(Button):
 	def loadroadandcolumn(self,row,column):
-		self.row = row
-		self.column = column
+		self.coordinates = Coordinates(row,column)
 	def getrowandcolumn(self):
-		return (self.row,self.column)
+		return self.coordinates
 	

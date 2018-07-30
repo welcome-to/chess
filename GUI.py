@@ -107,14 +107,26 @@ class MainApp(App):
 				else:
 					colorB = COLOROFCELL2
 				cell = Cell(bcolor = colorB)
-				image = Image(source = sourcelist[i][j], size_hint = (1,1), pos_hint = {'center_x': 0.5, 'center_y': 0.5})
-				button = ButtonRC(text = '',background_color = [0,0,0,0],background_normal = '', on_press = self.update,size_hint = (1,1), pos_hint = {'center_x': 0.5, 'center_y': 0.5})
+				image = Image(source = sourcelist[i][j],
+					          size_hint = (1,1),
+					          pos_hint = {'center_x': 0.5, 'center_y': 0.5})
+
+				button = ButtonRC(text = '',
+					              background_color = [0,0,0,0],
+					              background_normal = '',
+					              on_press = self.update,
+					              size_hint = (1,1),
+					              pos_hint = {'center_x': 0.5, 'center_y': 0.5})
+
 				button.loadroadandcolumn(i,j)
 				cell.add_widget(image)
 				cell.add_widget(button)
 				row.append(image)
 				celllist.append(cell)
-			celllist.append(LabelB(text = str(i+1),bcolor = BUTTONCOLOR, font_size = 20))
+				
+			celllist.append(LabelB(text = str(i+1),
+				                   bcolor = BUTTONCOLOR,
+				                   font_size = 20))
 			self.lbllist.append(row)
 		celllist.append(LabelB(text = '',bcolor = BUTTONCOLOR))
 		for i in range(8):
@@ -146,13 +158,10 @@ class MainApp(App):
 	def update(self,button):
 		self.countofmove += 1
 		if self.countofmove % 2 == 1:
-			cord =button.getrowandcolumn()
-			self.row = cord[0]
-			self.column = cord[1]
+			self.coord =button.getrowandcolumn()
 		else:
-			cord = button.getrowandcolumn()
-
-			move = INDEX_TO_LATTER.get(self.column)+str(self.row + 1) + INDEX_TO_LATTER.get(cord[1])+ str(cord[0]+1)
+			coord = button.getrowandcolumn()
+			move = (self.coord, coord) 
 			make_turn(self.gp, move)
 			boardlist = board(self.gp)
 			for i in range(8):
