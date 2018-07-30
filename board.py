@@ -35,54 +35,38 @@ class Coordinates(object):
             raise InvalidMove("Incorrect input: {0}".format(line))
 
     def left(self):
-        result = Coordinates(self.x - 1, self.y)
-        return result if result.valid() else None
+        return Coordinates(self.x - 1, self.y)
 
     def right(self):
-        result = Coordinates(self.x + 1, self.y)
-        return result if result.valid() else None
+        return Coordinates(self.x + 1, self.y)
 
     def top(self):
-        result = Coordinates(self.x, self.y + 1)
-        return result if result.valid() else None
+        return Coordinates(self.x, self.y + 1)
 
     def bottom(self):
-        result = Coordinates(self.x, self.y - 1)
-        return result if result.valid() else None
+        return Coordinates(self.x, self.y - 1)
 
     def top_left(self):
-        try:
-            return self.left().top()
-        except:
-            pass
+        return self.left().top()
 
     def top_right(self):
-        try:
-            return self.right().top()
-        except:
-            pass
+        return self.right().top()
 
     def bottom_left(self):
-        try:
-            return self.left().bottom()
-        except:
-            pass
+        return self.left().bottom()
 
     def bottom_right(self):
-        try:
-            return self.right().bottom()
-        except:
-            pass
+        return self.right().bottom()
 
-    def valid(self):
+    def __bool__(self):
         return 0 <= self.x <= 7 and 0 <= self.y <= 7
 
     def __repr__(self):
-        index_to_letter = {0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f', 6: 'g', 7: 'h'}
-        try:
-            return "{0}{1}".format(index_to_letter[self.x], self.y + 1)
-        except:
+        if not self:
             raise InternalError("Invalid coordinates")
+        index_to_letter = {0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f', 6: 'g', 7: 'h'}
+        return "{0}{1}".format(index_to_letter[self.x], self.y + 1)
+
     def __eq__(self,other):
         if ((self.x == other.x) and (self.y == other.y)): 
             return True

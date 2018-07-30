@@ -15,12 +15,12 @@ class TestAll(unittest.TestCase):
         self.assertEqual(str(coord), word)
 
         a1 = Coordinates.from_string('a1')
-        self.assertEqual(a1.left(), None)
-        self.assertTrue(a1.valid())
+        self.assertFalse(a1.left())
+        self.assertTrue(str(a1.right()))
         self.assertEqual(str(a1.right()), 'b1')
-        self.assertEqual(a1.bottom(), None)
+        self.assertFalse(a1.bottom())
         self.assertEqual(str(a1.top()), 'a2')
-        self.assertEqual(a1.top_left(), None)
+        self.assertFalse(a1.top_left())
         self.assertEqual(str(a1.top_right()), 'b2')
 
 

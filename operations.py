@@ -61,12 +61,14 @@ class NotBeatingSameColor(object):
             return True
         else:
             return False
+
+
 class NotCrossingOccupiesField(object):
     def __init__(self,board,initial_position):
         pass
     def __call__(self,final_position):
         return True
-        
+
 
 
 def possible_moves(board, position, player_color, previous_move):
@@ -91,16 +93,17 @@ def possible_moves(board, position, player_color, previous_move):
     return moves
 
 
-
 def raw_possible_moves_pawn(position):
     pass
 
+
 def raw_possible_moves_king(position):
     return list(filter(
-        lambda x: x is not None,
+        bool,
         [position.left(), position.right(), position.top(), position.bottom(),
          position.top_left(), position.top_right(), position.bottom_left(), position.bottom_right()]
     ))
+
 
 def raw_possible_moves_rook(position):
     x,y = position.x,position.y
@@ -122,11 +125,15 @@ def raw_possible_moves_rook(position):
         full.append(cord)
         cord = cord.bottom()
     return full
+
+
 def raw_possible_moves_knight(position):
     return list(filter(
         lambda x: x is not None,
         [position.top().top_right(),position.top().top_left(),position.bottom().bottom_right(),position.bottom().bottom_left(),
          position.left().top_left(),position.left().bottom_left(),position.right().top_right(),position.right().bottom_right()]))
+
+
 def raw_possible_moves_bishop(position):
     x,y = position.x, position.y
     byx = x
@@ -149,6 +156,7 @@ def raw_possible_moves_bishop(position):
         full.append(cord)
         cord = cord.bottom_left()
     return full
+
 
 def raw_possible_moves_queen(position):
     full = raw_possible_moves_rook(position).extend(raw_possible_moves_bishop(position))
