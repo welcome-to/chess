@@ -25,7 +25,9 @@ class TestAll(unittest.TestCase):
 
 
     def test_possible_moves(self):
-        pass
+        king_position = Coordinates.from_string('a1')
+        moves = sorted(raw_possible_moves_king(king_position), key=lambda x: str(x))
+        self.assertEqual(list(map(str, moves)), ['a2', 'b1', 'b2'])
 
     def test_board(self):
         board = Board()
