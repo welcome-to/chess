@@ -91,10 +91,11 @@ class MainApp(App):
 	def startgame(self,button):
 		self.main.remove_widget(self.startscrean)
 		self.countofmove = 0
-		celllist = [Button(text = 'Next',background_color = [.1,.1,.1,1])]
+		celllist = [Button(text = 'Next',background_color = BUTTONCOLOR,background_normal = '')]
 
 		for i in range(8):
 			celllist.append(LabelB(text = lineof[i],bcolor = BUTTONCOLOR, font_size = 20))
+		celllist.append(LabelB(text = '',bcolor = BUTTONCOLOR))
 		
 		self.lbllist = []
 		for i in range(8):
@@ -113,11 +114,16 @@ class MainApp(App):
 				cell.add_widget(button)
 				row.append(image)
 				celllist.append(cell)
+			celllist.append(LabelB(text = str(i+1),bcolor = BUTTONCOLOR, font_size = 20))
 			self.lbllist.append(row)
+		celllist.append(LabelB(text = '',bcolor = BUTTONCOLOR))
+		for i in range(8):
+			celllist.append(LabelB(text = lineof[i],bcolor = BUTTONCOLOR, font_size = 20))
+		celllist.append(LabelB(text = '',bcolor = BUTTONCOLOR))
 		
-		self.board = GridLayout(cols = 9,size_hint = (1,1),pos_hint = {'center_x': 0.5, 'center_y': 0.5})
+		self.board = GridLayout(cols = 10,size_hint = (1,1),pos_hint = {'center_x': 0.5, 'center_y': 0.5})
 
-		for i in range(81):
+		for i in range(100):
 			self.board.add_widget(celllist[i])
 
 		self.main.add_widget(self.board)
