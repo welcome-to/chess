@@ -132,28 +132,22 @@ def raw_possible_moves_bishop(position):
     byx = x
     byy = y
     full = []
-    while  (byx < 7) and (byy < 7):
-        byx += 1
-        byy += 1
-        full.append(Coordinates(byx,byy))
-    byx = x
-    byy = y
-    while  (byx > 0) and (byy > 0):
-        byx -= 1
-        byy -= 1
-        full.append(Coordinates(byx,byy))
-    byx = x
-    byy = y
-    while  (byx < 7) and (byy > 0):
-        byx += 1
-        byy -= 1
-        full.append(Coordinates(byx,byy))
-    byx = x
-    byy = y
-    while  (byx > 0) and (byy < 7):
-        byx -= 1
-        byy += 1
-        full.append(Coordinates(byx,byy))
+    cord = position.top_right()
+    while not(cord is None):
+        full.append(cord)
+        cord = cord.top_right()
+    cord = position.bottom_right()
+    while not(cord is None):
+        full.append(cord)
+        cord = cord.bottom_right()
+    cord = position.top_left()
+    while not(cord is None):
+        full.append(cord)
+        cord = cord.top_left()
+    cord = position.bottom_left()
+    while not(cord is None):
+        full.append(cord)
+        cord = cord.bottom_left()
     return full
 
 def raw_possible_moves_queen(position):
