@@ -18,7 +18,7 @@ BLACK_WIN = 1
 TIE = 2
 
 WHITE_WIN_IMAGE = 'img/kkk.jpg'
-BLACK_WIN_IMAGE = 'img/mandela.jpg'
+BLACK_WIN_IMAGE = 'img/black.jpg'
 TIE_IMAGE = 'tie.jpg'
 
 lineof = ['A','B','C','D','E','F','G','H']
