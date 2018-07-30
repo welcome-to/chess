@@ -3,7 +3,7 @@ import unittest
 from board import Board, Coordinates
 from const import *
 
-from operations import raw_possible_moves_king
+from operations import raw_possible_moves_king, raw_possible_moves_knight
 
 
 class TestAll(unittest.TestCase):
@@ -25,9 +25,20 @@ class TestAll(unittest.TestCase):
 
 
     def test_possible_moves(self):
-        king_position = Coordinates.from_string('a1')
-        moves = sorted(raw_possible_moves_king(king_position), key=lambda x: str(x))
+        # king
+        moves = sorted(raw_possible_moves_king(Coordinates.from_string('a1')), key=lambda x: str(x))
         self.assertEqual(list(map(str, moves)), ['a2', 'b1', 'b2'])
+
+        # knight
+        moves = sorted(raw_possible_moves_knight(Coordinates.from_string('b1')), key=lambda x: str(x))
+        self.assertEqual(list(map(str, moves)), ['a3', 'c3', 'd2'])
+
+        moves = sorted(raw_possible_moves_knight(Coordinates.from_string('a1')), key=lambda x: str(x))
+        self.assertEqual(list(map(str, moves)), ['b3', 'c2'])
+
+        moves = sorted(raw_possible_moves_knight(Coordinates.from_string('c3')), key=lambda x: str(x))
+        self.assertEqual(list(map(str, moves)), ['a2', 'a4', 'b1', 'b5', 'd1', 'd5', 'e2', 'e4'])
+
 
     def test_board(self):
         board = Board()

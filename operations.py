@@ -129,9 +129,10 @@ def raw_possible_moves_rook(position):
 
 def raw_possible_moves_knight(position):
     return list(filter(
-        lambda x: x is not None,
+        bool,
         [position.top().top_right(),position.top().top_left(),position.bottom().bottom_right(),position.bottom().bottom_left(),
-         position.left().top_left(),position.left().bottom_left(),position.right().top_right(),position.right().bottom_right()]))
+         position.left().top_left(),position.left().bottom_left(),position.right().top_right(),position.right().bottom_right()]
+    ))
 
 
 def raw_possible_moves_bishop(position):
