@@ -28,6 +28,7 @@ class HumanPlayer(Algorithm):
 
 class GameProcessor(object):
     FILE_PATTERN = "./logs/game_{0}"
+    self.logdir = open(LOGDIR,'w')
 
     def __init__(self):
         self.board = Board()
@@ -64,7 +65,10 @@ class GameProcessor(object):
         convert_pawns(self.board)
         self.boards.append(deepcopy(self.board))
 
+
         self.current_player, self.next_player = self.next_player, self.current_player
+        if self.log:
+            self.logdir.write(command.upper())
 
     def game_result(self):
         if self.technical_winner is not None:
@@ -78,7 +82,7 @@ class GameProcessor(object):
         else:
             self.technical_winner = WHITE
     def savelog(self,bool):
-        pass
+        self.log = bool
 
 
 
