@@ -3,7 +3,10 @@ from const import *
 from exception import InvalidMove, InternalError, NotImplementedError
 from operations import game_status, is_correct, convert_pawns, make_castling
 
+import os
+
 from copy import deepcopy
+from datetime import datetime
 
 
 class Algorithm(object):
@@ -27,10 +30,15 @@ class HumanPlayer(Algorithm):
 
 
 class GameProcessor(object):
-    FILE_PATTERN = "./logs/game_{0}"
+    FILE_PATTERN = "log.txt.{0}"
 
     def __init__(self):
-        self.logdir = open(LOGDIR,'w')
+        if not os.path.exists(LOGDIR):
+            os.mkdir(LOGDIR)
+        self.log_file = open(
+            os.path.join(LOGDIR, GameProcessor.FILE_PATTERN.format(datetime.now().strftime("%Y-%m-%d-%H:%M:%S"))), 'w'
+        )
+
         self.board = Board()
         self.log = False
         self.boards = []
