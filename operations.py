@@ -17,7 +17,9 @@ def is_correct(turn, board, player_color):
     if ((figure is None) or (figure.color != player_color)):
         return False
     listofmoves = possible_moves(board,turn.start,player_color,None)
-    if not (turn.end in listofmoves):
+    print(str(turn.end))
+    print(list(map(str,listofmoves)))
+    if not turn.end in listofmoves:
         return False
     return True
 

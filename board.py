@@ -83,6 +83,10 @@ class Coordinates(object):
             return "{0}{1}".format(index_to_letter[self.x], self.y + 1)
         except:
             raise InternalError("Invalid coordinates")
+    def __eq__(self,other):
+        if ((self.x == other.x) and (self.y == other.y)): 
+            return True
+        return False
 
 
 class Board(object):
