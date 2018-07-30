@@ -45,7 +45,7 @@ class Cell(FloatLayout):
 	bcolor = ListProperty([1,1,1,1])
 class ButtonRC(Button):
 	def loadroadandcolumn(self,row,column):
-		self.coordinates = Coordinates(row,column)
+		self.coordinates = Coordinates(column,row)
 	def getrowandcolumn(self):
 		return self.coordinates
 	
