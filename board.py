@@ -104,7 +104,7 @@ class Board(object):
         self.data[position.y][position.x] = figure
 
     def pop(self, position):
-        figure = self.figure_on_position(position.x, position.y)
+        figure = self.figure_on_position(position)
         if figure is None:
             raise InvalidMove("No figure at {0}".format(start))
         self.data[position.y][position.x] = None
@@ -114,9 +114,7 @@ class Board(object):
         figure = self.pop(start)
         self.put(end, figure)
 
-    def figure_on_position(self, x, y):
-        return self.data[y][x]
-    def figure_on_position1(self,coordinates):
+    def figure_on_position(self,coordinates):
         return self.data[coordinates.x][coordinates.y]
 
     def all_figures(self):

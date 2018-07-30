@@ -13,7 +13,7 @@ def is_correct(turn, board, player_color):
     if turn.is_roque:
         return True
 
-    figure = board.figure_on_position1(turn.start)
+    figure = board.figure_on_position(turn.start)
     if ((figure is None) or (figure.color != player_color)):
         return False
     listofmoves = possible_moves(board,turn.start,player_color,None)
@@ -26,11 +26,11 @@ def is_correct(turn, board, player_color):
 
 def convert_pawns(board):
     for i in range(8):
-        figure = board.figure_on_position(i, 7)
+        figure = board.figure_on_position(Coordinatees(i, 7))
         if figure is not None and figure.type == PAWN: # it can be only white
             board.data[7][i] = Figure(WHITE, QUEEN)
 
-        figure = board.figure_on_position(i, 0)
+        figure = board.figure_on_position(Coordinatees(i, 0))
         if figure is not None and figure.type == PAWN:
             board.data[0][i] = Figure(BLACK, QUEEN)
 
@@ -47,7 +47,7 @@ def make_castling(board, king_move):
 # this is a class-functor. it can be used as a function: instance(arg) === __call__(self, arg).
 class NotBeatingSameColor(object):
     def __init__(self, board, initial_position):
-        figurecolor = board.figure_on_position1(initial_position).color
+        figurecolor = board.figure_on_position(initial_position).color
         if figurecolor == WHITE:
             figureset = board.white_figures()
         else:
@@ -72,7 +72,7 @@ class NotCrossingOccupiedField(object):
 
 
 def possible_moves(board, position, player_color, previous_move):
-    figure = board.figure_on_position1(position)
+    figure = board.figure_on_position(position)
     if figure is None:
         return []
 
@@ -116,19 +116,19 @@ def raw_possible_moves_king(position):
 def raw_possible_moves_rook(position,board):
     full = []
     coord = position.right()
-    while coord:
+    while bool(coord):
         full.append(coord)
         coord = coord.right()
     coord = position.left()
-    while coord:
+    while bool(coord):
         full.append(coord)
         coord = coord.left()
     coord = position.top()
-    while coord:
+    while bool(coord):
         full.append(coord)
         coord = coord.top()
     coord = position.bottom()
-    while coord:
+    while bool(coord):
         full.append(coord)
         coord = coord.bottom()
     return full
@@ -145,19 +145,19 @@ def raw_possible_moves_knight(position,board):
 def raw_possible_moves_bishop(position,board):
     full = []
     coord = position.top_right()
-    while coord:
+    while bool(coord):
         full.append(coord)
         coord = coord.top_right()
     coord = position.bottom_right()
-    while coord:
+    while bool(coord):
         full.append(coord)
         coord = coord.bottom_right()
     coord = position.top_left()
-    while coord:
+    while bool(coord):
         full.append(coord)
         coord = coord.top_left()
     coord = position.bottom_left()
-    while coord:
+    while bool(coord):
         full.append(coord)
         coord = coord.bottom_left()
     return full
