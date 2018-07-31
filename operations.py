@@ -99,30 +99,41 @@ def possible_moves(board, position, player_color, previous_move):
     return moves
 
 
-def raw_possible_moves_pawn(position,board):
+class TryEat(object):
+    def __init__(self, board, color):
+        self.board = board
+        self.color = color
+
+    def __call__(self, position):
+        figure = self.board.figure_on_position(position)
+        if figure is not None and figure.color != self.color:
+            return position
+
+
+def raw_possible_moves_pawn(position, board):
     pawn = board.figure_on_position(position)
     full = []
+    try_eat = TryEat(board, pawn.color)
     if pawn.color == BLACK:
-        full.append(position.top())
-        if not pawn.has_moved:
-            full.append(position.top().top())
-        if not board.figure_on_position(position.top_left()) is None:
-            if board.figure_on_position(position.top_left()).color == WHITE:
-                full.append(position.top_left())
-        if not board.figure_on_position(position.top_right()) is None:
-            if board.figure_on_position(position.top_right()).color == WHITE:
-                full.append(position.top_right())
+        if position.bottom() and board.figure_on_position(position.bottom()) is None:
+            full.append(position.bottom())
+            if not pawn.has_moved and board.figure_on_position(position.bottom().bottom()) is None:
+                full.append(position.bottom().bottom())
+        full += list(filter(
+            lambda x: x is not None,
+            map(try_eat, [position.bottom_left(), position.bottom_right()])
+        ))
     else:
-        print(2)
-        full.append(position.top())
-        if not pawn.has_moved:
-            full.append(position.bottom().bottom())
-        if not board.figure_on_position(position.bottom_left()) is None:
-            if board.figure_on_position(position.bottom_left()).color == BLACK:
-                full.append(position.bottom_left())
-        if not board.figure_on_position(position.bottom_right()) is None:
-            if board.figure_on_position(position.bottom_right()).color == BLACK:
-                full.append(position.bottom_right())
+        if position.top() and board.figure_on_position(position.top()) is None:
+            full.append(position.top())
+            if not pawn.has_moved and board.figure_on_position(position.top().top()) is None:
+                full.append(position.top().top())
+        full += list(filter(
+            lambda x: x is not None,
+            map(try_eat, [position.top_left(), position.top_right()])
+        ))
+    print("Possible moves for pawn: {0}".format(full))
+    return full
 
 
 def raw_possible_moves_king(position,board):

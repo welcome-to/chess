@@ -113,9 +113,11 @@ class Board(object):
     def move(self, start, end):
         figure = self.pop(start)
         self.put(end, figure)
+        figure.has_moved = True
 
-    def figure_on_position(self,coordinates):
-        return self.data[coordinates.x][coordinates.y]
+    def figure_on_position(self, coordinates):
+        #print ("Coordinates given: {0}".format(coordinates))
+        return self.data[coordinates.y][coordinates.x]
 
     def all_figures(self):
         all_figures = []
