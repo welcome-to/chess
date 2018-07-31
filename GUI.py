@@ -47,7 +47,7 @@ class MainApp(App):
 		                   size_hint = [0.25,0.1],
 		                   pos_hint = {'center_x': 0.5, 'center_y': 0.5})
 
-		loging    = Button(text = 'Save game log',
+		self.loging= Button(text = 'Save game log',
 		                   on_press = self.log,
 		                   background_normal = '',
 		                   background_color = BUTTONCOLOR,
@@ -66,7 +66,7 @@ class MainApp(App):
 		self.startscrean.add_widget(welcome)
 		self.startscrean.add_widget(startgame)
 		self.startscrean.add_widget(exit)
-		self.startscrean.add_widget(loging)
+		self.startscrean.add_widget(self.loging)
 		self.main = FloatLayout()
 		self.main.add_widget(self.startscrean)
 		

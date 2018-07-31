@@ -33,11 +33,7 @@ class GameProcessor(object):
     FILE_PATTERN = "log.txt.{0}"
 
     def __init__(self):
-        if not os.path.exists(LOGDIR):
-            os.mkdir(LOGDIR)
-        self.log_file = open(
-            os.path.join(LOGDIR, GameProcessor.FILE_PATTERN.format(datetime.now().strftime("%Y-%m-%d-%H:%M:%S"))), 'w'
-        )
+        
 
         self.board = Board()
         self.log = False
@@ -77,7 +73,9 @@ class GameProcessor(object):
 
         self.current_player, self.next_player = self.next_player, self.current_player
         if self.log:
-            self.logdir.write(command.upper())
+            print(1)
+            print(str(command[0]).upper()+str(command[1]).upper())
+            self.log_file.write(str(command[0]).upper()+str(command[1]).upper())
 
     def game_result(self):
         if self.technical_winner is not None:
@@ -92,6 +90,12 @@ class GameProcessor(object):
             self.technical_winner = WHITE
     def savelog(self,bool):
         self.log = bool
+        if self.log:
+            if not os.path.exists(LOGDIR):
+                os.mkdir(LOGDIR)
+            self.log_file = open(
+                os.path.join(LOGDIR, GameProcessor.FILE_PATTERN.format(datetime.now().strftime("%Y-%m-%d-%H:%M:%S"))), 'w'
+                )
 
 
 

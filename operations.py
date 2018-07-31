@@ -132,11 +132,10 @@ def raw_possible_moves_pawn(position, board):
             lambda x: x is not None,
             map(try_eat, [position.top_left(), position.top_right()])
         ))
-    print("Possible moves for pawn: {0}".format(full))
     return full
 
 
-def raw_possible_moves_king(position,board):
+def raw_possible_moves_king(position):
     return list(filter(
         bool,
         [position.left(), position.right(), position.top(), position.bottom(),
