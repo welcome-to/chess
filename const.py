@@ -29,8 +29,7 @@ FON2 ='img/fon2.jpg'
 
 lineof = ['A','B','C','D','E','F','G','H']
 
-castling_types = {'e1g1': 'h1f1', 'e1c1': 'a1d1', 'e8g8': 'h8f8', 'e8c8': 'a8d8'}
-KING_MOVE  = ['e1g1','e1c1','e8g8','e8c8']
+CASTLING_TYPES = {'e1g1': 'h1f1', 'e1c1': 'a1d1', 'e8g8': 'h8f8', 'e8c8': 'a8d8'}
 
 INDEX_TO_LATTER = {0:'a',
 1 : 'b',

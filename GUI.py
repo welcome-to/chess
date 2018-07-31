@@ -188,8 +188,7 @@ class MainApp(App):
 			self.coord =button.getrowandcolumn()
 		else:
 			coord = button.getrowandcolumn()
-			move = (self.coord, coord) 
-			make_turn(self.gp, move)
+			self.gp.make_turn(self.coord, coord)
 			boardlist = board(self.gp)
 			for i in range(8):
 				for j in range(8):

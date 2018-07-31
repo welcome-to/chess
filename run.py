@@ -41,13 +41,13 @@ class GameProcessor(object):
 
         self.technical_winner = None
 
-    # `turn' is a line, either like `e2e4' or like `re1h1'
-    def make_turn(self, command):
+    # `start, end' are two Coordinates objects
+    def make_turn(self, start, end):
         try:
-            if (str(command[0])+str(command[1])) in KING_MOVE:
-                turn = Move(command, is_roque = True)
+            if (str(start)+str(end)) in CASTLING_TYPES.keys():
+                turn = Move(start, end, is_roque = True)
             else:
-                turn = Move(command)
+                turn = Move(start, end)
         except:
             self._run_technical_defeat()
             return
@@ -96,7 +96,6 @@ class GameProcessor(object):
             self.log_file = open(
                 os.path.join(LOGDIR, LOG_FILE_PATTERN.format(datetime.now().strftime("%Y-%m-%d-%H:%M:%S"))), 'w'
             )
-
 
 
 def play(first, second):

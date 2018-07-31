@@ -34,7 +34,8 @@ def convert_pawns(board):
 
 
 def make_castling(board, king_move):
-    rook_move = Move(castling_types[str(king_move)])
+    rook_move = CASTLING_TYPES[str(king_move)]
+    rook_move = Move(*map(Coordinates.from_string, [rook_move[:2], rook_move[2:]]))
     try:
         board.move(rook_move.start, rook_move.end)
         board.move(king_move.start, king_move.end)
