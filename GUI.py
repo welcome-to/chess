@@ -98,7 +98,10 @@ class MainApp(App):
 
 
 	def startgame(self,button):
-		self.main.remove_widget(self.startscrean)
+		try:
+			self.main.remove_widget(self.startscrean)
+		except:
+			pass
 		self.countofmove = 0
 		celllist = [LabelB(text = '',bcolor = BACKGROUND)]
 
@@ -158,8 +161,11 @@ class MainApp(App):
 
 
 		self.main.add_widget(self.gameplay)
-	def Restart(self,button):
-		pass
+	def Restart(self,btn):
+		del self.gp
+		self.gp = GameProcessor()
+		self.main.remove_widget(self.gameplay)
+		self.startgame(Button())
 
 	def gameover(self,reason):
 		self.main.remove_widget(self.gameplay)
