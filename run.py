@@ -30,11 +30,7 @@ class HumanPlayer(Algorithm):
 
 
 class GameProcessor(object):
-    FILE_PATTERN = "log.txt.{0}"
-
     def __init__(self):
-        
-
         self.board = Board()
         self.log = False
         self.boards = []
@@ -44,7 +40,6 @@ class GameProcessor(object):
         self.next_player = BLACK
 
         self.technical_winner = None
-        #self.log_file = open(FILE_PATTERN.format(datetime.utcnow().strftime("%Y-%m-%d-%H:%M:%s")), "w")
 
     # `turn' is a line, either like `e2e4' or like `re1h1'
     def make_turn(self, command):
@@ -88,14 +83,19 @@ class GameProcessor(object):
             self.technical_winner = BLACK
         else:
             self.technical_winner = WHITE
+
+    # for debug purposes
+    def __del__(self):
+        print("Destructor called")
+
     def savelog(self,bool):
         self.log = bool
         if self.log:
             if not os.path.exists(LOGDIR):
                 os.mkdir(LOGDIR)
             self.log_file = open(
-                os.path.join(LOGDIR, GameProcessor.FILE_PATTERN.format(datetime.now().strftime("%Y-%m-%d-%H:%M:%S"))), 'w'
-                )
+                os.path.join(LOGDIR, LOG_FILE_PATTERN.format(datetime.now().strftime("%Y-%m-%d-%H:%M:%S"))), 'w'
+            )
 
 
 

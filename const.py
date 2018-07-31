@@ -90,5 +90,4 @@ sourcelist = [
 
 
 LOGDIR = 'logs'
-
-
+LOG_FILE_PATTERN = "log.txt.{0}"
