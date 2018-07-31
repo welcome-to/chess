@@ -6,6 +6,14 @@ from const import *
 from operations import raw_possible_moves_king, raw_possible_moves_knight, raw_possible_moves_rook, raw_possible_moves_bishop, raw_possible_moves_queen
 
 
+def empty_board():
+    board = Board()
+    for i in range(8):
+        for j in range(8):
+            board.put(Coordinates(i, j), None)
+    return board
+
+
 class TestAll(unittest.TestCase):
     def test_coordinates(self):
         word = 'e2'
@@ -43,18 +51,18 @@ class TestAll(unittest.TestCase):
         self.assertEqual(list(map(str, moves)), ['a2', 'a4', 'b1', 'b5', 'd1', 'd5', 'e2', 'e4'])
 
         # rook
-        moves = sorted(raw_possible_moves_rook(Coordinates.from_string('d3')), key=lambda x: str(x))
+        moves = sorted(raw_possible_moves_rook(Coordinates.from_string('d3'), empty_board()), key=lambda x: str(x))
         self.assertEqual(list(map(str, moves)), ['a3', 'b3', 'c3', 'd1', 'd2', 'd4', 'd5', 'd6', 'd7', 'd8', 'e3', 'f3', 'g3', 'h3'])
 
         # bishop
-        moves = sorted(raw_possible_moves_bishop(Coordinates.from_string('a3')), key=lambda x: str(x))
+        moves = sorted(raw_possible_moves_bishop(Coordinates.from_string('a3'), empty_board()), key=lambda x: str(x))
         self.assertEqual(list(map(str, moves)), ['b2', 'b4', 'c1', 'c5', 'd6', 'e7', 'f8'])
 
-        moves = sorted(raw_possible_moves_bishop(Coordinates.from_string('h1')), key=lambda x: str(x))
+        moves = sorted(raw_possible_moves_bishop(Coordinates.from_string('h1'), empty_board()), key=lambda x: str(x))
         self.assertEqual(list(map(str, moves)), ['a8', 'b7', 'c6', 'd5', 'e4', 'f3', 'g2'])
 
         # queen
-        moves = sorted(raw_possible_moves_queen(Coordinates.from_string('e1')), key=lambda x: str(x))
+        moves = sorted(raw_possible_moves_queen(Coordinates.from_string('e1'), empty_board()), key=lambda x: str(x))
         self.assertEqual(list(map(str, moves)), ['a1', 'a5', 'b1', 'b4', 'c1', 'c3', 'd1', 'd2', 'e2', 'e3', 'e4', 'e5', 'e6', 'e7', 'e8', 'f1', 'f2', 'g1', 'g3', 'h1', 'h4'])
 
 
