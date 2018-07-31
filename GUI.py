@@ -20,7 +20,7 @@ from board import Coordinates
 
 # Window configuration
 Config.set('graphics','resizable','0')
-Config.set('graphics','width','600')
+Config.set('graphics','width','1200')
 Config.set('graphics','height','600')
 
 
@@ -34,18 +34,25 @@ class MainApp(App):
 		self.startscrean = FloatLayout(size_hint = (1,1),
 		                               pos_hint = {'center_x': 0.5, 'center_y': 0.5})
 
-		welcome   = LabelB(text = 'Welcome to Chess',
-		                   size_hint = [2,2],
-		                   pos_hint = {'center_x': 0.5, 'center_y': 0.6},
-		                   bcolor = [.8,.7,.6,1])
+		background   = Image(source = FON,
+		                   size_hint = [1,1],
+		                   pos_hint = {'center_x': 0.5, 'center_y': 0.5},
+		                   allow_stretch = True)
 
+		game = LabelB(text = 'Chess game',
+			          size_hint = [0.15,0.1],
+			          pos_hint ={'center_x': 0.7, 'center_y': 0.8},
+			          color = [0,0,0,1],
+			          bcolor = [0,0,0,0],
+			          font_name = FONT,
+			          font_size = 120)
 		startgame = Button(text = 'Start game',
 		                   on_press = self.startgame,
 		                   background_normal = '',
 		                   background_color = BUTTONCOLOR,
 		                   color = [0,0,0,1],
 		                   size_hint = [0.25,0.1],
-		                   pos_hint = {'center_x': 0.5, 'center_y': 0.5})
+		                   pos_hint = {'center_x': 0.70, 'center_y': 0.5})
 
 		self.loging= Button(text = 'Save game log',
 		                   on_press = self.log,
@@ -53,7 +60,7 @@ class MainApp(App):
 		                   background_color = BUTTONCOLOR,
 		                   color = [0,0,0,1],
 		                   size_hint = [0.25,0.1],
-		                   pos_hint = {'center_x': 0.5, 'center_y': 0.39})
+		                   pos_hint = {'center_x': 0.70, 'center_y': 0.39})
 
 		exit      = Button(text = 'Exit',
 		                   on_press = self.leave,
@@ -61,9 +68,10 @@ class MainApp(App):
 		                   background_color = BUTTONCOLOR,
 		                   color = [0,0,0,1],
 		                   size_hint = [0.25,0.1],
-		                   pos_hint = {'center_x': 0.5, 'center_y': 0.28})
+		                   pos_hint = {'center_x': 0.70, 'center_y': 0.28})
 
-		self.startscrean.add_widget(welcome)
+		self.startscrean.add_widget(background)
+		self.startscrean.add_widget(game)
 		self.startscrean.add_widget(startgame)
 		self.startscrean.add_widget(exit)
 		self.startscrean.add_widget(self.loging)

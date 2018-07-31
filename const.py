@@ -4,7 +4,7 @@ BLACK = 1
 
 COLOROFCELL1 = [1,0,0,1]
 COLOROFCELL2 = [.8,.7,.6,1]
-BUTTONCOLOR = [.3,.5,.7,1]
+BUTTONCOLOR = [248/255,176/255,152/255,0.6]
 
 PAWN = 'PAWN'
 ROOK = 'ROOK'
@@ -19,7 +19,9 @@ TIE = 2
 
 WHITE_WIN_IMAGE = 'img/kkk.jpg'
 BLACK_WIN_IMAGE = 'img/black.jpg'
-TIE_IMAGE = 'tie.jpg'
+TIE_IMAGE = 'img/tie.jpg'
+FON = 'img/fon.jpg'
+FONT = 'img/11997.ttf'
 
 lineof = ['A','B','C','D','E','F','G','H']
 
