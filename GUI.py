@@ -100,16 +100,16 @@ class MainApp(App):
 	def startgame(self,button):
 		self.main.remove_widget(self.startscrean)
 		self.countofmove = 0
-		celllist = [Button(text = 'Next',background_color = BUTTONCOLOR,background_normal = '')]
+		celllist = [LabelB(text = '',bcolor = BACKGROUND)]
 
 		for i in range(8):
-			celllist.append(LabelB(text = lineof[i],bcolor = BUTTONCOLOR, font_size = 20))
-		celllist.append(LabelB(text = '',bcolor = BUTTONCOLOR))
+			celllist.append(LabelB(text = lineof[i],bcolor = BACKGROUND, font_size = 20))
+		celllist.append(LabelB(text = '',bcolor = BACKGROUND))
 		
 		self.lbllist = []
 		for i in range(8):
 			row = []
-			celllist.append(LabelB(text = str(i+1),bcolor = BUTTONCOLOR, font_size = 20))
+			celllist.append(LabelB(text = str(i+1),bcolor = BACKGROUND, font_size = 20))
 			for j in range(8):
 				if (i + j) % 2 == 0:
 					colorB = COLOROFCELL1
@@ -134,23 +134,31 @@ class MainApp(App):
 				celllist.append(cell)
 
 			celllist.append(LabelB(text = str(i+1),
-				                   bcolor = BUTTONCOLOR,
+				                   bcolor = BACKGROUND,
 				                   font_size = 20))
 			self.lbllist.append(row)
-		celllist.append(LabelB(text = '',bcolor = BUTTONCOLOR))
+		celllist.append(LabelB(text = '',bcolor = BACKGROUND))
 		for i in range(8):
-			celllist.append(LabelB(text = lineof[i],bcolor = BUTTONCOLOR, font_size = 20))
-		celllist.append(LabelB(text = '',bcolor = BUTTONCOLOR))
+			celllist.append(LabelB(text = lineof[i],bcolor = BACKGROUND, font_size = 20))
+		celllist.append(LabelB(text = '',bcolor = BACKGROUND))
 		
-		self.board = GridLayout(cols = 10,size_hint = (1,1),pos_hint = {'center_x': 0.5, 'center_y': 0.5})
+		board = GridLayout(cols = 10,size_hint = (1,1),pos_hint = {'center_x': 0.5, 'center_y': 0.5})
 
 		for i in range(100):
-			self.board.add_widget(celllist[i])
+			board.add_widget(celllist[i])
 
-		self.main.add_widget(self.board)
+		self.gameplay = FloatLayout(size_hint = [0.5,1], pos_hint = {'center_x': 0.5, 'center_y': 0.5})
+		self.gameplay.add_widget(LabelB(text = '',bcolor = BACKGROUND1,size_hint = [2,2],pos_hint = {'center_x': 0.5, 'center_y': 0.5}))
+		self.gameplay.add_widget(Button(text = 'Next Move',on_press = self.movement,size_hint = [0.35,0.1], pos_hint = {'center_x':1.25,'center_y':0.9},background_color = BUTTONCOLOR1,background_normal = ''))
+		self.gameplay.add_widget(board)
+
+
+
+
+		self.main.add_widget(self.gameplay)
 
 	def gameover(self,reason):
-		self.main.remove_widget(self.board)
+		self.main.remove_widget(self.gameplay)
 		if reason == WHITE_WIN:
 			source = WHITE_WIN_IMAGE
 			text = 'You win like a real white man'
