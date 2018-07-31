@@ -45,7 +45,7 @@ class MainApp(App):
 			          color = [0,0,0,1],
 			          bcolor = [0,0,0,0],
 			          font_name = FONT,
-			          font_size = 120)
+			          font_size = 100)
 		startgame = Button(text = 'Start game',
 		                   on_press = self.startgame,
 		                   background_normal = '',
@@ -148,14 +148,18 @@ class MainApp(App):
 			board.add_widget(celllist[i])
 
 		self.gameplay = FloatLayout(size_hint = [0.5,1], pos_hint = {'center_x': 0.5, 'center_y': 0.5})
-		self.gameplay.add_widget(LabelB(text = '',bcolor = BACKGROUND1,size_hint = [2,2],pos_hint = {'center_x': 0.5, 'center_y': 0.5}))
+		self.gameplay.add_widget(Image(source = FON2,size_hint = [2,2],pos_hint = {'center_x': 0.5, 'center_y': 0.5},allow_stretch = True))
 		self.gameplay.add_widget(Button(text = 'Next Move',on_press = self.movement,size_hint = [0.35,0.1], pos_hint = {'center_x':1.25,'center_y':0.9},background_color = BUTTONCOLOR1,background_normal = ''))
+		self.gameplay.add_widget(Button(text = 'Quit',on_press = self.leave,size_hint = [0.35,0.1], pos_hint = {'center_x':1.25,'center_y':0.66},background_color = BUTTONCOLOR1,background_normal = ''))		
+		self.gameplay.add_widget(Button(text = 'Restart',on_press = self.Restart,size_hint = [0.35,0.1], pos_hint = {'center_x':1.25,'center_y':0.78},background_color = BUTTONCOLOR1,background_normal = ''))
 		self.gameplay.add_widget(board)
 
 
 
 
 		self.main.add_widget(self.gameplay)
+	def Restart(self,button):
+		pass
 
 	def gameover(self,reason):
 		self.main.remove_widget(self.gameplay)
