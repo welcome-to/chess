@@ -3,7 +3,7 @@ import unittest
 from board import Board, Coordinates
 from const import *
 
-from operations import raw_possible_moves_king, raw_possible_moves_knight, raw_possible_moves_rook, raw_possible_moves_bishop, raw_possible_moves_queen
+from operations import raw_possible_moves_king, raw_possible_moves_knight, raw_possible_moves_rook, raw_possible_moves_bishop, raw_possible_moves_queen, raw_possible_moves_pawn
 
 
 def empty_board():
@@ -75,6 +75,10 @@ class TestAll(unittest.TestCase):
 
         moves = sorted(raw_possible_moves_queen(Coordinates.from_string('d1'), self.full_board), key=lambda x: str(x))
         self.assertEqual(list(map(str, moves)), ['c1', 'c2', 'd2', 'e1', 'e2'])
+
+        # pawn
+        moves = sorted(raw_possible_moves_pawn(Coordinates.from_string('h7'), self.full_board), key=lambda x: str(x))
+        self.assertEqual(list(map(str, moves)), ['h5', 'h6'])
 
         # all possible moves
         
