@@ -5,19 +5,41 @@ from copy import deepcopy
 
 
 # has the game finished with a result? return this result if yes
+# current_player: the one whose turn is next
 def game_status(board, current_player):
-    return None
+    all_moves = possible_moves(board, current_player, None)
+    if all_moves: # there are moves, so the game is not over
+        return None
+
+    if current_player == WHITE:
+        enemy_color = BLACK
+        king_position = board.white_king()
+    else:
+        enemy_color = WHITE
+        king_position = board.black_king()
+
+    enemy_moves = possible_moves(board, enemy_color, None)
+    if list(filter(lambda item: item[0] == king_position), enemy_moves): # king can be eaten. checkmate
+        if current_player == WHITE:
+            return BLACK_WIN
+        return WHITE_WIN
+
+    # king is safe. stalemate
+    return TIE
 
 
 # is the `turn' correct at this position?
 def is_correct(turn, board, player_color):
     if turn.is_roque:
+        # 1. Check there are no extra figures.
+        # 2. Check the figures haven't moved.
+        # 3. Check the king's way is not under attack.
         return True
 
     figure = board.figure_on_position(turn.start)
     if ((figure is None) or (figure.color != player_color)):
         return False
-    listofmoves = possible_moves(board,turn.start,player_color,None)
+    listofmoves = possible_moves_from_position(board,turn.start,player_color,None) # FIXME: wtf None
     is_kamikadze = IsKamikadze(board,turn.start)
     moves = filter(is_kamikadze, listofmoves)
 
@@ -78,20 +100,30 @@ class IsKamikadze(object):
             self.figure_set = board.black_figures()
             self.king_pos = board.white_king()
             self.enemy_color = BLACK
-        print("King position: " + str(self.king_pos))
         self.figure = board.figure_on_position(initial_position)
         self.board.pop(initial_position)
 
     def __call__(self,final_position):
         self.board.put(final_position,self.figure)
         for i in self.figure_set:
-            if self.king_pos in possible_moves(self.board,i[1],self.enemy_color,None):
+            if self.king_pos in possible_moves_from_position(self.board,i[1],self.enemy_color,None):
                 print ("Figure in position {0} will eat our beloved James LVII".format(str(i[1])))
                 return True
         return False
 
 
-def possible_moves(board, position, player_color, previous_move):
+def possible_moves(board, player_color, previous_move):
+    figures = board.white_figures() if player_color == WHITE else board.black_figures()
+    return sum(
+        map(
+            lambda item: [(item[0], boo) for boo in item[1]],
+            [(start[1], possible_moves_from_position(board, start[1], player_color, previous_move)) for start in figures]
+        ),
+        []
+    )
+
+
+def possible_moves_from_position(board, position, player_color, previous_move):
     figure = board.figure_on_position(position)
 
     if figure is None:
@@ -117,7 +149,7 @@ def possible_moves(board, position, player_color, previous_move):
     not_beating_same_color = NotBeatingSameColor(board, position)
 
     moves = type_to_handler[figure.type](*given_args[figure.type])
-    moves = filter(not_beating_same_color, moves)
+    moves = list(filter(not_beating_same_color, moves))
     return moves
 
 
