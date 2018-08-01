@@ -149,18 +149,26 @@ def raw_possible_moves_rook(position,board):
     coord = position.right()
     while coord:
         full.append(coord)
+        if board.figure_on_position(coord) is not None:
+            break
         coord = coord.right()
     coord = position.left()
     while coord:
         full.append(coord)
+        if board.figure_on_position(coord) is not None:
+            break
         coord = coord.left()
     coord = position.top()
     while coord:
         full.append(coord)
+        if board.figure_on_position(coord) is not None:
+            break
         coord = coord.top()
     coord = position.bottom()
     while coord:
         full.append(coord)
+        if board.figure_on_position(coord) is not None:
+            break
         coord = coord.bottom()
     return full
 
@@ -178,22 +186,29 @@ def raw_possible_moves_bishop(position,board):
     coord = position.top_right()
     while coord:
         full.append(coord)
+        if board.figure_on_position(coord) is not None:
+            break
         coord = coord.top_right()
     coord = position.bottom_right()
     while coord:
         full.append(coord)
+        if board.figure_on_position(coord) is not None:
+            break
         coord = coord.bottom_right()
     coord = position.top_left()
     while coord:
         full.append(coord)
+        if board.figure_on_position(coord) is not None:
+            break
         coord = coord.top_left()
     coord = position.bottom_left()
     while coord:
         full.append(coord)
+        if board.figure_on_position(coord) is not None:
+            break
         coord = coord.bottom_left()
     return full
 
 
 def raw_possible_moves_queen(position,board):
     return raw_possible_moves_rook(position,board) + raw_possible_moves_bishop(position,board)
-    return full

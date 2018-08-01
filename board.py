@@ -116,8 +116,10 @@ class Board(object):
         figure.has_moved = True
 
     def figure_on_position(self, coordinates):
-        #print ("Coordinates given: {0}".format(coordinates))
-        return self.data[coordinates.y][coordinates.x]
+        try:
+            return self.data[coordinates.y][coordinates.x]
+        except:
+            raise InternalError("Received the following coordinates: x={0} y={1}. Will fail.".format(coordinates.x, coordinates.y))
 
     def all_figures(self):
         all_figures = []
