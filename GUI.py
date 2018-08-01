@@ -103,7 +103,7 @@ class MainApp(App):
 		except:
 			pass
 		try:
-			self.main.remove_widget(self.gameover)
+			self.main.remove_widget(self.Gameover)
 		except:
 			pass
 		self.countofmove = 0
@@ -212,12 +212,12 @@ class MainApp(App):
 		else:
 			source = TIE_IMAGE
 			text = 'potom'
-		self.gameover = FloatLayout()
-		self.gameover.add_widget(Image(source = source, size_hint = (1,1),pos_hint = {'center_x': 0.5,'center_y':0.4}))
-		self.gameover.add_widget(LabelB(bcolor = [0,0,0,0],text = text,size_hint = (0.3,1),pos_hint = {'center_x': 0.5,'center_y':0.9}, color = [1,0,0,1],font_size = 40))
-		self.gameover.add_widget(Button(text = 'Restart',on_press = self.Restart,background_normal = '', background_color = [.7,.8,.9,1],pos_hint = {'center_x': 0.15,'center_y':0.5},size_hint = (0.25,0.15)))
-		self.gameover.add_widget(Button(text = 'Quit',on_press = self.leave,background_normal = '', background_color = [.7,.8,.9,1],pos_hint = {'center_x': 0.85,'center_y':0.5},size_hint = (0.25,0.15)))
-		self.main.add_widget(self.gameover)
+		self.Gameover = FloatLayout()
+		self.Gameover.add_widget(Image(source = source, size_hint = (1,1),pos_hint = {'center_x': 0.5,'center_y':0.4}))
+		self.Gameover.add_widget(LabelB(bcolor = [0,0,0,0],text = text,size_hint = (0.3,1),pos_hint = {'center_x': 0.5,'center_y':0.9}, color = [1,0,0,1],font_size = 40))
+		self.Gameover.add_widget(Button(text = 'Restart',on_press = self.Restart,background_normal = '', background_color = [.7,.8,.9,1],pos_hint = {'center_x': 0.15,'center_y':0.5},size_hint = (0.25,0.15)))
+		self.Gameover.add_widget(Button(text = 'Quit',on_press = self.leave,background_normal = '', background_color = [.7,.8,.9,1],pos_hint = {'center_x': 0.85,'center_y':0.5},size_hint = (0.25,0.15)))
+		self.main.add_widget(self.Gameover)
 		print(reason)
 
 
