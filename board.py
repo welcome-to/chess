@@ -134,6 +134,10 @@ class Board(object):
 
     def black_figures(self):
         return list(filter(lambda item: item[0].color == BLACK, self.all_figures()))
+    def white_king(self):
+        return list(filter(lambda item: item[0].type == KING, self.white_figures()))[0][1]
+    def black_king(self):
+        return list(filter(lambda item: item[0].type == KING, self.black_figures()))[0][1]
 
     def __str__(self):
         return '\n'.join(reversed(

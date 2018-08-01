@@ -1,6 +1,7 @@
 from board import Figure, Move, Coordinates
 from const import *
 from exception import InternalError
+from copy import deepcopy
 
 
 # has the game finished with a result? return this result if yes
@@ -17,6 +18,9 @@ def is_correct(turn, board, player_color):
     if ((figure is None) or (figure.color != player_color)):
         return False
     listofmoves = possible_moves(board,turn.start,player_color,None)
+    is_kamikadze = IsKamikadze(board,turn.start)
+    moves = filter(is_kamikadze, listofmoves)
+
     if not turn.end in listofmoves:
         return False
     return True
@@ -62,11 +66,32 @@ class NotBeatingSameColor(object):
             return False
 
 
-class NotCrossingOccupiedField(object):
+class IsKamikadze(object):
     def __init__(self,board,initial_position):
-        pass
+        figurecolor = board.figure_on_position(initial_position).color
+        self.board = deepcopy(board)
+        if figurecolor == BLACK:
+            self.figureset = board.white_figures()
+            self.king_pos = board.black_king()
+            self.color = WHITE
+        else:
+            self.figureset = board.black_figures()
+            self.king_pos = board.white_king()
+            self.color = BLACK
+        print(str(self.king_pos))
+        self.figure = board.figure_on_position(initial_position)
+        self.board.pop(initial_position)
     def __call__(self,final_position):
+        self.board.put(final_position,self.figure)
+        for i in self.figureset:
+            if self.king_pos in possible_moves(self.board,i[1],self.color,None):
+                return False
         return True
+
+
+
+
+
 
 
 
@@ -94,12 +119,10 @@ def possible_moves(board, position, player_color, previous_move):
     }
 
     not_beating_same_color = NotBeatingSameColor(board, position)
-    not_crossing_occupied_field = NotCrossingOccupiedField(board, position)
 
 
     moves = type_to_handler[figure.type](*given_args[figure.type])
     moves = filter(not_beating_same_color, moves)
-    moves = filter(not_crossing_occupied_field, moves)
     return moves
 
 
