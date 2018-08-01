@@ -203,20 +203,17 @@ class MainApp(App):
 
 	def gameover(self,reason):
 		self.main.remove_widget(self.gameplay)
-		if reason == WHITE_WIN:
-			source = WHITE_WIN_IMAGE
-			text = 'You win like a real white man'
-		elif reason == BLACK_WIN:
+		if reason != TIE:
 			source = BLACK_WIN_IMAGE
-			text = 'pridumay sama'
+			text = 'You Lose'
 		else:
 			source = TIE_IMAGE
 			text = 'potom'
 		self.Gameover = FloatLayout()
-		self.Gameover.add_widget(Image(source = source, size_hint = (1,1),pos_hint = {'center_x': 0.5,'center_y':0.4}))
-		self.Gameover.add_widget(LabelB(bcolor = [0,0,0,0],text = text,size_hint = (0.3,1),pos_hint = {'center_x': 0.5,'center_y':0.9}, color = [1,0,0,1],font_size = 40))
-		self.Gameover.add_widget(Button(text = 'Restart',on_press = self.Restart,background_normal = '', background_color = [.7,.8,.9,1],pos_hint = {'center_x': 0.15,'center_y':0.5},size_hint = (0.25,0.15)))
-		self.Gameover.add_widget(Button(text = 'Quit',on_press = self.leave,background_normal = '', background_color = [.7,.8,.9,1],pos_hint = {'center_x': 0.85,'center_y':0.5},size_hint = (0.25,0.15)))
+		self.Gameover.add_widget(Image(source = source, size_hint = (1,1),pos_hint = {'center_x': 0.5,'center_y':0.5}))
+		self.Gameover.add_widget(LabelB(bcolor = [0,0,0,0],text = text,size_hint = (0.3,1),pos_hint = {'center_x': 0.5,'center_y':0.7}, color = [1,0,0,1],font_size = 160,font_name = FAIL))
+		self.Gameover.add_widget(Button(text = 'Restart',color = [0,0,0,1],on_press = self.Restart,background_normal = '', background_color = [1,0,0,1],pos_hint = {'center_x': 0.25,'center_y':0.15},size_hint = (0.25,0.15)))
+		self.Gameover.add_widget(Button(text = 'Quit',color = [0,0,0,1],on_press = self.leave,background_normal = '', background_color = [1,0,0,1],pos_hint = {'center_x': 0.75,'center_y': 0.15},size_hint = (0.25,0.15)))
 		self.main.add_widget(self.Gameover)
 		print(reason)
 

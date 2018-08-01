@@ -21,11 +21,12 @@ BLACK_WIN = 1
 TIE = 2
 
 WHITE_WIN_IMAGE = 'img/kkk.jpg'
-BLACK_WIN_IMAGE = 'img/black.jpg'
+BLACK_WIN_IMAGE = 'img/fail.jpg'
 TIE_IMAGE = 'img/tie.jpg'
 FON = 'img/fon.jpg'
 FONT = 'img/11895.ttf'
 FON2 ='img/fon2.jpg'
+FAIL = 'img/11464.ttf'
 
 lineof = ['A','B','C','D','E','F','G','H']
 
