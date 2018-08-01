@@ -68,31 +68,27 @@ class NotBeatingSameColor(object):
 
 class IsKamikadze(object):
     def __init__(self,board,initial_position):
-        figurecolor = board.figure_on_position(initial_position).color
+        figure_color = board.figure_on_position(initial_position).color
         self.board = deepcopy(board)
-        if figurecolor == BLACK:
-            self.figureset = board.white_figures()
+        if figure_color == BLACK:
+            self.figure_set = board.white_figures()
             self.king_pos = board.black_king()
-            self.color = WHITE
+            self.enemy_color = WHITE
         else:
-            self.figureset = board.black_figures()
+            self.figure_set = board.black_figures()
             self.king_pos = board.white_king()
-            self.color = BLACK
-        print(str(self.king_pos))
+            self.enemy_color = BLACK
+        print("King position: " + str(self.king_pos))
         self.figure = board.figure_on_position(initial_position)
         self.board.pop(initial_position)
+
     def __call__(self,final_position):
         self.board.put(final_position,self.figure)
-        for i in self.figureset:
-            if self.king_pos in possible_moves(self.board,i[1],self.color,None):
-                return False
-        return True
-
-
-
-
-
-
+        for i in self.figure_set:
+            if self.king_pos in possible_moves(self.board,i[1],self.enemy_color,None):
+                print ("Figure in position {0} will eat our beloved James LVII".format(str(i[1])))
+                return True
+        return False
 
 
 def possible_moves(board, position, player_color, previous_move):
@@ -119,7 +115,6 @@ def possible_moves(board, position, player_color, previous_move):
     }
 
     not_beating_same_color = NotBeatingSameColor(board, position)
-
 
     moves = type_to_handler[figure.type](*given_args[figure.type])
     moves = filter(not_beating_same_color, moves)
