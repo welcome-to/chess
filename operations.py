@@ -72,6 +72,7 @@ class NotCrossingOccupiedField(object):
 
 def possible_moves(board, position, player_color, previous_move):
     figure = board.figure_on_position(position)
+
     if figure is None:
         return []
 
@@ -91,8 +92,10 @@ def possible_moves(board, position, player_color, previous_move):
         QUEEN: [position,board],
         KING: [position]
     }
+
     not_beating_same_color = NotBeatingSameColor(board, position)
     not_crossing_occupied_field = NotCrossingOccupiedField(board, position)
+
 
     moves = type_to_handler[figure.type](*given_args[figure.type])
     moves = filter(not_beating_same_color, moves)
@@ -106,15 +109,18 @@ class TryEat(object):
         self.color = color
 
     def __call__(self, position):
-        figure = self.board.figure_on_position(position)
-        if figure is not None and figure.color != self.color:
-            return position
+        if position:
+            figure = self.board.figure_on_position(position)
+            if figure is not None and figure.color != self.color:
+                return position
 
 
 def raw_possible_moves_pawn(position, board):
     pawn = board.figure_on_position(position)
     full = []
     try_eat = TryEat(board, pawn.color)
+
+
     if pawn.color == BLACK:
         if position.bottom() and board.figure_on_position(position.bottom()) is None:
             full.append(position.bottom())

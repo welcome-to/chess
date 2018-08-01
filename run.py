@@ -51,13 +51,11 @@ class GameProcessor(object):
         except:
             self._run_technical_defeat()
             return
-
         self.turns.append(deepcopy(turn))
 
         if not is_correct(turn, self.board, self.current_player):
             self._run_technical_defeat()
             return
-
         if turn.is_roque:
             make_castling(self.board, turn)
         else: # move

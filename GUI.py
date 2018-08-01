@@ -130,6 +130,7 @@ class MainApp(App):
 					              size_hint = (1,1),
 					              pos_hint = {'center_x': 0.5, 'center_y': 0.5})
 
+
 				button.loadroadandcolumn(i,j)
 				cell.add_widget(image)
 				cell.add_widget(button)
@@ -186,6 +187,7 @@ class MainApp(App):
 		self.countofmove += 1
 		if self.countofmove % 2 == 1:
 			self.coord =button.getrowandcolumn()
+			
 		else:
 			coord = button.getrowandcolumn()
 			self.gp.make_turn(self.coord, coord)
