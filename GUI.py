@@ -102,6 +102,10 @@ class MainApp(App):
 			self.main.remove_widget(self.startscrean)
 		except:
 			pass
+		try:
+			self.main.remove_widget(self.gameover)
+		except:
+			pass
 		self.countofmove = 0
 		celllist = [LabelB(text = '',bcolor = BACKGROUND)]
 
@@ -126,7 +130,7 @@ class MainApp(App):
 				button = ButtonRC(text = '',
 					              background_color = [0,0,0,0],
 					              background_normal = '',
-					              on_press = self.update,
+					              on_press = self.InputMove,
 					              size_hint = (1,1),
 					              pos_hint = {'center_x': 0.5, 'center_y': 0.5})
 
@@ -156,6 +160,10 @@ class MainApp(App):
 		self.gameplay.add_widget(Button(text = 'Next Move',on_press = self.movement,size_hint = [0.35,0.1], pos_hint = {'center_x':1.25,'center_y':0.9},background_color = BUTTONCOLOR1,background_normal = ''))
 		self.gameplay.add_widget(Button(text = 'Quit',on_press = self.leave,size_hint = [0.35,0.1], pos_hint = {'center_x':1.25,'center_y':0.66},background_color = BUTTONCOLOR1,background_normal = ''))		
 		self.gameplay.add_widget(Button(text = 'Restart',on_press = self.Restart,size_hint = [0.35,0.1], pos_hint = {'center_x':1.25,'center_y':0.78},background_color = BUTTONCOLOR1,background_normal = ''))
+		self.movelabel = LabelB(text = '',bcolor = BUTTONCOLOR1,size_hint = [.35,.1],pos_hint = {'center_x':-0.25,'center_y':0.9})
+		self.gameplay.add_widget(self.movelabel)
+		self.gameplay.add_widget(Button(text = 'Cancel selection',on_press = self.CancelMove,size_hint = [0.35,0.1], pos_hint = {'center_x':-0.25,'center_y':0.66},background_color = BUTTONCOLOR1,background_normal = ''))
+		self.gameplay.add_widget(Button(text = 'Make movement',on_press = self.ComitMove,size_hint = [0.35,0.1], pos_hint = {'center_x':-0.25,'center_y':0.78},background_color = BUTTONCOLOR1,background_normal = ''))
 		self.gameplay.add_widget(board)
 
 
@@ -168,6 +176,31 @@ class MainApp(App):
 		self.main.remove_widget(self.gameplay)
 		self.startgame(Button())
 
+	def CancelMove(self,button):
+		self.countofmove = 0 
+		self.movelabel.text = ''
+	def ComitMove(self,button):
+		self.gp.make_turn(self.coord, self.coordto)
+		boardlist = board(self.gp)
+		for i in range(8):
+			for j in range(8):
+				self.lbllist[i][j].source = boardlist[i][j]
+		a = game_result(self.gp)
+		if not a[0]:
+			self.gameover(a[1])
+		self.movelabel.text = ''
+	def InputMove(self,button):
+		self.countofmove += 1
+		if self.countofmove % 2 == 1:
+			self.coord =button.getrowandcolumn()
+			self.movelabel.text = str(self.coord).upper()+ ' --> '
+			
+		else:
+			self.coordto = button.getrowandcolumn()
+			self.movelabel.text = self.movelabel.text + str(self.coordto).upper()
+
+
+
 	def gameover(self,reason):
 		self.main.remove_widget(self.gameplay)
 		if reason == WHITE_WIN:
@@ -179,25 +212,16 @@ class MainApp(App):
 		else:
 			source = TIE_IMAGE
 			text = 'potom'
-		self.main.add_widget(Image(source = source, size_hint = (1,1)))
+		self.gameover = FloatLayout()
+		self.gameover.add_widget(Image(source = source, size_hint = (1,1),pos_hint = {'center_x': 0.5,'center_y':0.4}))
+		self.gameover.add_widget(LabelB(bcolor = [0,0,0,0],text = text,size_hint = (0.3,1),pos_hint = {'center_x': 0.5,'center_y':0.9}, color = [1,0,0,1],font_size = 40))
+		self.gameover.add_widget(Button(text = 'Restart',on_press = self.Restart,background_normal = '', background_color = [.7,.8,.9,1],pos_hint = {'center_x': 0.15,'center_y':0.5},size_hint = (0.25,0.15)))
+		self.gameover.add_widget(Button(text = 'Quit',on_press = self.leave,background_normal = '', background_color = [.7,.8,.9,1],pos_hint = {'center_x': 0.85,'center_y':0.5},size_hint = (0.25,0.15)))
+		self.main.add_widget(self.gameover)
 		print(reason)
 
 
-	def update(self,button):
-		self.countofmove += 1
-		if self.countofmove % 2 == 1:
-			self.coord =button.getrowandcolumn()
-			
-		else:
-			coord = button.getrowandcolumn()
-			self.gp.make_turn(self.coord, coord)
-			boardlist = board(self.gp)
-			for i in range(8):
-				for j in range(8):
-					self.lbllist[i][j].source = boardlist[i][j]
-			a = game_result(self.gp)
-			if not a[0]:
-				self.gameover(a[1])
+	
 	def movement(self,instance):
 		boardlist = board(self.gp)
 		for i in range(8):
