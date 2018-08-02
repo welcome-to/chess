@@ -6,7 +6,7 @@ from const import *
 from operations import (
     raw_possible_moves_king, raw_possible_moves_knight, raw_possible_moves_rook,
     raw_possible_moves_bishop, raw_possible_moves_queen, raw_possible_moves_pawn,
-    IsKamikadze
+    IsKamikadze, game_status
 )
 
 
@@ -35,6 +35,18 @@ def empty_board():
     for i in range(8):
         for j in range(8):
             board.put(Coordinates(i, j), None)
+    return board
+
+
+def children_board():
+    board = Board()
+    board.move(E2, E4)
+    board.move(E7, E5)
+    board.move(D1, H5)
+    board.move(B8, C6)
+    board.move(F1, C4)
+    board.move(G8, F6)
+    board.move(H5, F7)
     return board
 
 
@@ -117,17 +129,10 @@ class TestAll(unittest.TestCase):
         bad_board.move(A8, E6) # шах
         self.assertEqual(IsKamikadze(bad_board, B2)(B4), True)
 
-        children_board = Board()
-        children_board.move(E2, E4)
-        children_board.move(E7, E5)
-        children_board.move(D1, H5)
-        children_board.move(B8, C6)
-        children_board.move(F1, C4)
-        children_board.move(G8, F6)
-        children_board.move(H5, F7) # мат
-        self.assertEqual(IsKamikadze(children_board, E8)(E7), True)
-        self.assertEqual(IsKamikadze(children_board, D7)(D5), True)
-        self.assertEqual(IsKamikadze(children_board, C6)(D4), True)
+        ch_board = children_board()
+        self.assertEqual(IsKamikadze(ch_board, E8)(E7), True)
+        self.assertEqual(IsKamikadze(ch_board, D7)(D5), True)
+        self.assertEqual(IsKamikadze(ch_board, C6)(D4), True)
 
         board = Board()
         board.move(E2, E4)
@@ -137,6 +142,11 @@ class TestAll(unittest.TestCase):
         board.move(E1, E2)
         board.move(E4, G3) # жена упала, Штирлиц насторожился
         self.assertEqual(IsKamikadze(board, B2)(B4), True)
+
+
+    def test_game_status(self):
+        ch_board = children_board()
+        self.assertEqual(game_status(ch_board, BLACK), WHITE_WIN)
 
 
     def test_board(self):

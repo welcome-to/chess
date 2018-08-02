@@ -9,7 +9,10 @@ from itertools import filterfalse
 # has the game finished with a result? return this result if yes
 # current_player: the one whose turn is next
 def game_status(board, current_player):
-    all_moves = possible_moves(board, current_player, None)
+    all_moves = list(filterfalse(
+        lambda item: IsKamikadze(board, item[0])(item[1]),
+        possible_moves(board, current_player, None)
+    ))
     if all_moves: # there are moves, so the game is not over
         return None
 
@@ -21,18 +24,20 @@ def game_status(board, current_player):
         king_position = board.black_king()
 
     enemy_moves = possible_moves(board, enemy_color, None)
-    if list(filter(lambda item: item[0] == king_position), enemy_moves): # king can be eaten. checkmate
+    if list(filter(lambda item: item[1] == king_position, enemy_moves)): # king can be eaten. checkmate
+        print("It's checkmate.")
         if current_player == WHITE:
             return BLACK_WIN
         return WHITE_WIN
 
     # king is safe. stalemate
+    print("It's stalemate.")
     return TIE
 
 
 # is the `turn' correct at this position?
 def is_correct(turn, board, player_color):
-    print ("Player {0}. Turn: {1} -> {2}".format(player_color, turn.start, turn.end))
+    print("Player {0}. Turn: {1} -> {2}".format(player_color, turn.start, turn.end))
     if turn.is_roque:
         # 1. Check there are no extra figures.
         # 2. Check the figures haven't moved.
@@ -110,7 +115,7 @@ class IsKamikadze(object):
         self.board.put(final_position,self.figure)
         for i in self.figure_set:
             if self.king_pos in possible_moves_from_position(self.board,i[1],self.enemy_color,None):
-                print ("Figure in position {0} will eat our beloved James LVII".format(str(i[1])))
+                #print ("Figure in position {0} will eat our beloved James LVII".format(str(i[1])))
                 return True
         return False
 
