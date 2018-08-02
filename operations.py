@@ -1,7 +1,9 @@
 from board import Figure, Move, Coordinates
 from const import *
 from exception import InternalError
+
 from copy import deepcopy
+from itertools import filterfalse
 
 
 # has the game finished with a result? return this result if yes
@@ -30,6 +32,7 @@ def game_status(board, current_player):
 
 # is the `turn' correct at this position?
 def is_correct(turn, board, player_color):
+    print ("Player {0}. Turn: {1} -> {2}".format(player_color, turn.start, turn.end))
     if turn.is_roque:
         # 1. Check there are no extra figures.
         # 2. Check the figures haven't moved.
@@ -41,9 +44,9 @@ def is_correct(turn, board, player_color):
         return False
     listofmoves = possible_moves_from_position(board,turn.start,player_color,None) # FIXME: wtf None
     is_kamikadze = IsKamikadze(board,turn.start)
-    moves = filter(is_kamikadze, listofmoves)
+    moves = filterfalse(is_kamikadze, listofmoves)
 
-    if not turn.end in listofmoves:
+    if not turn.end in moves:
         return False
     return True
 

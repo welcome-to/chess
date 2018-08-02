@@ -114,7 +114,7 @@ class TestAll(unittest.TestCase):
 
         bad_board = Board()
         bad_board.pop(E2)
-        bad_board.move(A8, E6)
+        bad_board.move(A8, E6) # шах
         self.assertEqual(IsKamikadze(bad_board, B2)(B4), True)
 
         children_board = Board()
@@ -124,10 +124,19 @@ class TestAll(unittest.TestCase):
         children_board.move(B8, C6)
         children_board.move(F1, C4)
         children_board.move(G8, F6)
-        children_board.move(H5, F7)
+        children_board.move(H5, F7) # мат
         self.assertEqual(IsKamikadze(children_board, E8)(E7), True)
         self.assertEqual(IsKamikadze(children_board, D7)(D5), True)
         self.assertEqual(IsKamikadze(children_board, C6)(D4), True)
+
+        board = Board()
+        board.move(E2, E4)
+        board.move(G8, F6)
+        board.move(A2, A3)
+        board.move(F6, E4)
+        board.move(E1, E2)
+        board.move(E4, G3) # жена упала, Штирлиц насторожился
+        self.assertEqual(IsKamikadze(board, B2)(B4), True)
 
 
     def test_board(self):
