@@ -1,4 +1,4 @@
-from board import Figure, Move, Coordinates
+from board import Figure, Move, Coordinates, figures_by_color, figures_by_type
 from const import *
 from exception import InternalError
 
@@ -9,6 +9,7 @@ from itertools import filterfalse
 # has the game finished with a result? return this result if yes
 # current_player: the one whose turn is next
 def game_status(board, current_player):
+    # are there possible moves for `current_player'?
     all_moves = list(filterfalse(
         lambda item: IsKamikadze(board, item[0])(item[1]),
         possible_moves(board, current_player, None)
@@ -18,10 +19,9 @@ def game_status(board, current_player):
 
     if current_player == WHITE:
         enemy_color = BLACK
-        king_position = board.white_king()
     else:
         enemy_color = WHITE
-        king_position = board.black_king()
+    king_position = figures_by_type(board, KING, current_player)[0][1]
 
     enemy_moves = possible_moves(board, enemy_color, None)
     if list(filter(lambda item: item[1] == king_position, enemy_moves)): # king can be eaten. checkmate
@@ -80,34 +80,29 @@ def make_castling(board, king_move):
 # this is a class-functor. it can be used as a function: instance(arg) === __call__(self, arg).
 class NotBeatingSameColor(object):
     def __init__(self, board, initial_position):
-        figurecolor = board.figure_on_position(initial_position).color
-        if figurecolor == WHITE:
-            figureset = board.white_figures()
-        else:
-            figureset = board.black_figures()
-        self.positionset = []
-        for i in figureset:
-            self.positionset.append(i[1])
+        figure_color = board.figure_on_position(initial_position).color
+        figure_set = figures_by_color(board, figure_color)
+        self.position_set = []
+        for i in figure_set:
+            self.position_set.append(i[1])
 
     def __call__(self, final_position):
-        if not (final_position in self.positionset):
+        if not (final_position in self.position_set):
             return True
         else:
             return False
 
 
 class IsKamikadze(object):
-    def __init__(self,board,initial_position):
+    def __init__(self, board, initial_position):
         figure_color = board.figure_on_position(initial_position).color
         self.board = deepcopy(board)
         if figure_color == BLACK:
-            self.figure_set = board.white_figures()
-            self.king_pos = board.black_king()
             self.enemy_color = WHITE
         else:
-            self.figure_set = board.black_figures()
-            self.king_pos = board.white_king()
             self.enemy_color = BLACK
+        self.figure_set = figures_by_color(board, self.enemy_color)
+        self.king_pos = figures_by_type(board, KING, figure_color)[0][1]
         self.figure = board.figure_on_position(initial_position)
         self.board.pop(initial_position)
 
@@ -121,7 +116,7 @@ class IsKamikadze(object):
 
 
 def possible_moves(board, player_color, previous_move):
-    figures = board.white_figures() if player_color == WHITE else board.black_figures()
+    figures = figures_by_color(board, player_color)
     return sum(
         map(
             lambda item: [(item[0], boo) for boo in item[1]],

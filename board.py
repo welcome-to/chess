@@ -129,17 +129,15 @@ class Board(object):
                     all_figures.append((self.data[row][cell],Coordinates(cell,row)))
         return all_figures
 
-    def white_figures(self):
-        return list(filter(lambda item: item[0].color == WHITE, self.all_figures()))
-
-    def black_figures(self):
-        return list(filter(lambda item: item[0].color == BLACK, self.all_figures()))
-    def white_king(self):
-        return list(filter(lambda item: item[0].type == KING, self.white_figures()))[0][1]
-    def black_king(self):
-        return list(filter(lambda item: item[0].type == KING, self.black_figures()))[0][1]
-
     def __str__(self):
         return '\n'.join(reversed(
             [' '.join(str(element) for element in lst) for lst in self.data]
         ))
+
+
+def figures_by_color(board, color):
+    return list(filter(lambda item: item[0].color == color, board.all_figures()))
+
+
+def figures_by_type(board, type, color):
+    return list(filter(lambda item: item[0].color == color and item[0].type == type, board.all_figures()))
