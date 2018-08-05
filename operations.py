@@ -1,4 +1,4 @@
-from board import Figure, Move, Coordinates, figures_by_color, figures_by_type
+from board import Figure, Move, Coordinates, figures_on_board
 from const import *
 from exception import InternalError
 
@@ -21,7 +21,7 @@ def game_status(board, current_player):
         enemy_color = BLACK
     else:
         enemy_color = WHITE
-    king_position = figures_by_type(board, KING, current_player)[0][1]
+    king_position = figures_on_board(board, type=KING, color=current_player)[0][1]
 
     enemy_moves = possible_moves(board, enemy_color, None)
     if list(filter(lambda item: item[1] == king_position, enemy_moves)): # king can be eaten. checkmate
@@ -81,7 +81,7 @@ def make_castling(board, king_move):
 class NotBeatingSameColor(object):
     def __init__(self, board, initial_position):
         figure_color = board.figure_on_position(initial_position).color
-        figure_set = figures_by_color(board, figure_color)
+        figure_set = figures_on_board(board, color=figure_color)
         self.position_set = []
         for i in figure_set:
             self.position_set.append(i[1])
@@ -101,8 +101,8 @@ class IsKamikadze(object):
             self.enemy_color = WHITE
         else:
             self.enemy_color = BLACK
-        self.figure_set = figures_by_color(board, self.enemy_color)
-        self.king_pos = figures_by_type(board, KING, figure_color)[0][1]
+        self.figure_set = figures_on_board(board, color=self.enemy_color)
+        self.king_pos = figures_on_board(board, type=KING, color=figure_color)[0][1]
         self.figure = board.figure_on_position(initial_position)
         self.board.pop(initial_position)
 
@@ -116,7 +116,7 @@ class IsKamikadze(object):
 
 
 def possible_moves(board, player_color, previous_move):
-    figures = figures_by_color(board, player_color)
+    figures = figures_on_board(board, color=player_color)
     return sum(
         map(
             lambda item: [(item[0], boo) for boo in item[1]],

@@ -1,6 +1,6 @@
 import unittest
 
-from board import Board, Coordinates, figures_by_type, figures_by_color
+from board import Board, Coordinates, figures_on_board
 from const import *
 
 from operations import (
@@ -158,7 +158,7 @@ class TestAll(unittest.TestCase):
         wq = only_white_queens[0]
         self.assertEqual(str(wq[1]), 'd1')
 
-        self.assertEqual(len(figures_by_color(board, WHITE)), 16)
+        self.assertEqual(len(figures_on_board(board, color=WHITE)), 16)
 
 
 if __name__ == "__main__":

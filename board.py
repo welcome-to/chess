@@ -135,9 +135,10 @@ class Board(object):
         ))
 
 
-def figures_by_color(board, color):
-    return list(filter(lambda item: item[0].color == color, board.all_figures()))
-
-
-def figures_by_type(board, type, color):
-    return list(filter(lambda item: item[0].color == color and item[0].type == type, board.all_figures()))
+def figures_on_board(board, type=None, color=None):
+    result = board.all_figures()
+    if color is not None:
+        result = list(filter(lambda item: item[0].color == color, result))
+    if type is not None:
+        result = list(filter(lambda item: item[0].type == type, result))
+    return result
