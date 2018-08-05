@@ -9,6 +9,8 @@ from operations import (
     IsKamikadze, game_status
 )
 
+from decode import decode_move
+
 
 A1, A2, A3, A4, A5, A6, A7, A8, \
 B1, B2, B3, B4, B5, B6, B7, B8, \
@@ -159,6 +161,23 @@ class TestAll(unittest.TestCase):
         self.assertEqual(str(wq[1]), 'd1')
 
         self.assertEqual(len(figures_on_board(board, color=WHITE)), 16)
+
+
+    def test_decode(self):
+        board = Board()
+        self.assertEqual(decode_move('e4', board, WHITE), 'e2e4')
+        board.move(E2, E4)
+        self.assertEqual(decode_move('e5', board, BLACK), 'e7e5')
+        board.move(E7, E5)
+        self.assertEqual(decode_move('Bc4', board, WHITE), 'f1c4')
+        board.move(F1, C4)
+        self.assertEqual(decode_move('Nc6', board, BLACK), 'b8c6')
+        board.move(B8, C6)
+        self.assertEqual(decode_move('Qh5', board, WHITE), 'd1h5')
+        board.move(D1, H5)
+        self.assertEqual(decode_move('Nf6', board, BLACK), 'g8f6')
+        board.move(G8, F6)
+        self.assertEqual(decode_move('Qxf7#', board, WHITE), 'h5f7')
 
 
 if __name__ == "__main__":

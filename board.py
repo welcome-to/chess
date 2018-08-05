@@ -8,8 +8,8 @@ class Figure(object):
         self.has_moved = False
         self.type = type
 
-    def __str__(self): #FIXME
-        return self.type
+    def __repr__(self):
+        return "{0}|{1}".format({WHITE: "W", BLACK: "B"}[self.color], self.type)
 
 
 class Move(object):
