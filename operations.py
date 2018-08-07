@@ -38,6 +38,8 @@ def game_status(board, current_player):
 # is the `turn' correct at this position?
 def is_correct(turn, board, player_color):
     print("Player {0}. Turn: {1} -> {2}".format(player_color, turn.start, turn.end))
+    if str(turn.start)+str(turn.end) in CASTLING_TYPES:
+        turn.is_roque = True
     if turn.is_roque:
         # 1. Check there are no extra figures.
         # 2. Check the figures haven't moved.
