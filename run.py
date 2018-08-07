@@ -43,14 +43,7 @@ class GameProcessor(object):
 
     # `start, end' are two Coordinates objects
     def make_turn(self, start, end):
-        try:
-            if (str(start)+str(end)) in CASTLING_TYPES.keys():
-                turn = Move(start, end, is_roque = True)
-            else:
-                turn = Move(start, end)
-        except:
-            self._run_technical_defeat()
-            return
+        turn = Move(start, end)
         self.turns.append(deepcopy(turn))
 
         if not is_correct(turn, self.board, self.current_player):
