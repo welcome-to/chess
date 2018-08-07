@@ -47,22 +47,22 @@ def is_correct(turn, board, player_color):
         if CastlingType == 'e1g1':
             if (not (board.figure_on_position(Coordinates.from_string('f1')) is None)) or (not (board.figure_on_position(Coordinates.from_string('g1')) is None)):
                 return False
-            if board.figure_on_position(turn.start).has_moved or board.figure_on_position(Coordinates.from_string('h1')):
+            if board.figure_on_position(turn.start).has_moved or board.figure_on_position(Coordinates.from_string('h1')).has_moved:
                 return False
         if CastlingType == 'e8g8':
             if (not (board.figure_on_position(Coordinates.from_string('f8')) is None)) or (not (board.figure_on_position(Coordinates.from_string('g8')) is None)):
                 return False
-            if board.figure_on_position(turn.start).has_moved or board.figure_on_position(Coordinates.from_string('h8')):
+            if board.figure_on_position(turn.start).has_moved or board.figure_on_position(Coordinates.from_string('h8')).has_moved:
                 return False
         if CastlingType == 'e1c1':
             if (not (board.figure_on_position(Coordinates.from_string('d1')) is None)) or (not (board.figure_on_position(Coordinates.from_string('c1')) is None)) or (not (board.figure_on_position(Coordinates.from_string('b1')) is None)):
                 return False
-            if board.figure_on_position(turn.start).has_moved or board.figure_on_position(Coordinates.from_string('a1')):
+            if board.figure_on_position(turn.start).has_moved or board.figure_on_position(Coordinates.from_string('a1')).has_moved:
                 return False
         if CastlingType == 'e8c8':
             if (not (board.figure_on_position(Coordinates.from_string('d8')) is None)) or (not (board.figure_on_position(Coordinates.from_string('c8')) is None)) or (not (board.figure_on_position(Coordinates.from_string('b8')) is None)):
                 return False
-            if board.figure_on_position(turn.start).has_moved or board.figure_on_position(Coordinates.from_string('a8')):
+            if board.figure_on_position(turn.start).has_moved or board.figure_on_position(Coordinates.from_string('a8')).has_moved:
                 return False
         # 2. Check the figures haven't moved.
         # 3. Check the king's way is not under attack.
