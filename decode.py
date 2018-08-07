@@ -1,6 +1,7 @@
 from board import Board, Coordinates, Move, figures_on_board
 from const import *
 from operations import possible_moves_from_position
+from run import GameProcessor
 
 import copy
 
@@ -89,12 +90,12 @@ def decode_game(line):
     game_results = ['1-0', '0-1', '1/2']
     human_readable = []
     n = 1
-    board = Board()
+    gp = GameProcessor()
     while line:
         print("Turn #{0}".format(n))
         for game_result in game_results:
             if line.startswith(game_result):
-                human_readable += game_result
+                human_readable += [game_result]
                 return human_readable
 
         prefix = str(n) + '.'
@@ -106,26 +107,32 @@ def decode_game(line):
         next_space = end_word(line)
         white_turn = line[:next_space]
         try:
-            decoded = decode_move(white_turn, board, WHITE)
+            decoded = decode_move(white_turn, gp.board, WHITE)
         except:
             raise DecodeError("Expected correct move description: `{0}`".format(white_turn))
         human_readable += [decoded]
-        board.move(Coordinates.from_string(decoded[:2]), Coordinates.from_string(decoded[2:]))
+        gp.make_turn(
+            Coordinates.from_string(decoded[:2]),
+            Coordinates.from_string(decoded[2:])
+        )
 
         line = line[next_space:].lstrip(' ')
         for game_result in game_results:
             if line.startswith(game_result):
-                human_readable += game_result
+                human_readable += [game_result]
                 return human_readable
 
         next_space = end_word(line)
         black_turn = line[:next_space]
         try:
-            decoded = decode_move(black_turn, board, BLACK)
+            decoded = decode_move(black_turn, gp.board, BLACK)
         except:
             raise DecodeError("Expected correct move description: `{0}`".format(black_turn))
         human_readable += [decoded]
-        board.move(Coordinates.from_string(decoded[:2]), Coordinates.from_string(decoded[2:]))
+        gp.make_turn(
+            Coordinates.from_string(decoded[:2]),
+            Coordinates.from_string(decoded[2:])
+        )
         line = line[next_space:].lstrip(' ')
 
         n += 1
