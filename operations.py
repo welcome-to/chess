@@ -40,10 +40,36 @@ def is_correct(turn, board, player_color):
     print("Player {0}. Turn: {1} -> {2}".format(player_color, turn.start, turn.end))
     if str(turn.start)+str(turn.end) in CASTLING_TYPES:
         turn.is_roque = True
+        CastlingType = str(turn.start)+str(turn.end)
     if turn.is_roque:
         # 1. Check there are no extra figures.
         # 2. Check the figures haven't moved.
+        if CastlingType == 'e1g1':
+            if (not (board.figure_on_position(Coordinates.from_string('f1')) is None)) or (not (board.figure_on_position(Coordinates.from_string('g1')) is None)):
+                return False
+            if board.figure_on_position(turn.start).has_moved or board.figure_on_position(Coordinates.from_string('h1')):
+                return False
+        if CastlingType == 'e8g8':
+            if (not (board.figure_on_position(Coordinates.from_string('f8')) is None)) or (not (board.figure_on_position(Coordinates.from_string('g8')) is None)):
+                return False
+            if board.figure_on_position(turn.start).has_moved or board.figure_on_position(Coordinates.from_string('h8')):
+                return False
+        if CastlingType == 'e1c1':
+            if (not (board.figure_on_position(Coordinates.from_string('d1')) is None)) or (not (board.figure_on_position(Coordinates.from_string('c1')) is None)) or (not (board.figure_on_position(Coordinates.from_string('b1')) is None)):
+                return False
+            if board.figure_on_position(turn.start).has_moved or board.figure_on_position(Coordinates.from_string('a1')):
+                return False
+        if CastlingType == 'e8c8':
+            if (not (board.figure_on_position(Coordinates.from_string('d8')) is None)) or (not (board.figure_on_position(Coordinates.from_string('c8')) is None)) or (not (board.figure_on_position(Coordinates.from_string('b8')) is None)):
+                return False
+            if board.figure_on_position(turn.start).has_moved or board.figure_on_position(Coordinates.from_string('a8')):
+                return False
+        # 2. Check the figures haven't moved.
         # 3. Check the king's way is not under attack.
+        is_kamikadze = IsKamikadze(board,turn.start)
+        #if is_kamikadze(turn.end):
+            #print('Kamikadze')
+            #return False
         return True
 
     figure = board.figure_on_position(turn.start)
