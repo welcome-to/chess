@@ -18,6 +18,13 @@ class Move(object):
         self.end = end
         self.is_roque = is_roque
 
+    @staticmethod
+    def from_string(line):
+        try:
+            return Move(Coordinates.from_string(line[:2]), Coordinates.from_string(line[2:]))
+        except:
+            raise InvalidMove("Incorrect input: {0}".format(line))
+
     def __repr__(self):
         return str(self.start) + str(self.end)
 

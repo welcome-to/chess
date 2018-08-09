@@ -1,7 +1,7 @@
 from board import Board, Move
 from const import *
 from exception import InvalidMove, InternalError, NotImplementedError
-from operations import game_status, is_correct, convert_pawns, make_castling
+from operations import convert_pawns, is_correct, is_castling, game_status, make_castling
 
 import os
 
@@ -49,7 +49,7 @@ class GameProcessor(object):
         if not is_correct(turn, self.board, self.current_player):
             self._run_technical_defeat()
             return
-        if turn.is_roque:
+        if is_castling(turn):
             make_castling(self.board, turn)
         else: # move
             self.board.move(turn.start, turn.end)
@@ -74,10 +74,6 @@ class GameProcessor(object):
             self.technical_winner = BLACK
         else:
             self.technical_winner = WHITE
-
-    # for debug purposes
-    def __del__(self):
-        print("Destructor called")
 
     def savelog(self,bool):
         self.log = bool

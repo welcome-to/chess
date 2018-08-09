@@ -35,46 +35,49 @@ def game_status(board, current_player):
     return TIE
 
 
+def is_castling_correct(king_move, board, player_color):
+    castling_data = CASTLING_DATA[str(king_move)]
+    rook_move = Move.from_string(castling_data['rook_move'])
+
+    king = board.figure_on_position(king_move.start)
+    if king.color != CASTLING_DATA[str(king_move)]['color']:
+        return False
+
+    rook = board.figure_on_position(rook_move.start)
+    if rook is None or rook.color != player_color or rook.color != CASTLING_DATA[str(king_move)]['color']:
+        return False
+
+    if king.has_moved or rook.has_moved:
+        return False
+
+    for inner_field in castling_data['inner_fields']:
+        if not board.figure_on_position(Coordinates.from_string(inner_field)) is None:
+            return False
+
+    # 3. Check the king's way is not under attack.
+    #is_kamikadze = IsKamikadze(board,turn.start)
+    #if is_kamikadze(turn.end):
+        #print('Kamikadze')
+        #return False
+
+    return True
+
+
+def is_castling(move):
+    return str(move) in CASTLING_DATA.keys()
+
+
 # is the `turn' correct at this position?
 def is_correct(turn, board, player_color):
     print("Player {0}. Turn: {1} -> {2}".format(player_color, turn.start, turn.end))
-    if str(turn.start)+str(turn.end) in CASTLING_TYPES:
-        turn.is_roque = True
-        CastlingType = str(turn.start)+str(turn.end)
-    if turn.is_roque:
-        # 1. Check there are no extra figures.
-        # 2. Check the figures haven't moved.
-        if CastlingType == 'e1g1':
-            if (not (board.figure_on_position(Coordinates.from_string('f1')) is None)) or (not (board.figure_on_position(Coordinates.from_string('g1')) is None)):
-                return False
-            if board.figure_on_position(turn.start).has_moved or board.figure_on_position(Coordinates.from_string('h1')).has_moved:
-                return False
-        if CastlingType == 'e8g8':
-            if (not (board.figure_on_position(Coordinates.from_string('f8')) is None)) or (not (board.figure_on_position(Coordinates.from_string('g8')) is None)):
-                return False
-            if board.figure_on_position(turn.start).has_moved or board.figure_on_position(Coordinates.from_string('h8')).has_moved:
-                return False
-        if CastlingType == 'e1c1':
-            if (not (board.figure_on_position(Coordinates.from_string('d1')) is None)) or (not (board.figure_on_position(Coordinates.from_string('c1')) is None)) or (not (board.figure_on_position(Coordinates.from_string('b1')) is None)):
-                return False
-            if board.figure_on_position(turn.start).has_moved or board.figure_on_position(Coordinates.from_string('a1')).has_moved:
-                return False
-        if CastlingType == 'e8c8':
-            if (not (board.figure_on_position(Coordinates.from_string('d8')) is None)) or (not (board.figure_on_position(Coordinates.from_string('c8')) is None)) or (not (board.figure_on_position(Coordinates.from_string('b8')) is None)):
-                return False
-            if board.figure_on_position(turn.start).has_moved or board.figure_on_position(Coordinates.from_string('a8')).has_moved:
-                return False
-        # 2. Check the figures haven't moved.
-        # 3. Check the king's way is not under attack.
-        is_kamikadze = IsKamikadze(board,turn.start)
-        #if is_kamikadze(turn.end):
-            #print('Kamikadze')
-            #return False
-        return True
 
     figure = board.figure_on_position(turn.start)
     if ((figure is None) or (figure.color != player_color)):
         return False
+
+    if is_castling(turn):
+        return is_castling_correct(turn, board, player_color)
+
     listofmoves = possible_moves_from_position(board,turn.start,player_color,None) # FIXME: wtf None
     is_kamikadze = IsKamikadze(board,turn.start)
     moves = filterfalse(is_kamikadze, listofmoves)
@@ -96,8 +99,7 @@ def convert_pawns(board):
 
 
 def make_castling(board, king_move):
-    rook_move = CASTLING_TYPES[str(king_move)]
-    rook_move = Move(*map(Coordinates.from_string, [rook_move[:2], rook_move[2:]]))
+    rook_move = Move.from_string(CASTLING_DATA[str(king_move)]['rook_move'])
     try:
         board.move(rook_move.start, rook_move.end)
         board.move(king_move.start, king_move.end)
@@ -181,6 +183,7 @@ def possible_moves_from_position(board, position, player_color, previous_move):
 
     moves = type_to_handler[figure.type](*given_args[figure.type])
     moves = list(filter(not_beating_same_color, moves))
+
     return moves
 
 

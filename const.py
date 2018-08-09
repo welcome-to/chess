@@ -30,7 +30,28 @@ FAIL = 'img/11464.ttf'
 
 lineof = ['A','B','C','D','E','F','G','H']
 
-CASTLING_TYPES = {'e1g1': 'h1f1', 'e1c1': 'a1d1', 'e8g8': 'h8f8', 'e8c8': 'a8d8'}
+CASTLING_DATA = {
+    'e1g1': {
+        'rook_move': 'h1f1',
+        'inner_fields': ['f1', 'g1'],
+        'color': WHITE
+    },
+    'e8g8': {
+        'rook_move': 'h8f8',
+        'inner_fields': ['f8', 'g8'],
+        'color': BLACK
+    },
+    'e1c1': {
+        'rook_move': 'a1d1',
+        'inner_fields': ['b1', 'c1', 'd1'],
+        'color': WHITE
+    },
+    'e8c8': {
+        'rook_move': 'a8d8',
+        'inner_fields': ['b8', 'c8', 'd8'],
+        'color': BLACK
+    }
+}
 
 INDEX_TO_LETTER = {0:'a',
 1 : 'b',
