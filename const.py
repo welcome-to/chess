@@ -34,21 +34,25 @@ CASTLING_DATA = {
     'e1g1': {
         'rook_move': 'h1f1',
         'inner_fields': ['f1', 'g1'],
+        'safe_fields': ['e1', 'f1', 'g1'],
         'color': WHITE
     },
     'e8g8': {
         'rook_move': 'h8f8',
         'inner_fields': ['f8', 'g8'],
+        'safe_fields': ['e8', 'f8', 'g8'],
         'color': BLACK
     },
     'e1c1': {
         'rook_move': 'a1d1',
         'inner_fields': ['b1', 'c1', 'd1'],
+        'safe_fields': ['e1', 'd1', 'c1'],
         'color': WHITE
     },
     'e8c8': {
         'rook_move': 'a8d8',
         'inner_fields': ['b8', 'c8', 'd8'],
+        'safe_fields': ['e8', 'd8', 'c8'],
         'color': BLACK
     }
 }

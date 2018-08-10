@@ -55,10 +55,10 @@ def is_castling_correct(king_move, board, player_color):
             return False
 
     # 3. Check the king's way is not under attack.
-    #is_kamikadze = IsKamikadze(board,turn.start)
-    #if is_kamikadze(turn.end):
-        #print('Kamikadze')
-        #return False
+    is_kamikadze = IsKamikadze(board, king_move.start)
+    for field in castling_data['safe_fields']:
+        if is_kamikadze(Coordinates.from_string(field)):
+            return False
 
     return True
 
