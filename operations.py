@@ -35,12 +35,17 @@ def game_status(board, current_player):
     return TIE
 
 
+def is_castling(move):
+    return str(move) in CASTLING_DATA.keys()
+
+
 def is_castling_correct(king_move, board, player_color):
     castling_data = CASTLING_DATA[str(king_move)]
     rook_move = Move.from_string(castling_data['rook_move'])
 
+    # FIXME: there are excess conditions here
     king = board.figure_on_position(king_move.start)
-    if king.color != CASTLING_DATA[str(king_move)]['color']:
+    if king is None or king.color != player_color or king.color != CASTLING_DATA[str(king_move)]['color']:
         return False
 
     rook = board.figure_on_position(rook_move.start)
@@ -50,6 +55,7 @@ def is_castling_correct(king_move, board, player_color):
     if king.has_moved or rook.has_moved:
         return False
 
+    # no figures between king and rook
     for inner_field in castling_data['inner_fields']:
         if not board.figure_on_position(Coordinates.from_string(inner_field)) is None:
             return False
@@ -63,20 +69,16 @@ def is_castling_correct(king_move, board, player_color):
     return True
 
 
-def is_castling(move):
-    return str(move) in CASTLING_DATA.keys()
-
-
 # is the `turn' correct at this position?
 def is_correct(turn, board, player_color):
     print("Player {0}. Turn: {1} -> {2}".format(player_color, turn.start, turn.end))
 
+    if is_castling(turn):
+        return is_castling_correct(turn, board, player_color)
+
     figure = board.figure_on_position(turn.start)
     if ((figure is None) or (figure.color != player_color)):
         return False
-
-    if is_castling(turn):
-        return is_castling_correct(turn, board, player_color)
 
     listofmoves = possible_moves_from_position(board,turn.start,player_color,None) # FIXME: wtf None
     is_kamikadze = IsKamikadze(board,turn.start)

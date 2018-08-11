@@ -1,12 +1,12 @@
 import unittest
 
-from board import Board, Coordinates, figures_on_board
+from board import Board, Coordinates, Figure, Move, figures_on_board
 from const import *
 
 from operations import (
     raw_possible_moves_king, raw_possible_moves_knight, raw_possible_moves_rook,
     raw_possible_moves_bishop, raw_possible_moves_queen, raw_possible_moves_pawn,
-    IsKamikadze, game_status
+    IsKamikadze, game_status, is_castling, is_castling_correct
 )
 
 from decode import decode_move, decode_game
@@ -120,6 +120,29 @@ class TestAll(unittest.TestCase):
 
         # all possible moves
         pass
+
+
+    def test_castling(self):
+        self.assertTrue(is_castling(Move(E1, C1)))
+        self.assertFalse(is_castling(Move(G8, E8)))
+
+        board = empty_board()
+        king = Figure(BLACK, KING)
+        rook = Figure(BLACK, ROOK)
+        board.put(E8, king)
+        board.put(H8, rook)
+        self.assertTrue(is_castling_correct(Move(E8, G8), board, BLACK))
+        self.assertFalse(is_castling_correct(Move(E1, G1), board, WHITE))
+
+        enemy_queen = Figure(WHITE, QUEEN)
+        board.put(E3, enemy_queen)
+        self.assertFalse(is_castling_correct(Move(E1, G1), board, BLACK))
+        board.move(E3, F3)
+        self.assertFalse(is_castling_correct(Move(E1, G1), board, BLACK))
+
+        pawn = Figure(BLACK, PAWN)
+        board.put(F6, pawn)
+        self.assertTrue(is_castling_correct(Move(E1, G1), board, BLACK))
 
 
     def test_kamikadze(self):
