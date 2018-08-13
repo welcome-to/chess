@@ -73,6 +73,7 @@ def decode_move(short_line, board, player_color):
         candidates
     ))
 
+    print("\n{0}\n".format(board))
     if not candidates:
         raise RuntimeError("No suitable figures for turn")
     if len(candidates) > 1:

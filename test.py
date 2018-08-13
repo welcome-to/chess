@@ -193,7 +193,7 @@ class TestAll(unittest.TestCase):
         self.assertEqual(len(figures_on_board(board, color=WHITE)), 16)
 
 
-    def test_decode_move(self):
+    def _test_decode_move(self):
         board = Board()
         self.assertEqual(decode_move('e4', board, WHITE), 'e2e4')
         board.move(E2, E4)
