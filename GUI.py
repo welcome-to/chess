@@ -199,6 +199,8 @@ class MainApp(App):
 			for i in range(8):
 				self.left[i].text = str(9 - (i+1))
 				self.right[i].text = str(9 - (i+1))
+				self.up[i].text = lineof[7-i]
+				self.botom[i].text = lineof[7-i]
 			for i in range(8):
 				for j in range(8):
 					if (i+j) % 2 == 0:
@@ -210,6 +212,8 @@ class MainApp(App):
 			for i in range(8):
 				self.left[i].text = str(i+1)
 				self.right[i].text = str(i+1)
+				self.up[i].text = lineof[i]
+				self.botom[i].text = lineof[i]
 			for i in range(8):
 				for j in range(8):
 					if (i+j) % 2 != 0:
@@ -236,7 +240,7 @@ class MainApp(App):
 		else:
 			for i in range(8):
 				for j in range(8):
-					self.lbllist[7-i][j].source = boardlist[i][j]
+					self.lbllist[7-i][7-j].source = boardlist[i][j]
 		a = game_result(self.gp)
 		if not a[0]:
 			self.gameover(a[1])
@@ -253,10 +257,10 @@ class MainApp(App):
 				self.movelabel.text = self.movelabel.text + str(self.coordto).upper()
 		else:
 			if self.countofmove % 2 == 1:
-				self.coord = Coordinates(button.getrowandcolumn()[0],7-button.getrowandcolumn()[1])
+				self.coord = Coordinates(7-button.getrowandcolumn()[0],7-button.getrowandcolumn()[1])
 				self.movelabel.text = str(self.coord).upper()+ ' --> '
 			else:
-				self.coordto = Coordinates(button.getrowandcolumn()[0],7-button.getrowandcolumn()[1])
+				self.coordto = Coordinates(7-button.getrowandcolumn()[0],7-button.getrowandcolumn()[1])
 				self.movelabel.text = self.movelabel.text + str(self.coordto).upper()
 
 
