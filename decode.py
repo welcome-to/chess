@@ -4,6 +4,7 @@ from operations import possible_moves_from_position
 from run import GameProcessor
 
 import copy
+import sys
 
 
 class DecodeError(Exception):
@@ -92,7 +93,7 @@ def decode_game(line):
     n = 1
     gp = GameProcessor()
     while line:
-        print("Turn #{0}".format(n))
+        print("Turn #{0}".format(n), file=sys.stderr)
         for game_result in game_results:
             if line.startswith(game_result):
                 human_readable += [game_result]

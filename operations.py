@@ -6,6 +6,8 @@ from copy import deepcopy
 from functools import reduce
 from itertools import filterfalse
 
+import sys
+
 
 # has the game finished with a result? return this result if yes
 # current_player: the one whose turn is next
@@ -75,7 +77,7 @@ def is_castling_correct(king_move, board, player_color):
 
 # is the `turn' correct at this position?
 def is_correct(turn, board, player_color):
-    print("Player {0}. Turn: {1} -> {2}".format(player_color, turn.start, turn.end))
+    print("Player {0}. Turn: {1} -> {2}".format(player_color, turn.start, turn.end), file=sys.stderr)
 
     if is_castling(turn):
         return is_castling_correct(turn, board, player_color)
