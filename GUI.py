@@ -111,10 +111,14 @@ class MainApp(App):
 		self.celllist = [LabelB(text = '',bcolor = BACKGROUND)]
 		self.left = []
 		self.right = []
+		self.up = []
+		self.botom = []
+		self.cells = []
 
 		for i in range(8):
 			label = LabelB(text = lineof[i],bcolor = BACKGROUND, font_size = 20)
 			self.celllist.append(label)
+			self.up.append(label)
 		self.celllist.append(LabelB(text = '',bcolor = BACKGROUND))
 		
 		self.lbllist = []
@@ -153,6 +157,7 @@ class MainApp(App):
 				cell.add_widget(button)
 				row.append(image)
 				self.celllist.append(cell)
+				self.cells.append(cell)
 			
 			self.celllist.append(self.right[i])
 			self.lbllist.append(row)
@@ -160,6 +165,7 @@ class MainApp(App):
 		for i in range(8):
 			label = LabelB(text = lineof[i],bcolor = BACKGROUND, font_size = 20)
 			self.celllist.append(label)
+			self.botom.append(label)
 		self.celllist.append(LabelB(text = '',bcolor = BACKGROUND))
 		
 		board = GridLayout(cols = 10,size_hint = (1,1),pos_hint = {'center_x': 0.5, 'center_y': 0.5})
@@ -193,10 +199,25 @@ class MainApp(App):
 			for i in range(8):
 				self.left[i].text = str(9 - (i+1))
 				self.right[i].text = str(9 - (i+1))
+			for i in range(8):
+				for j in range(8):
+					if (i+j) % 2 == 0:
+						colorB = COLOROFCELL2
+					else:
+						colorB = COLOROFCELL1
+					self.cells[i*8+j].bcolor = colorB
 		else:
 			for i in range(8):
 				self.left[i].text = str(i+1)
 				self.right[i].text = str(i+1)
+			for i in range(8):
+				for j in range(8):
+					if (i+j) % 2 != 0:
+						colorB = COLOROFCELL2
+					else:
+						colorB = COLOROFCELL1
+					self.cells[i*8+j].bcolor = colorB
+		
 
 
 	def CancelMove(self,button):

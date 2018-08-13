@@ -104,14 +104,14 @@ figurecolor = {WHITE : 'img/w',BLACK : 'img/b'}
 
 
 sourcelist = [
-['img/w_rook.png','img/w_knight.png','img/w_bishop.png','img/w_queen.png','img/w_king.png','img/w_bishop.png','img/w_knight.png','img/w_rook.png'],
+['img/w_rook.png','img/w_knight.png','img/w_bishop.png','img/w_king.png','img/w_queen.png','img/w_bishop.png','img/w_knight.png','img/w_rook.png'],
 ['img/w_pawn.png','img/w_pawn.png','img/w_pawn.png','img/w_pawn.png','img/w_pawn.png','img/w_pawn.png','img/w_pawn.png','img/w_pawn.png'],
 ['img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png'],
 ['img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png'],
 ['img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png'],
 ['img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png'],
 ['img/b_pawn.png','img/b_pawn.png','img/b_pawn.png','img/b_pawn.png','img/b_pawn.png','img/b_pawn.png','img/b_pawn.png','img/b_pawn.png'],
-['img/b_rook.png','img/b_knight.png','img/b_bishop.png','img/b_queen.png','img/b_king.png','img/b_bishop.png','img/b_knight.png','img/b_rook.png']]
+['img/b_rook.png','img/b_knight.png','img/b_bishop.png','img/b_king.png','img/b_queen.png','img/b_bishop.png','img/b_knight.png','img/b_rook.png']]
 
 
 LOGDIR = 'logs'
