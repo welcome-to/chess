@@ -189,7 +189,7 @@ class MainApp(App):
 		self.startgame(Button())
 
 	def reversfildadres(self):
-		if (int(self.left[0].text)) == 8:
+		if (int(self.left[0].text)) != 8:
 			for i in range(8):
 				self.left[0].text = str(9 - (i+1))
 				self.right[0].text = str(9 - (i+1))
@@ -215,7 +215,7 @@ class MainApp(App):
 		else:
 			for i in range(8):
 				for j in range(8):
-					self.lbllist[7-i][7-j].source = boardlist[i][j]
+					self.lbllist[7-i][j].source = boardlist[i][j]
 		a = game_result(self.gp)
 		if not a[0]:
 			self.gameover(a[1])
