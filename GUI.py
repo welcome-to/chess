@@ -106,24 +106,37 @@ class MainApp(App):
 			self.main.remove_widget(self.Gameover)
 		except:
 			pass
+		self.numberofmoves = 0
 		self.countofmove = 0
-		celllist = [LabelB(text = '',bcolor = BACKGROUND)]
+		self.celllist = [LabelB(text = '',bcolor = BACKGROUND)]
+		self.left = []
+		self.right = []
 
 		for i in range(8):
-			celllist.append(LabelB(text = lineof[i],bcolor = BACKGROUND, font_size = 20))
-		celllist.append(LabelB(text = '',bcolor = BACKGROUND))
+			label = LabelB(text = lineof[i],bcolor = BACKGROUND, font_size = 20)
+			self.celllist.append(label)
+		self.celllist.append(LabelB(text = '',bcolor = BACKGROUND))
 		
 		self.lbllist = []
 		for i in range(8):
+			labelL = LabelB(text = str(9-(i+1)),bcolor = BACKGROUND, font_size = 20)
+			self.left.append(labelL)
+		for i in range(8):
+			labelR  = LabelB(text = str(9-(i+1)), bcolor = BACKGROUND,font_size = 20)
+			self.right.append(labelR)
+
+		for i in range(8):
 			row = []
-			celllist.append(LabelB(text = str(i+1),bcolor = BACKGROUND, font_size = 20))
+			
+			self.celllist.append(self.left[i])
+			
 			for j in range(8):
 				if (i + j) % 2 == 0:
-					colorB = COLOROFCELL1
-				else:
 					colorB = COLOROFCELL2
+				else:
+					colorB = COLOROFCELL1
 				cell = Cell(bcolor = colorB)
-				image = Image(source = sourcelist[i][j],
+				image = Image(source = sourcelist[7-i][7-j],
 					          size_hint = (1,1),
 					          pos_hint = {'center_x': 0.5, 'center_y': 0.5})
 
@@ -139,21 +152,20 @@ class MainApp(App):
 				cell.add_widget(image)
 				cell.add_widget(button)
 				row.append(image)
-				celllist.append(cell)
-
-			celllist.append(LabelB(text = str(i+1),
-				                   bcolor = BACKGROUND,
-				                   font_size = 20))
+				self.celllist.append(cell)
+			
+			self.celllist.append(self.right[i])
 			self.lbllist.append(row)
-		celllist.append(LabelB(text = '',bcolor = BACKGROUND))
+		self.celllist.append(LabelB(text = '',bcolor = BACKGROUND))
 		for i in range(8):
-			celllist.append(LabelB(text = lineof[i],bcolor = BACKGROUND, font_size = 20))
-		celllist.append(LabelB(text = '',bcolor = BACKGROUND))
+			label = LabelB(text = lineof[i],bcolor = BACKGROUND, font_size = 20)
+			self.celllist.append(label)
+		self.celllist.append(LabelB(text = '',bcolor = BACKGROUND))
 		
 		board = GridLayout(cols = 10,size_hint = (1,1),pos_hint = {'center_x': 0.5, 'center_y': 0.5})
 
 		for i in range(100):
-			board.add_widget(celllist[i])
+			board.add_widget(self.celllist[i])
 
 		self.gameplay = FloatLayout(size_hint = [0.5,1], pos_hint = {'center_x': 0.5, 'center_y': 0.5})
 		self.gameplay.add_widget(Image(source = FON2,size_hint = [2,2],pos_hint = {'center_x': 0.5, 'center_y': 0.5},allow_stretch = True))
@@ -176,28 +188,56 @@ class MainApp(App):
 		self.main.remove_widget(self.gameplay)
 		self.startgame(Button())
 
+	def reversfildadres(self):
+		if (int(self.left[0].text)) == 8:
+			for i in range(8):
+				self.left[0].text = str(9 - (i+1))
+				self.right[0].text = str(9 - (i+1))
+		else:
+			for i in range(8):
+				self.left[0].text = str(i+1)
+				self.right[0].text = str(i+1)
+
+
 	def CancelMove(self,button):
 		self.countofmove = 0 
 		self.movelabel.text = ''
+
 	def ComitMove(self,button):
 		self.gp.make_turn(self.coord, self.coordto)
 		boardlist = board(self.gp)
-		for i in range(8):
-			for j in range(8):
-				self.lbllist[i][j].source = boardlist[i][j]
+		self.reversfildadres()
+		self.numberofmoves += 1
+		if self.numberofmoves%2 != 0:
+			for i in range(8):
+				for j in range(8):
+					self.lbllist[i][j].source = boardlist[i][j]
+		else:
+			for i in range(8):
+				for j in range(8):
+					self.lbllist[7-i][7-j].source = boardlist[i][j]
 		a = game_result(self.gp)
 		if not a[0]:
 			self.gameover(a[1])
 		self.movelabel.text = ''
+
 	def InputMove(self,button):
 		self.countofmove += 1
-		if self.countofmove % 2 == 1:
-			self.coord =button.getrowandcolumn()
-			self.movelabel.text = str(self.coord).upper()+ ' --> '
-			
+		if self.numberofmoves % 2 != 0:
+			if self.countofmove % 2 == 1:
+				self.coord = Coordinates(button.getrowandcolumn()[0],button.getrowandcolumn()[1])
+				self.movelabel.text = str(self.coord).upper()+ ' --> '
+			else:
+				self.coordto = Coordinates(button.getrowandcolumn()[0],button.getrowandcolumn()[1])
+				self.movelabel.text = self.movelabel.text + str(self.coordto).upper()
 		else:
-			self.coordto = button.getrowandcolumn()
-			self.movelabel.text = self.movelabel.text + str(self.coordto).upper()
+			if self.countofmove % 2 == 1:
+				self.coord = Coordinates(button.getrowandcolumn()[0],7-button.getrowandcolumn()[1])
+				self.movelabel.text = str(self.coord).upper()+ ' --> '
+			else:
+				self.coordto = Coordinates(button.getrowandcolumn()[0],7-button.getrowandcolumn()[1])
+				self.movelabel.text = self.movelabel.text + str(self.coordto).upper()
+
 
 
 
