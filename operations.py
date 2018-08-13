@@ -3,6 +3,7 @@ from const import *
 from exception import InternalError
 
 from copy import deepcopy
+from functools import reduce
 from itertools import filterfalse
 
 
@@ -35,6 +36,10 @@ def game_status(board, current_player):
     return TIE
 
 
+def another_color(color):
+    return WHITE if color == BLACK else BLACK
+
+
 def is_castling(move):
     return str(move) in CASTLING_DATA.keys()
 
@@ -61,10 +66,9 @@ def is_castling_correct(king_move, board, player_color):
             return False
 
     # 3. Check the king's way is not under attack.
-    is_kamikadze = IsKamikadze(board, king_move.start)
-    for field in castling_data['safe_fields']:
-        if is_kamikadze(Coordinates.from_string(field)):
-            return False
+    under_attack = fields_under_attack(board, another_color(player_color))
+    if set(map(Coordinates.from_string, castling_data['safe_fields'])) & set(under_attack):
+        return False
 
     return True
 
@@ -125,10 +129,21 @@ class NotBeatingSameColor(object):
             return False
 
 
+def fields_under_attack(board, enemy_color):
+    attacked = [possible_moves_from_position(board, item[1], enemy_color, None) for item in figures_on_board(board, color=enemy_color)]
+    return reduce(lambda x,y: set(x) | set(y), attacked, set())
+
+
 class IsKamikadze(object):
     def __init__(self, board, initial_position):
-        figure_color = board.figure_on_position(initial_position).color
         self.board = deepcopy(board)
+        self.figure = board.figure_on_position(initial_position)
+        self.enemy_color = another_color(self.figure.color)
+        self.figure_set = figures_on_board(self.board, color=self.enemy_color)
+
+        self.board.pop(initial_position)
+
+        """
         if figure_color == BLACK:
             self.enemy_color = WHITE
         else:
@@ -137,11 +152,15 @@ class IsKamikadze(object):
         self.king_pos = figures_on_board(board, type=KING, color=figure_color)[0][1]
         self.figure = board.figure_on_position(initial_position)
         self.board.pop(initial_position)
+        """
 
     def __call__(self,final_position):
         self.board.put(final_position,self.figure)
-        for i in self.figure_set:
-            if self.king_pos in possible_moves_from_position(self.board,i[1],self.enemy_color,None):
+        king_pos = figures_on_board(self.board, type=KING, color=self.figure.color)[0][1]
+        enemy_color = another_color(self.figure.color)
+        figure_set = figures_on_board(self.board, color=enemy_color)
+        for i in figure_set:
+            if king_pos in possible_moves_from_position(self.board,i[1],self.enemy_color,None):
                 #print ("Figure in position {0} will eat our beloved James LVII".format(str(i[1])))
                 return True
         return False

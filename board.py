@@ -68,6 +68,9 @@ class Coordinates(object):
     def __bool__(self):
         return 0 <= self.x <= 7 and 0 <= self.y <= 7
 
+    def __hash__(self):
+        return hash(str(self))
+
     def __repr__(self):
         if not self:
             raise InternalError("Invalid coordinates")

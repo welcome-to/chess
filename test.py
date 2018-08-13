@@ -136,13 +136,13 @@ class TestAll(unittest.TestCase):
 
         enemy_queen = Figure(WHITE, QUEEN)
         board.put(E3, enemy_queen)
-        self.assertFalse(is_castling_correct(Move(E1, G1), board, BLACK))
+        self.assertFalse(is_castling_correct(Move(E8, G8), board, BLACK))
         board.move(E3, F3)
-        self.assertFalse(is_castling_correct(Move(E1, G1), board, BLACK))
+        self.assertFalse(is_castling_correct(Move(E8, G8), board, BLACK))
 
         pawn = Figure(BLACK, PAWN)
         board.put(F6, pawn)
-        self.assertTrue(is_castling_correct(Move(E1, G1), board, BLACK))
+        self.assertTrue(is_castling_correct(Move(E8, G8), board, BLACK))
 
 
     def test_kamikadze(self):
@@ -167,6 +167,13 @@ class TestAll(unittest.TestCase):
         board.move(E1, E2)
         board.move(E4, G3) # жена упала, Штирлиц насторожился
         self.assertEqual(IsKamikadze(board, B2)(B4), True)
+
+        board = empty_board()
+        king = Figure(BLACK, KING)
+        enemy_queen = Figure(WHITE, QUEEN)
+        board.put(D4, king)
+        board.put(E4, enemy_queen)
+        self.assertEqual(IsKamikadze(board, D4)(C3), False)
 
 
     def test_game_status(self):
