@@ -191,12 +191,12 @@ class MainApp(App):
 	def reversfildadres(self):
 		if (int(self.left[0].text)) != 8:
 			for i in range(8):
-				self.left[0].text = str(9 - (i+1))
-				self.right[0].text = str(9 - (i+1))
+				self.left[i].text = str(9 - (i+1))
+				self.right[i].text = str(9 - (i+1))
 		else:
 			for i in range(8):
-				self.left[0].text = str(i+1)
-				self.right[0].text = str(i+1)
+				self.left[i].text = str(i+1)
+				self.right[i].text = str(i+1)
 
 
 	def CancelMove(self,button):
