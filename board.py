@@ -109,21 +109,33 @@ class Board(object):
         self.data[7][3] = Figure(BLACK, QUEEN)
         self.data[0][4] = Figure(WHITE, KING)
         self.data[7][4] = Figure(BLACK, KING)
+        self.updateselffigures()
 
     def put(self, position, figure):
         self.data[position.y][position.x] = figure
+        self.updateselffigures()
 
     def pop(self, position):
         figure = self.figure_on_position(position)
         if figure is None:
             raise InvalidMove("No figure at {0}".format(start))
         self.data[position.y][position.x] = None
+        self.updateselffigures()
         return figure
 
     def move(self, start, end):
         figure = self.pop(start)
         self.put(end, figure)
         figure.has_moved = True
+        self.updateselffigures()
+
+    def updateselffigures(self):
+        self.all_figures_on = []
+        for row in range(8):
+            for cell in range(8):
+                if self.data[row][cell] != None:
+                    self.all_figures_on.append((self.data[row][cell],Coordinates(cell,row)))
+
 
     def figure_on_position(self, coordinates):
         try:
@@ -132,12 +144,7 @@ class Board(object):
             raise InternalError("Received the following coordinates: x={0} y={1}. Will fail.".format(coordinates.x, coordinates.y))
 
     def all_figures(self):
-        all_figures = []
-        for row in range(8):
-            for cell in range(8):
-                if self.data[row][cell] != None:
-                    all_figures.append((self.data[row][cell],Coordinates(cell,row)))
-        return all_figures
+        return self.all_figures_on
 
     def __str__(self):
         return '\n'.join(reversed(
