@@ -47,7 +47,7 @@ class Cell(FloatLayout):
 class ButtonRC(Button):
 	def loadroadandcolumn(self,row,column):
 		self.row = row
-		self.column = column
+		self.column = 7- column
 	def getrowandcolumn(self):
 		return (self.column,self.row)
 class  Board(GridLayout):
@@ -63,6 +63,8 @@ class  Board(GridLayout):
 		self.b = []
 		self.cells = []
 		self.countofmove = 0
+		self.numberofmoves = 0
+		self.coordto = Coordinates(0,0)
 
 		for i in range(8):
 			label = LabelB(text = lineof[i],bcolor = BACKGROUND, font_size = 20)
@@ -120,12 +122,42 @@ class  Board(GridLayout):
 			self.add_widget(self.celllist[i])
 	def InputMove(self,button):
 		self.countofmove +=1
-		if self.countofmove % 2 == 1:
-			self.coord = Coordinates(button.getrowandcolumn()[0],button.getrowandcolumn()[1])
-			self.movelabel.text = str(self.coord).upper()+ ' --> '
+		if self.numberofmoves % 2 != 0:
+			if self.countofmove % 2 == 1:
+				self.coord = Coordinates(button.getrowandcolumn()[0],button.getrowandcolumn()[1])
+				self.movelabel.text = str(self.coord).upper()+ ' --> '
+			else:
+				self.coordto = Coordinates(button.getrowandcolumn()[0],button.getrowandcolumn()[1])
+				self.movelabel.text = self.movelabel.text + str(self.coordto).upper()
 		else:
-			self.coordto = Coordinates(button.getrowandcolumn()[0],button.getrowandcolumn()[1])
-			self.movelabel.text = self.movelabel.text + str(self.coordto).upper()
-	
-		
-	
+			if self.countofmove % 2 == 1:
+				self.coord = Coordinates(button.getrowandcolumn()[0],button.getrowandcolumn()[1])
+				self.movelabel.text = str(self.inverted()[0]).upper() + ' --> '
+			else:
+				self.coordto = Coordinates(button.getrowandcolumn()[0],button.getrowandcolumn()[1])
+				self.movelabel.text = self.movelabel.text + str(self.inverted()[1]).upper()
+				
+	def get_move(self):
+		if self.numberofmoves % 2 == 0:
+			return self.normal()
+		else:
+			return self.inverted()
+	def normal(self):
+		return self.coord, self.coordto
+	def inverted(self):
+		coord = Coordinates(7-self.coord.x,7-self.coord.y)
+		coordto = Coordinates(7-self.coordto.x,7-self.coordto.y)
+		return coord ,coordto
+	def invertboard(self):
+		if self.numberofmoves % 2 != 0:
+			for i in range(8):
+				self.u[i].text = lineof[7-i]
+				self.b[i].text = lineof[7-i]
+				self.l[i].text = str(i+1)
+				self.r[i].text = str(i+1)
+		else:
+			for i in range(8):
+				self.u[i].text = lineof[i]
+				self.b[i].text = lineof[i]
+				self.l[i].text = str(9 - (i + 1))
+				self.r[i].text = str(9 - (i + 1))

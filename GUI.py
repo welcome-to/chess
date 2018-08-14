@@ -133,34 +133,6 @@ class MainApp(App):
 		self.gp = GameProcessor()
 		self.main.remove_widget(self.gameplay)
 		self.startgame(Button())
-
-	def reversfildadres(self):
-		if (int(self.board.l[0].text)) != 8:
-			for i in range(8):
-				self.board.l[i].text = str(9 - (i+1))
-				self.board.r[i].text = str(9 - (i+1))
-				self.board.u[i].text = lineof[7-i]
-				self.board.b[i].text = lineof[7-i]
-			for i in range(8):
-				for j in range(8):
-					if (i+j) % 2 == 0:
-						colorB = COLOROFCELL2
-					else:
-						colorB = COLOROFCELL1
-					self.board.cells[i*8+j].bcolor = colorB
-		else:
-			for i in range(8):
-				self.board.l[i].text = str(i+1)
-				self.board.r[i].text = str(i+1)
-				self.board.u[i].text = lineof[i]
-				self.board.b[i].text = lineof[i]
-			for i in range(8):
-				for j in range(8):
-					if (i+j) % 2 != 0:
-						colorB = COLOROFCELL2
-					else:
-						colorB = COLOROFCELL1
-					self.board.cells[i*8+j].bcolor = colorB
 		
 
 
@@ -169,18 +141,19 @@ class MainApp(App):
 		self.movelabel.text = ''
 
 	def ComitMove(self,button):
-		self.gp.make_turn(self.board.coord, self.board.coordto)
+		self.board.numberofmoves += 1
+		self.board.invertboard()
+		start,end = self.board.get_move()
+		self.gp.make_turn(start,end)
 		boardlist = board(self.gp)
-		self.reversfildadres()
-		self.numberofmoves += 1
-		if self.numberofmoves%2 != 0:
+		if self.board.numberofmoves%2 != 0:
 			for i in range(8):
 				for j in range(8):
-					self.board.lbllist[i][j].source = boardlist[i][j]
+					self.board.lbllist[i][7-j].source = boardlist[i][j]
 		else:
 			for i in range(8):
 				for j in range(8):
-					self.board.lbllist[7-i][7-j].source = boardlist[i][j]
+					self.board.lbllist[7-i][j].source = boardlist[i][j]
 		a = game_result(self.gp)
 		if not a[0]:
 			self.gameover(a[1])
