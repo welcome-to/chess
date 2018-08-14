@@ -14,7 +14,7 @@ from kivy.uix.image import Image
 from kivy.graphics import Color
 from run import GameProcessor
 from const import *
-from Widgets import LabelB,Cell,ButtonRC
+from Widgets import LabelB,Cell,ButtonRC,Board
 from board import Coordinates
 
 
@@ -108,70 +108,8 @@ class MainApp(App):
 			pass
 		self.numberofmoves = 0
 		self.countofmove = 0
-		self.celllist = [LabelB(text = '',bcolor = BACKGROUND)]
-		self.left = []
-		self.right = []
-		self.up = []
-		self.botom = []
-		self.cells = []
-
-		for i in range(8):
-			label = LabelB(text = lineof[i],bcolor = BACKGROUND, font_size = 20)
-			self.celllist.append(label)
-			self.up.append(label)
-		self.celllist.append(LabelB(text = '',bcolor = BACKGROUND))
-		
-		self.lbllist = []
-		for i in range(8):
-			labelL = LabelB(text = str(9-(i+1)),bcolor = BACKGROUND, font_size = 20)
-			self.left.append(labelL)
-		for i in range(8):
-			labelR  = LabelB(text = str(9-(i+1)), bcolor = BACKGROUND,font_size = 20)
-			self.right.append(labelR)
-
-		for i in range(8):
-			row = []
-			
-			self.celllist.append(self.left[i])
-			
-			for j in range(8):
-				if (i + j) % 2 == 0:
-					colorB = COLOROFCELL2
-				else:
-					colorB = COLOROFCELL1
-				cell = Cell(bcolor = colorB)
-				image = Image(source = sourcelist[7-i][7-j],
-					          size_hint = (1,1),
-					          pos_hint = {'center_x': 0.5, 'center_y': 0.5})
-
-				button = ButtonRC(text = '',
-					              background_color = [0,0,0,0],
-					              background_normal = '',
-					              on_press = self.InputMove,
-					              size_hint = (1,1),
-					              pos_hint = {'center_x': 0.5, 'center_y': 0.5})
 
 
-				button.loadroadandcolumn(i,j)
-				cell.add_widget(image)
-				cell.add_widget(button)
-				row.append(image)
-				self.celllist.append(cell)
-				self.cells.append(cell)
-			
-			self.celllist.append(self.right[i])
-			self.lbllist.append(row)
-		self.celllist.append(LabelB(text = '',bcolor = BACKGROUND))
-		for i in range(8):
-			label = LabelB(text = lineof[i],bcolor = BACKGROUND, font_size = 20)
-			self.celllist.append(label)
-			self.botom.append(label)
-		self.celllist.append(LabelB(text = '',bcolor = BACKGROUND))
-		
-		board = GridLayout(cols = 10,size_hint = (1,1),pos_hint = {'center_x': 0.5, 'center_y': 0.5})
-
-		for i in range(100):
-			board.add_widget(self.celllist[i])
 
 		self.gameplay = FloatLayout(size_hint = [0.5,1], pos_hint = {'center_x': 0.5, 'center_y': 0.5})
 		self.gameplay.add_widget(Image(source = FON2,size_hint = [2,2],pos_hint = {'center_x': 0.5, 'center_y': 0.5},allow_stretch = True))
@@ -182,7 +120,9 @@ class MainApp(App):
 		self.gameplay.add_widget(self.movelabel)
 		self.gameplay.add_widget(Button(text = 'Cancel selection',on_press = self.CancelMove,size_hint = [0.35,0.1], pos_hint = {'center_x':-0.25,'center_y':0.66},background_color = BUTTONCOLOR1,background_normal = ''))
 		self.gameplay.add_widget(Button(text = 'Make movement',on_press = self.ComitMove,size_hint = [0.35,0.1], pos_hint = {'center_x':-0.25,'center_y':0.78},background_color = BUTTONCOLOR1,background_normal = ''))
-		self.gameplay.add_widget(board)
+		self.board = Board()
+		self.board.load_board(self.movelabel)
+		self.gameplay.add_widget(self.board)
 
 
 
@@ -195,32 +135,32 @@ class MainApp(App):
 		self.startgame(Button())
 
 	def reversfildadres(self):
-		if (int(self.left[0].text)) != 8:
+		if (int(self.board.l[0].text)) != 8:
 			for i in range(8):
-				self.left[i].text = str(9 - (i+1))
-				self.right[i].text = str(9 - (i+1))
-				self.up[i].text = lineof[7-i]
-				self.botom[i].text = lineof[7-i]
+				self.board.l[i].text = str(9 - (i+1))
+				self.board.r[i].text = str(9 - (i+1))
+				self.board.u[i].text = lineof[7-i]
+				self.board.b[i].text = lineof[7-i]
 			for i in range(8):
 				for j in range(8):
 					if (i+j) % 2 == 0:
 						colorB = COLOROFCELL2
 					else:
 						colorB = COLOROFCELL1
-					self.cells[i*8+j].bcolor = colorB
+					self.board.cells[i*8+j].bcolor = colorB
 		else:
 			for i in range(8):
-				self.left[i].text = str(i+1)
-				self.right[i].text = str(i+1)
-				self.up[i].text = lineof[i]
-				self.botom[i].text = lineof[i]
+				self.board.l[i].text = str(i+1)
+				self.board.r[i].text = str(i+1)
+				self.board.u[i].text = lineof[i]
+				self.board.b[i].text = lineof[i]
 			for i in range(8):
 				for j in range(8):
 					if (i+j) % 2 != 0:
 						colorB = COLOROFCELL2
 					else:
 						colorB = COLOROFCELL1
-					self.cells[i*8+j].bcolor = colorB
+					self.board.cells[i*8+j].bcolor = colorB
 		
 
 
@@ -229,39 +169,23 @@ class MainApp(App):
 		self.movelabel.text = ''
 
 	def ComitMove(self,button):
-		self.gp.make_turn(self.coord, self.coordto)
+		self.gp.make_turn(self.board.coord, self.board.coordto)
 		boardlist = board(self.gp)
 		self.reversfildadres()
 		self.numberofmoves += 1
 		if self.numberofmoves%2 != 0:
 			for i in range(8):
 				for j in range(8):
-					self.lbllist[i][j].source = boardlist[i][j]
+					self.board.lbllist[i][j].source = boardlist[i][j]
 		else:
 			for i in range(8):
 				for j in range(8):
-					self.lbllist[7-i][7-j].source = boardlist[i][j]
+					self.board.lbllist[7-i][7-j].source = boardlist[i][j]
 		a = game_result(self.gp)
 		if not a[0]:
 			self.gameover(a[1])
 		self.movelabel.text = ''
 
-	def InputMove(self,button):
-		self.countofmove += 1
-		if self.numberofmoves % 2 != 0:
-			if self.countofmove % 2 == 1:
-				self.coord = Coordinates(button.getrowandcolumn()[0],button.getrowandcolumn()[1])
-				self.movelabel.text = str(self.coord).upper()+ ' --> '
-			else:
-				self.coordto = Coordinates(button.getrowandcolumn()[0],button.getrowandcolumn()[1])
-				self.movelabel.text = self.movelabel.text + str(self.coordto).upper()
-		else:
-			if self.countofmove % 2 == 1:
-				self.coord = Coordinates(7-button.getrowandcolumn()[0],7-button.getrowandcolumn()[1])
-				self.movelabel.text = str(self.coord).upper()+ ' --> '
-			else:
-				self.coordto = Coordinates(7-button.getrowandcolumn()[0],7-button.getrowandcolumn()[1])
-				self.movelabel.text = self.movelabel.text + str(self.coordto).upper()
 
 
 
