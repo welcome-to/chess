@@ -137,7 +137,7 @@ class MainApp(App):
 
 
 	def CancelMove(self,button):
-		self.countofmove = 0 
+		self.board.countofmove = 0 
 		self.movelabel.text = ''
 
 	def ComitMove(self,button):
