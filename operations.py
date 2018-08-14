@@ -88,7 +88,7 @@ def is_correct(turn, board, player_color):
 
     listofmoves = possible_moves_from_position(board,turn.start,player_color,None) # FIXME: wtf None
     is_kamikadze = IsKamikadze(board,turn.start)
-    moves = filterfalse(is_kamikadze, listofmoves)
+    moves = list(filterfalse(is_kamikadze, listofmoves))
 
     if not turn.end in moves:
         return False
@@ -157,12 +157,13 @@ class IsKamikadze(object):
         """
 
     def __call__(self,final_position):
-        self.board.put(final_position,self.figure)
-        king_pos = figures_on_board(self.board, type=KING, color=self.figure.color)[0][1]
+        board = deepcopy(self.board)
+        board.put(final_position,self.figure)
+        king_pos = figures_on_board(board, type=KING, color=self.figure.color)[0][1]
         enemy_color = another_color(self.figure.color)
-        figure_set = figures_on_board(self.board, color=enemy_color)
+        figure_set = figures_on_board(board, color=enemy_color)
         for i in figure_set:
-            if king_pos in possible_moves_from_position(self.board,i[1],self.enemy_color,None):
+            if king_pos in possible_moves_from_position(board,i[1],self.enemy_color,None):
                 #print ("Figure in position {0} will eat our beloved James LVII".format(str(i[1])))
                 return True
         return False

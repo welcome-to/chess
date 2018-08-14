@@ -43,6 +43,11 @@ def decode_move(short_line, board, player_color):
 
     is_eating = False
     if short_line and short_line[-1] == 'x':
+        eaten_figure = board.figure_on_position(Coordinates.from_string(end_field))
+        if eaten_figure is None:
+            raise DecodeError("Expected eating at {0} but there's no figure to eat".format(end_field))
+        if eaten_figure.color == player_color:
+            raise DecodeError("Expected figure of another color at {0}".format(end_field))
         is_eating = True
         short_line = short_line[:-1]
 
@@ -65,7 +70,7 @@ def decode_move(short_line, board, player_color):
     if initial_x:
         candidates = list(filter(lambda item: item[1].x == LETTER_TO_INDEX[initial_x], candidates))
     elif initial_y:
-        candidates = list(filter(lambda item: item[1].y == initial_y - 1, candidates))
+        candidates = list(filter(lambda item: item[1].y == int(initial_y) - 1, candidates))
 
     final_pos = Coordinates.from_string(end_field)
     candidates = list(filter(
@@ -73,11 +78,14 @@ def decode_move(short_line, board, player_color):
         candidates
     ))
 
-    print("\n{0}\n".format(board))
     if not candidates:
-        raise RuntimeError("No suitable figures for turn")
+        raise DecodeError("No suitable figures for turn")
     if len(candidates) > 1:
-        raise RuntimeError("Too many suitable figures for turn")
+        raise DecodeError("Too many suitable figures for turn")
+    if figure_type != candidates[0][0].type:
+        raise DecodeError("Wrong figure type: declared {0}, found {1}".format(figure_type, candidates[0][0].type))
+    if player_color != candidates[0][0].color:
+        raise DecodeError("Found figure of color {0} but it's {1} turn".format(candidates[0][0].color, player_color))
     return str(candidates[0][1]) + end_field
 
 
@@ -113,7 +121,7 @@ def decode_game(line):
         try:
             decoded = decode_move(white_turn, gp.board, WHITE)
         except:
-            raise DecodeError("Expected correct move description: `{0}`".format(white_turn))
+            raise
         human_readable += [decoded]
         gp.make_turn(
             Coordinates.from_string(decoded[:2]),
@@ -133,7 +141,7 @@ def decode_game(line):
         try:
             decoded = decode_move(black_turn, gp.board, BLACK)
         except:
-            raise DecodeError("Expected correct move description: `{0}`".format(black_turn))
+            raise
         human_readable += [decoded]
         gp.make_turn(
             Coordinates.from_string(decoded[:2]),
