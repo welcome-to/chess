@@ -1,5 +1,5 @@
 import unittest
-
+import cProfile
 from board import Board, Coordinates, Figure, Move, figures_on_board
 from const import *
 
@@ -266,4 +266,5 @@ class TestAll(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    unittest.main()
+    cProfile.run("unittest.main()")
+    #unittest.main()
