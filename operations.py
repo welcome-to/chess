@@ -42,7 +42,10 @@ def another_color(color):
     return WHITE if color == BLACK else BLACK
 
 
-def is_castling(move):
+def is_castling(move, board):
+    figure = board.figure_on_position(move.start)
+    if figure is None or figure.type is not KING:
+        return False
     return str(move) in CASTLING_DATA.keys()
 
 
@@ -79,7 +82,7 @@ def is_castling_correct(king_move, board, player_color):
 def is_correct(turn, board, player_color):
     print("Player {0}. Turn: {1} -> {2}".format(player_color, turn.start, turn.end), file=sys.stderr)
 
-    if is_castling(turn):
+    if is_castling(turn, board):
         return is_castling_correct(turn, board, player_color)
 
     figure = board.figure_on_position(turn.start)

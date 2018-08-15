@@ -49,7 +49,7 @@ class GameProcessor(object):
         if not is_correct(turn, self.board, self.current_player):
             self._run_technical_defeat()
             return
-        if is_castling(turn):
+        if is_castling(turn, self.board):
             make_castling(self.board, turn)
         else: # move
             self.board.move(turn.start, turn.end)
