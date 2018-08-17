@@ -2,6 +2,7 @@ from board import Board, Move
 from const import *
 from exception import InvalidMove, InternalError, NotImplementedError
 from operations import convert_pawns, is_correct, is_castling, game_status, make_castling
+from Electronic_Kasparov import GameBrains
 
 import os
 
@@ -35,6 +36,7 @@ class GameProcessor(object):
         self.log = False
         self.boards = []
         self.turns = []
+        self.algorithm = GameBrains(BLACK)
         # outside make_turn `current player' is the one whose turn is next
         self.current_player = WHITE
         self.next_player = BLACK
@@ -62,6 +64,9 @@ class GameProcessor(object):
             print(1)
             print(str(command[0]).upper()+str(command[1]).upper())
             self.log_file.write(str(command[0]).upper()+str(command[1]).upper())
+    def nextmove(self):
+        start,end = self.algorithm.makemove(self.board,self.current_player)
+        self.make_turn(start,end)
 
     def game_result(self):
         if self.technical_winner is not None:

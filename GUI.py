@@ -20,8 +20,8 @@ from board import Coordinates
 
 # Window configuration
 Config.set('graphics','resizable','0')
-Config.set('graphics','width','2160')
-Config.set('graphics','height','1080')
+Config.set('graphics','width','1200')
+Config.set('graphics','height','600')
 
 
 
@@ -183,11 +183,20 @@ class MainApp(App):
 
 	
 	def movement(self,instance):
+		self.board.numberofmoves += 1
+		self.gp.nextmove()
 		boardlist = board(self.gp)
-		for i in range(8):
-			for j in range(8):
-				self.lbllist[i][j].source = boardlist[i][j]
-		game_result(self.gp)
+		if self.board.numberofmoves%2 != 0:
+			for i in range(8):
+				for j in range(8):
+					self.board.lbllist[i][7-j].source = boardlist[i][j]
+		else:
+			for i in range(8):
+				for j in range(8):
+					self.board.lbllist[7-i][j].source = boardlist[i][j]
+		a = game_result(self.gp)
+		if not a[0]:
+			self.gameover(a[1])
 
 
 def game_result(GameProcessor):
