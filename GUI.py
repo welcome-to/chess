@@ -144,6 +144,7 @@ class MainApp(App):
 		self.board.numberofmoves += 1
 		self.board.invertboard()
 		start,end = self.board.get_move()
+		self.board.del_move()
 		self.gp.make_turn(start,end)
 		boardlist = board(self.gp)
 		if self.board.numberofmoves%2 != 0:

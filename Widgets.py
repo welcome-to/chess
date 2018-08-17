@@ -64,7 +64,8 @@ class  Board(GridLayout):
 		self.cells = []
 		self.countofmove = 0
 		self.numberofmoves = 0
-		self.coordto = Coordinates(0,0)
+		self.coord = Coordinates(9,9)
+		self.coordto = Coordinates(9,9)
 
 		for i in range(8):
 			label = LabelB(text = lineof[i],bcolor = BACKGROUND, font_size = 20)
@@ -161,3 +162,6 @@ class  Board(GridLayout):
 				self.b[i].text = lineof[i]
 				self.l[i].text = str(9 - (i + 1))
 				self.r[i].text = str(9 - (i + 1))
+	def del_move(self):
+		self.coord = Coordinates(9,9)
+		self.coordto = Coordinates(9,9)
