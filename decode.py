@@ -16,6 +16,7 @@ class DecodeError(Exception):
 
 
 def decode_move(short_line, board, player_color):
+    # FIXME: castling may be followed by gameover
     if short_line == '0-0':
         return 'e1g1' if player_color == WHITE else 'e8g8'
 

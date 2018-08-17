@@ -28,13 +28,13 @@ def game_status(board, current_player):
 
     enemy_moves = possible_moves(board, enemy_color, None)
     if list(filter(lambda item: item[1] == king_position, enemy_moves)): # king can be eaten. checkmate
-        print("It's checkmate.")
+        print("It's checkmate.", file=sys.stderr)
         if current_player == WHITE:
             return BLACK_WIN
         return WHITE_WIN
 
     # king is safe. stalemate
-    print("It's stalemate.")
+    print("It's stalemate.", file=sys.stderr)
     return TIE
 
 
