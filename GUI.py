@@ -20,8 +20,8 @@ from board import Coordinates
 
 # Window configuration
 Config.set('graphics','resizable','0')
-Config.set('graphics','width','1200')
-Config.set('graphics','height','600')
+Config.set('graphics','width','2160')
+Config.set('graphics','height','1080')
 
 
 
