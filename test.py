@@ -2,11 +2,12 @@ import unittest
 import cProfile
 from board import Board, Coordinates, Figure, Move, figures_on_board
 from const import *
+from exception import *
 
 from operations import (
     raw_possible_moves_king, raw_possible_moves_knight, raw_possible_moves_rook,
     raw_possible_moves_bishop, raw_possible_moves_queen, raw_possible_moves_pawn,
-    IsKamikadze, game_status, is_castling, is_castling_correct, is_correct
+    IsKamikadze, game_status, is_castling, is_castling_correct, is_correct, is_pawn_jump
 )
 
 
@@ -113,7 +114,7 @@ class TestAll(unittest.TestCase):
         self.assertEqual(list(map(str, moves)), ['c1', 'c2', 'd2', 'e1', 'e2'])
 
         # pawn
-        moves = sorted(raw_possible_moves_pawn(H7, self.full_board), key=lambda x: str(x))
+        moves = sorted(raw_possible_moves_pawn(H7, self.full_board, None), key=lambda x: str(x))
         self.assertEqual(list(map(str, moves)), ['h5', 'h6'])
 
         # all possible moves
@@ -215,6 +216,18 @@ class TestAll(unittest.TestCase):
         board.put(A7, bp3)
         board.put(B4, bk)
         self.assertTrue(is_correct(Move(D3, E3), board, WHITE))
+
+
+    def test_is_pawn_jump(self):
+        board = Board()
+        board.move(E2, E4)
+        board.move(D2, D3)
+        board.move(H7, H5)
+        self.assertTrue(is_pawn_jump(board, Move(E2, E4), WHITE))
+        self.assertFalse(is_pawn_jump(board, Move(D2, D3), WHITE))
+        self.assertTrue(is_pawn_jump(board, Move(H7, H5), BLACK))
+        with self.assertRaises(InternalError):
+            is_pawn_jump(board, Move(H6, H4), BLACK)
 
 
 if __name__ == "__main__":

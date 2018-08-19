@@ -148,17 +148,6 @@ class IsKamikadze(object):
 
         self.board.pop(initial_position)
 
-        """
-        if figure_color == BLACK:
-            self.enemy_color = WHITE
-        else:
-            self.enemy_color = BLACK
-        self.figure_set = figures_on_board(board, color=self.enemy_color)
-        self.king_pos = figures_on_board(board, type=KING, color=figure_color)[0][1]
-        self.figure = board.figure_on_position(initial_position)
-        self.board.pop(initial_position)
-        """
-
     def __call__(self,final_position):
         board = deepcopy(self.board)
         board.put(final_position,self.figure)
@@ -198,7 +187,7 @@ def possible_moves_from_position(board, position, player_color, previous_move):
         KING: raw_possible_moves_king
     }
     given_args = {
-        PAWN: [position,board],
+        PAWN: [position,board,previous_move],
         ROOK: [position,board],
         KNIGHT: [position],
         BISHOP: [position,board],
@@ -214,6 +203,16 @@ def possible_moves_from_position(board, position, player_color, previous_move):
     return moves
 
 
+def is_pawn_jump(board, move, color):
+    figure = board.figure_on_position(move.end)
+    if figure is None or figure.color != color:
+        raise InternalError("This could not happen")
+    if figure.type != PAWN:
+        return False
+
+    return (color == WHITE and move.end.y - move.start.y == 2) or (color == BLACK and move.end.y - move.start.y == -2)
+
+
 class TryEat(object):
     def __init__(self, board, color):
         self.board = board
@@ -226,11 +225,10 @@ class TryEat(object):
                 return position
 
 
-def raw_possible_moves_pawn(position, board):
+def raw_possible_moves_pawn(position, board, previous_move):
     pawn = board.figure_on_position(position)
     full = []
     try_eat = TryEat(board, pawn.color)
-
 
     if pawn.color == BLACK:
         if position.bottom() and board.figure_on_position(position.bottom()) is None:
