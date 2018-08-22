@@ -7,7 +7,7 @@ from exception import *
 from operations import (
     raw_possible_moves_king, raw_possible_moves_knight, raw_possible_moves_rook,
     raw_possible_moves_bishop, raw_possible_moves_queen, raw_possible_moves_pawn,
-    IsKamikadze, game_status, is_castling, is_castling_correct, is_correct, is_pawn_jump
+    IsKamikadze, game_status, is_castling, is_castling_correct, is_correct, is_pawn_jump, is_e_p, make_e_p
 )
 
 
@@ -117,6 +117,16 @@ class TestAll(unittest.TestCase):
         moves = sorted(raw_possible_moves_pawn(H7, self.full_board, None), key=lambda x: str(x))
         self.assertEqual(list(map(str, moves)), ['h5', 'h6'])
 
+        board = empty_board()
+        board.put(E4, Figure(WHITE, PAWN))
+        board.put(D7, Figure(BLACK, PAWN))
+        board.move(D7, D4)
+        moves = sorted(raw_possible_moves_pawn(D4, board, Move(E2, E4)), key=lambda x: str(x))
+        self.assertEqual(list(map(str, moves)), ['d3', 'e3'])
+        board.put(A5, Figure(WHITE, PAWN))
+        moves = sorted(raw_possible_moves_pawn(D4, board, Move(A4, A5)), key=lambda x: str(x))
+        self.assertEqual(list(map(str, moves)), ['d3'])
+
         # all possible moves
         pass
 
@@ -180,7 +190,7 @@ class TestAll(unittest.TestCase):
 
     def test_game_status(self):
         ch_board = children_board()
-        self.assertEqual(game_status(ch_board, BLACK), WHITE_WIN)
+        self.assertEqual(game_status(ch_board, BLACK, None), WHITE_WIN)
 
 
     def test_board(self):
@@ -215,7 +225,7 @@ class TestAll(unittest.TestCase):
         board.put(F6, bp2)
         board.put(A7, bp3)
         board.put(B4, bk)
-        self.assertTrue(is_correct(Move(D3, E3), board, WHITE))
+        self.assertTrue(is_correct(Move(D3, E3), board, WHITE, None))
 
 
     def test_is_pawn_jump(self):
@@ -228,6 +238,25 @@ class TestAll(unittest.TestCase):
         self.assertTrue(is_pawn_jump(board, Move(H7, H5), BLACK))
         with self.assertRaises(InternalError):
             is_pawn_jump(board, Move(H6, H4), BLACK)
+
+
+    def test_e_p(self):
+        board = empty_board()
+        wp1 = Figure(WHITE, PAWN)
+        wp2 = Figure(WHITE, PAWN)
+        bp = Figure(BLACK, PAWN)
+        board.put(E4, wp1)
+        board.put(E5, wp2)
+        board.put(D4, bp)
+        self.assertTrue(is_e_p(Move(E4, D5), board))
+        self.assertFalse(is_e_p(Move(D4, E5), board))
+
+        self.assertTrue(board.figure_on_position(D5) is None)
+        make_e_p(board, Move(E4, D5))
+        wp = board.figure_on_position(D5)
+        self.assertTrue(wp is not None)
+        self.assertEqual(wp.type, PAWN)
+        self.assertEqual(wp.color, WHITE)
 
 
 if __name__ == "__main__":

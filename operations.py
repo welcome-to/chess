@@ -11,11 +11,11 @@ import sys
 
 # has the game finished with a result? return this result if yes
 # current_player: the one whose turn is next
-def game_status(board, current_player):
+def game_status(board, current_player, previous_turn):
     # are there possible moves for `current_player'?
     all_moves = list(filterfalse(
         lambda item: IsKamikadze(board, item[0])(item[1]),
-        possible_moves(board, current_player, None)
+        possible_moves(board, current_player, previous_turn)
     ))
     if all_moves: # there are moves, so the game is not over
         return None
@@ -79,7 +79,7 @@ def is_castling_correct(king_move, board, player_color):
 
 
 # is the `turn' correct at this position?
-def is_correct(turn, board, player_color):
+def is_correct(turn, board, player_color, previous_turn):
     print("Player {0}. Turn: {1} -> {2}".format(player_color, turn.start, turn.end), file=sys.stderr)
 
     if is_castling(turn, board):
@@ -89,9 +89,9 @@ def is_correct(turn, board, player_color):
     if ((figure is None) or (figure.color != player_color)):
         return False
 
-    listofmoves = possible_moves_from_position(board,turn.start,player_color,None) # FIXME: wtf None
-    is_kamikadze = IsKamikadze(board,turn.start)
-    moves = list(filterfalse(is_kamikadze, listofmoves))
+    list_of_moves = possible_moves_from_position(board, turn.start, player_color, previous_turn)
+    is_kamikadze = IsKamikadze(board, turn.start)
+    moves = list(filterfalse(is_kamikadze, list_of_moves))
 
     if not turn.end in moves:
         return False
@@ -203,6 +203,21 @@ def possible_moves_from_position(board, position, player_color, previous_move):
     return moves
 
 
+def is_e_p(move, board):
+    figure = board.figure_on_position(move.start)
+    if not figure.type == PAWN:
+        return False
+    if move.start.x == move.end.x:
+        return False
+    return board.figure_on_position(move.end) is None
+
+
+def make_e_p(board, move):
+    board.move(move.start, move.end)
+    enemy_pos = Coordinates(move.end.x, move.start.y)
+    board.pop(enemy_pos)
+
+
 def is_pawn_jump(board, move, color):
     figure = board.figure_on_position(move.end)
     if figure is None or figure.color != color:
@@ -248,6 +263,13 @@ def raw_possible_moves_pawn(position, board, previous_move):
             lambda x: x is not None,
             map(try_eat, [position.top_left(), position.top_right()])
         ))
+
+    if previous_move is not None and is_pawn_jump(board, previous_move, another_color(pawn.color)):
+        if pawn.color == BLACK:
+            full.append(previous_move.end.bottom())
+        else:
+            full.append(previous_move.end.top())
+
     return full
 
 
