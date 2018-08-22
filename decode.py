@@ -1,6 +1,6 @@
 from board import Board, Coordinates, Move, figures_on_board
 from const import *
-from operations import possible_moves_from_position
+from operations import possible_moves_from_position, is_e_p
 from run import GameProcessor
 
 import copy
@@ -15,7 +15,7 @@ class DecodeError(Exception):
         return str(self.value)
 
 
-def decode_move(short_line, board, player_color):
+def decode_move(short_line, board, player_color, previous_move):
     # FIXME: castling may be followed by gameover
     if short_line == '0-0':
         return 'e1g1' if player_color == WHITE else 'e8g8'
@@ -44,11 +44,6 @@ def decode_move(short_line, board, player_color):
 
     is_eating = False
     if short_line and short_line[-1] == 'x':
-        eaten_figure = board.figure_on_position(Coordinates.from_string(end_field))
-        if eaten_figure is None:
-            raise DecodeError("Expected eating at {0} but there's no figure to eat".format(end_field))
-        if eaten_figure.color == player_color:
-            raise DecodeError("Expected figure of another color at {0}".format(end_field))
         is_eating = True
         short_line = short_line[:-1]
 
@@ -75,7 +70,7 @@ def decode_move(short_line, board, player_color):
 
     final_pos = Coordinates.from_string(end_field)
     candidates = list(filter(
-        lambda item: final_pos in possible_moves_from_position(board, item[1], player_color, None),
+        lambda item: final_pos in possible_moves_from_position(board, item[1], player_color, previous_move),
         candidates
     ))
 
@@ -87,11 +82,22 @@ def decode_move(short_line, board, player_color):
         raise DecodeError("Wrong figure type: declared {0}, found {1}".format(figure_type, candidates[0][0].type))
     if player_color != candidates[0][0].color:
         raise DecodeError("Found figure of color {0} but it's {1} turn".format(candidates[0][0].color, player_color))
-    return str(candidates[0][1]) + end_field
+
+    start_pos = candidates[0][1]
+    if is_eating:
+        attacked_field = final_pos
+        if is_e_p(Move(start_pos, final_pos), board):
+            attacked_field = Coordinates(final_pos.x, start_pos.y)
+        eaten_figure = board.figure_on_position(attacked_field)
+        if eaten_figure is None:
+            raise DecodeError("Expected eating at {0} but there's no figure to eat".format(attacked_field))
+        if eaten_figure.color == player_color:
+            raise DecodeError("Expected figure of another color at {0}".format(attacked_field))
+
+    return str(start_pos) + end_field
 
 
-
-def decode_game(line):
+def decode_game(line, raise_if_incomplete=True):
     def end_word(line):
         result = line.find(' ')
         if result == -1:
@@ -102,6 +108,7 @@ def decode_game(line):
     human_readable = []
     n = 1
     gp = GameProcessor()
+    previous_move = None
     while line:
         print("Turn #{0}".format(n), file=sys.stderr)
         for game_result in game_results:
@@ -120,7 +127,7 @@ def decode_game(line):
         next_space = end_word(line)
         white_turn = line[:next_space]
         try:
-            decoded = decode_move(white_turn, gp.board, WHITE)
+            decoded = decode_move(white_turn, gp.board, WHITE, previous_move)
         except:
             raise
         human_readable += [decoded]
@@ -128,6 +135,7 @@ def decode_game(line):
             Coordinates.from_string(decoded[:2]),
             Coordinates.from_string(decoded[2:])
         )
+        previous_move = Move.from_string(decoded)
 
         line = line[next_space:].lstrip(' ')
         for game_result in game_results:
@@ -139,8 +147,12 @@ def decode_game(line):
 
         next_space = end_word(line)
         black_turn = line[:next_space]
+        if not black_turn:
+            if raise_if_incomplete:
+                raise DecodeError("Expected game result")
+            return human_readable
         try:
-            decoded = decode_move(black_turn, gp.board, BLACK)
+            decoded = decode_move(black_turn, gp.board, BLACK, previous_move)
         except:
             raise
         human_readable += [decoded]
@@ -148,8 +160,12 @@ def decode_game(line):
             Coordinates.from_string(decoded[:2]),
             Coordinates.from_string(decoded[2:])
         )
+        previous_move = Move.from_string(decoded)
         line = line[next_space:].lstrip(' ')
 
         n += 1
 
-    raise DecodeError("Expected game result")
+    if raise_if_incomplete:
+        raise DecodeError("Expected game result")
+
+    return human_readable
