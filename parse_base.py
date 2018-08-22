@@ -28,7 +28,7 @@ if __name__ == "__main__":
                     gamefile.write('\n'+str(i))
                 gamefile.close()
             except Exception as ex:
-                print(players_line + date_line + "Game {0}: exception. {1}\nGame:{2}".format(gamenumber, ex, lines))
+                print(players_line + date_line + "Game {0}: exception. {1}\n{2}".format(gamenumber, ex, lines))
         elif lines.strip() and lines.strip()[-1] == ']':
             players_line = lines
             #print ("Players line: " + players_line + "," + lines)
