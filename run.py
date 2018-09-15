@@ -90,11 +90,11 @@ class GameProcessor(object):
         return result
 
     def _run_technical_defeat(self):
-        print("Invalid move")
         if self.current_player == WHITE:
             self.technical_winner = BLACK
         else:
             self.technical_winner = WHITE
+        print("Invalid move. Winner: {0}".format(self.technical_winner))
 
     def savelog(self,bool):
         self.log = bool

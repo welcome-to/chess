@@ -80,18 +80,22 @@ def is_castling_correct(king_move, board, player_color):
 
 # is the `turn' correct at this position?
 def is_correct(turn, board, player_color, previous_turn):
-    print("Player {0}. Turn: {1} -> {2}".format(player_color, turn.start, turn.end), file=sys.stderr)
+    print("Player {0}.\n{1},{2}\n".format(player_color, turn.start, turn.end), file=sys.stderr)
 
     if is_castling(turn, board):
         return is_castling_correct(turn, board, player_color)
 
     figure = board.figure_on_position(turn.start)
     if ((figure is None) or (figure.color != player_color)):
+        print("No figure or wrong figure color")
         return False
 
     list_of_moves = possible_moves_from_position(board, turn.start, player_color, previous_turn)
+    print("List of raw moves:", list_of_moves)
+
     is_kamikadze = IsKamikadze(board, turn.start)
     moves = list(filterfalse(is_kamikadze, list_of_moves))
+    print("List of moves:", moves)
 
     if not turn.end in moves:
         return False
@@ -166,7 +170,7 @@ def possible_moves(board, player_color, previous_move):
     return sum(
         map(
             lambda item: [(item[0], boo) for boo in item[1]],
-            [(start[1], possible_moves_from_position(board, start[1], player_color, previous_move)) for start in figures]
+            [(start[1], is_correct(board, start[1], player_color, previous_move)) for start in figures]
         ),
         []
     )

@@ -10,6 +10,8 @@ from operations import (
     IsKamikadze, game_status, is_castling, is_castling_correct, is_correct, is_pawn_jump, is_e_p, make_e_p
 )
 
+from run import GameProcessor
+
 
 A1, A2, A3, A4, A5, A6, A7, A8, \
 B1, B2, B3, B4, B5, B6, B7, B8, \
@@ -52,6 +54,7 @@ def children_board():
 
 
 class TestAll(unittest.TestCase):
+    """
     def test_coordinates(self):
         word = 'e2'
         coord = Coordinates.from_string(word)
@@ -257,6 +260,32 @@ class TestAll(unittest.TestCase):
         self.assertTrue(wp is not None)
         self.assertEqual(wp.type, PAWN)
         self.assertEqual(wp.color, WHITE)
+    """
+
+    def test_57(self):
+        #board = Board()
+        gp = GameProcessor()
+        gp.make_turn(H2, H3)
+        gp.make_turn(E7, E6)
+        gp.make_turn(A2, A4)
+        gp.make_turn(F8, D6)
+        gp.make_turn(E2, E4)
+        gp.make_turn(F7, F6)
+        gp.make_turn(B1, A3)
+        gp.make_turn(D6, F4)
+        gp.make_turn(H1, H2)
+        gp.make_turn(E8, E7)
+        gp.make_turn(E1, E2)
+        gp.make_turn(B8, A6)
+        gp.make_turn(A3, B5)
+        gp.make_turn(C7, C5)
+        gp.make_turn(A4, A5)
+        gp.make_turn(D8, F8)
+        gp.make_turn(E2, E1)
+        gp.make_turn(F4, D2)
+        print(gp.board)
+        gp.make_turn(B5, C7)
+        print("Game status: {0}".format(game_status(gp.board, BLACK, None)))
 
 
 if __name__ == "__main__":
