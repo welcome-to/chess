@@ -28,7 +28,7 @@ GAME_BACKGROUND ='img/fon2.jpg'
 FONT = 'img/11895.ttf'
 FAIL = 'img/11464.ttf'
 
-lineof = ['A','B','C','D','E','F','G','H']
+listoflaters = ['A','B','C','D','E','F','G','H']
 
 CASTLING_DATA = {
     'e1g1': {

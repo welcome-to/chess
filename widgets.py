@@ -59,10 +59,54 @@ class  BoardWidget(GridLayout):
 			cols=10,
 			rows=10
 		)
+		celllist = []
+
+		celllist.append(LabelB(text = '',bcolor = BACKGROUND))
+		for i in range(8):
+			celllist.append(LabelB(text = listoflaters[i],bcolor = BACKGROUND))
+		celllist.append(LabelB(text = '',bcolor = BACKGROUND))
+		cells=[]
+		for i in range(8):
+			row = []			
+			for j in range(8):
+				if (i + j) % 2 == 0:
+					colorB = COLOROFCELL2
+				else:
+					colorB = COLOROFCELL1
+				cell = Cell(bcolor = colorB)
+				image = Image(source = 'img/nothing.png',
+					          size_hint = (1,1),
+					          pos_hint = {'center_x': 0.5, 'center_y': 0.5})
+
+				button = ButtonRC(text = '',
+					              background_color = [0,0,0,0],
+					              background_normal = '',
+					              on_press = self.InputMove,
+					              size_hint = (1,1),
+					              pos_hint = {'center_x': 0.5, 'center_y': 0.5})
+				cell.add_widget(image)
+				cell.add_widget(button)
+				row.append(cell)
+				cells.append(cell)
+		for i in range(8):
+			celllist.append(LabelB(text = str(i),bcolor = BACKGROUND))
+			for j in range(8):
+				celllist.append(cells[i*8+j])
+			celllist.append(LabelB(text = str(i),bcolor = BACKGROUND))
+		
+		celllist.append(LabelB(text = '',bcolor = BACKGROUND))
+		for i in range(8):
+			celllist.append(LabelB(text = listoflaters[i],bcolor = BACKGROUND))
+		celllist.append(LabelB(text = '',bcolor = BACKGROUND))
+
+
+
+		for i in celllist:
+			self.add_widget(i)
 		self.draw(initial_objects)
 
 	def draw(self, orientated_objects):
-		pas
+		pass
 
 
 	def InputMove(self,button):

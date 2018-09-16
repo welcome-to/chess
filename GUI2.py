@@ -139,8 +139,7 @@ class MainApp(App):
 			background_color=GAME_BUTTON_COLOR,
 			background_normal=''
 		))
-		self.board = BoardWidget()
-		self.board.load_board(self.move_label)
+		self.board = BoardWidget('')
 		self.gameplay.add_widget(self.board)
 		self.main_layout.add_widget(self.gameplay)
 
