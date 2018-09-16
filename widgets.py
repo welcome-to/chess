@@ -18,7 +18,7 @@ from const import *
 
 
 
-
+#Label с изменяемым цветом фона
 
 Builder.load_string("""
 <LabelB>:
@@ -30,6 +30,12 @@ Builder.load_string("""
     		pos: self.pos
     		size: self.size
 """)
+class LabelB(Label):
+	bcolor = ListProperty([1,1,1,1])
+
+
+
+#Добавление свойства цвета коетке
 Builder.load_string("""
 <Cell>:
     canvas:
@@ -39,9 +45,7 @@ Builder.load_string("""
             pos: self.pos
             size: self.size
 """)
-
-class LabelB(Label):
-	bcolor = ListProperty([1,1,1,1])
+#создание класса клетки
 class Cell(FloatLayout):
 	bcolor = ListProperty([1,1,1,1])
 	def __init__(self,bcolor):
@@ -54,6 +58,7 @@ class Cell(FloatLayout):
 	def updateimage(self,source):
 		self.image.source = source
 
+#создание специализированной кнопки (большой кастыль) кнопка помнит где она												исправить!!!!!!!!!!
 class ButtonRC(Button):
 	def loadroadandcolumn(self,row,column):
 		self.row = row
@@ -61,7 +66,13 @@ class ButtonRC(Button):
 	def getrowandcolumn(self):
 		return (self.column,self.row)
 
+
+
+
+
+#виджет доски 
 class  BoardWidget(GridLayout):
+	#создание сетки доски без заполнения
 	def __init__(self, initial_objects):
 		super().__init__(
 			pos_hint={'center_x':0.5,'center_y':0.5},
@@ -111,6 +122,7 @@ class  BoardWidget(GridLayout):
 			self.add_widget(i)
 		self.draw(initial_objects)
 
+	#заполнение доски в соответсвии с заданной упорядоченной доской
 	def draw(self, orientated_objects):
 		pass
 
