@@ -147,8 +147,57 @@ class MainApp(App):
 		self.stop()
 
 	def show_settings(self, button):
-		pass
+		self.start_screen.remove_widget(self.buttons)
 
+		self.settings = BoxLayout(
+			orientation='vertical',
+			spacing=10,
+			size_hint=(0.3, 0.4),
+			pos_hint={'center_x': 0.7, 'center_y': 0.4})
+		crimea = Button(
+			text='Whose Crimea?: Russian',
+			on_press=self.crimea,
+			background_normal='',
+			background_color=INITIAL_BUTTON_COLOR,
+			color=[0, 0, 0, 1]
+		)
+
+		log = Button(
+			text='Loging: No',
+			on_press=self.loging,
+			background_normal='',
+			background_color=INITIAL_BUTTON_COLOR,
+			color=[0, 0, 0, 1]
+		)
+
+		back_to_start_screen = Button(
+			text='Back',
+			on_press=self.back_to_start,
+			background_normal='',
+			background_color=INITIAL_BUTTON_COLOR,
+			color=[0, 0, 0, 1]
+		)
+		self.settings.add_widget(crimea)
+		self.settings.add_widget(log)
+		self.settings.add_widget(back_to_start_screen)
+		self.start_screen.add_widget(self.settings)
+
+	def back_to_start(self, button):
+
+		self.start_screen.remove_widget(self.settings)
+		self.start_screen.add_widget(self.buttons)
+
+	def crimea(self, button):
+		if button.text == 'Whose Crimea?: Russian':
+			button.text = 'Whose Crimea?: Ukraine'
+		else:
+			button.text = 'Whose Crimea?: Russian'
+
+	def loging(self, button):
+		if button.text == 'Loging: No':
+			button.text = 'Loging: Yes'
+		else:
+			button.text = 'Loging: No'
 	def cancel_move(self, button):
 		pass
 
