@@ -7,6 +7,7 @@ from kivy.uix.image import Image
 
 from const import *
 from widgets import LabelB, BoardWidget
+from run import GameProcessor
 
 # Window configuration
 Config.set('graphics','resizable','0')
@@ -87,6 +88,10 @@ class MainApp(App):
 		self.draw_game_screen()
 
 	def draw_game_screen(self):
+
+		self.GameProcessor = GameProcessor()
+
+
 		self.gameplay = FloatLayout(
 			size_hint=[0.5,1],
 			pos_hint={'center_x': 0.5, 'center_y': 0.5}
