@@ -8,11 +8,42 @@ from kivy.uix.image import Image
 from const import *
 from widgets import LabelB, BoardWidget
 from run import GameProcessor
+from copy import copy
 
 # Window configuration
 Config.set('graphics','resizable','0')
 Config.set('graphics','width','1200')
 Config.set('graphics','height','600')
+
+
+REGULAR = 1
+INVERSE = -1
+
+def another_orientation(orientation):
+    if orientation == REGULAR:
+        return INVERSE
+    return REGULAR
+
+
+class Orienteer(object):
+    def __init__(self, player_color=WHITE):
+        if player_color == WHITE:
+            self.orientation = REGULAR
+        else:
+            self.orientation = INVERSE
+
+    def invert(self):
+        self.orientation = another_orientation(self.orientation)
+
+    def oriented_board(board):
+        if (self.orientation == REGULAR):
+            return board
+        return list(reversed(board))
+
+    def oriented_coordinates(coordinates, board_size):
+        if (self.orientation == REGULAR):
+            return coordinates
+        return board_size - coordinates[0], board_size - coordinates[1]
 
 
 class MainApp(App):
