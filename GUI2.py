@@ -21,23 +21,33 @@ INVERSE = -1
 
 def another_orientation(orientation):
     if orientation == REGULAR:
-        return INVERSE
+    	return INVERSE
     return REGULAR
 
 
 class Orienteer(object):
     def __init__(self, player_color=WHITE):
         if player_color == WHITE:
-            self.orientation = REGULAR
+        	self.orientation = REGULAR
         else:
-            self.orientation = INVERSE
+        	self.orientation = INVERSE
 
     def invert(self):
         self.orientation = another_orientation(self.orientation)
 
-    def oriented_board(board):
-        if (self.orientation == REGULAR):
-            return board
+    def oriented_board(self,board):
+    	orient_board = []
+    	if (self.orientation == REGULAR):
+        	for i in range(8):
+            	for j in range(8):
+            		if board.data[i][j] == None:
+            			orient_board.append('img/nothing.png')
+            		else:
+            			figure = board.data[i][j]
+            			figure = figurecolor[figure.color] + figuretype[figure.type] 
+            			orient_board.append(figure)
+            return(orient_board)
+
         return list(reversed(board))
 
     def oriented_coordinates(coordinates, board_size):
@@ -121,6 +131,7 @@ class MainApp(App):
 	def draw_game_screen(self):
 
 		self.GameProcessor = GameProcessor()
+		self.Orienteer = Orienteer()
 
 
 		self.gameplay = FloatLayout(
@@ -175,7 +186,7 @@ class MainApp(App):
 			background_color=GAME_BUTTON_COLOR,
 			background_normal=''
 		))
-		self.board = BoardWidget('')
+		self.board = BoardWidget(self.Orienteer.oriented_board(self.GameProcessor.board))
 		self.gameplay.add_widget(self.board)
 		self.main_layout.add_widget(self.gameplay)
 
