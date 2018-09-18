@@ -30,6 +30,10 @@ FAIL = 'img/11464.ttf'
 
 listoflaters = ['A','B','C','D','E','F','G','H']
 
+# orientation
+REGULAR = 1
+INVERSE = -1
+
 CASTLING_DATA = {
     'e1g1': {
         'rook_move': 'h1f1',

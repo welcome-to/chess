@@ -16,36 +16,33 @@ Config.set('graphics','width','1200')
 Config.set('graphics','height','600')
 
 
-REGULAR = 1
-INVERSE = -1
-
 def another_orientation(orientation):
     if orientation == REGULAR:
-    	return INVERSE
+        return INVERSE
     return REGULAR
 
 
 class Orienteer(object):
-    def __init__(self, player_color=WHITE):
-        if player_color == WHITE:
-        	self.orientation = REGULAR
+    def __init__(self, initial_color=WHITE):
+        if initial_color == WHITE:
+            self.orientation = REGULAR
         else:
-        	self.orientation = INVERSE
+        self.orientation = INVERSE
 
     def invert(self):
         self.orientation = another_orientation(self.orientation)
 
     def oriented_board(self,board):
-    	orient_board = []
-    	if (self.orientation == REGULAR):
-        	for i in range(8):
-            	for j in range(8):
-            		if board.data[i][j] == None:
-            			orient_board.append('img/nothing.png')
-            		else:
-            			figure = board.data[i][j]
-            			figure = figurecolor[figure.color] + figuretype[figure.type] 
-            			orient_board.append(figure)
+        orient_board = []
+        if (self.orientation == REGULAR):
+            for i in range(8):
+                for j in range(8):
+                    if board.data[i][j] == None:
+                        orient_board.append('img/nothing.png')
+                    else:
+                        figure = board.data[i][j]
+                        figure = figurecolor[figure.color] + figuretype[figure.type] 
+                        orient_board.append(figure)
             return(orient_board)
 
         return list(reversed(board))
