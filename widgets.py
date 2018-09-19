@@ -148,6 +148,19 @@ class  BoardWidget(GridLayout):
         )[0][0]
         # FIXME: do something else
         self.button_function(index)
+    def LightRed(self,index):
+        self.children[index].bcolor = [255, 0, 0, 1]
+    def LightGreen(self,index):
+        self.children[index].bcolor = [0, 255,0,1]
+    def UnlightAll(self):
+        for i in range(8):
+            for j in range(8):
+                if (i + j) % 2 == 0:
+                    colorB = COLOROFCELL2
+                else:
+                    colorB = COLOROFCELL1
+                self.children[10*(i+1)+j+1].bcolor = colorB
+
 
 
 
