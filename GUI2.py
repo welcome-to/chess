@@ -32,26 +32,16 @@ class Orienteer(object):
     def invert(self):
         self.orientation = another_orientation(self.orientation)
 
-    def oriented_board(self,board):
-        orient_board = []
-        if (self.orientation == REGULAR):
-            for i in range(8):
-                for j in range(8):
-                    if board.data[i][j] == None:
-                        orient_board.append('img/nothing.png')
-                    else:
-                        figure = board.data[i][j]
-                        figure = figurecolor[figure.color] + figuretype[figure.type] 
-                        orient_board.append(figure)
-            return(orient_board)
 
-        return list(reversed(board))
-
-    def oriented_coordinates(coordinates, board_size):
+    def oriented_coordinates(self,coordinates, board_size):
         if (self.orientation == REGULAR):
             return coordinates
         return board_size - coordinates[0], board_size - coordinates[1]
 
+    def oriented_board(self,board):
+    	if self.orientation == REGULAR:
+    		return board
+    	return list(reversed(board))
 
 class MainApp(App):
     def build(self):
@@ -185,7 +175,8 @@ class MainApp(App):
             background_color=GAME_BUTTON_COLOR,
             background_normal=''
         ))
-        self.board = BoardWidget(self.Orienteer.oriented_board(self.GameProcessor.board))
+        self.Orienteer.invert()
+        self.board = BoardWidget(self.Orienteer.oriented_board(self.get_board()))
         self.gameplay.add_widget(self.board)
         self.main_layout.add_widget(self.gameplay)
 
@@ -246,6 +237,27 @@ class MainApp(App):
             button.text = 'Loging: No'
     def cancel_move(self, button):
         pass
+
+    def get_board(self):
+        board_list = []
+        board_list.append('')
+        for i in listoflaters:
+            board_list.append(i)
+        board_list.append('')
+        for i in range(8):
+            board_list.append(str(i+1))
+            for j in range(8):
+                figure = self.GameProcessor.board.data[i][j]
+                if figure is None:
+                    board_list.append('img/nothing.png')
+                else:
+                    board_list.append(figurecolor[figure.color]+figuretype[figure.type])
+            board_list.append(str(i+1))
+        board_list.append('')
+        for i in listoflaters:
+            board_list.append(i)
+        board_list.append('')
+        return board_list
 
     def commit_move(self, button):
         pass

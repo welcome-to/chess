@@ -80,12 +80,12 @@ class  BoardWidget(GridLayout):
             cols=10,
             rows=10
         )
-        celllist = []
+        self.celllist = []
 
-        celllist.append(LabelB(text = '',bcolor = BACKGROUND))
+        self.celllist.append(LabelB(text = '',bcolor = BACKGROUND))
         for i in range(8):
-            celllist.append(LabelB(text = listoflaters[i],bcolor = BACKGROUND))
-        celllist.append(LabelB(text = '',bcolor = BACKGROUND))
+            self.celllist.append(LabelB(text = listoflaters[i],bcolor = BACKGROUND))
+        self.celllist.append(LabelB(text = '',bcolor = BACKGROUND))
         cells=[]
         for i in range(8):
             row = []
@@ -106,23 +106,35 @@ class  BoardWidget(GridLayout):
                 row.append(cell)
                 cells.append(cell)
         for i in range(8):
-            celllist.append(LabelB(text = str(8-i),bcolor = BACKGROUND))
+            self.celllist.append(LabelB(text = str(8-i),bcolor = BACKGROUND))
             for j in range(8):
-                celllist.append(cells[i*8+j])
-            celllist.append(LabelB(text = str(8-i),bcolor = BACKGROUND))
+                self.celllist.append(cells[i*8+j])
+            self.celllist.append(LabelB(text = str(8-i),bcolor = BACKGROUND))
 
-        celllist.append(LabelB(text = '',bcolor = BACKGROUND))
+        self.celllist.append(LabelB(text = '',bcolor = BACKGROUND))
         for i in range(8):
-            celllist.append(LabelB(text = listoflaters[i],bcolor = BACKGROUND))
-        celllist.append(LabelB(text = '',bcolor = BACKGROUND))
+            self.celllist.append(LabelB(text = listoflaters[i],bcolor = BACKGROUND))
+        self.celllist.append(LabelB(text = '',bcolor = BACKGROUND))
 
-        for i in celllist:
+        for i in self.celllist:
             self.add_widget(i)
         self.draw(initial_objects)
 
     #заполнение доски в соответсвии с заданной упорядоченной доской
     def draw(self, orientated_objects):
-        pass
+        k=0
+        for i in range(10):
+            self.celllist[k].text=orientated_objects[k]
+            k+=1
+        for i in range(8):
+            self.celllist[k].text=orientated_objects[k]
+            k+=1
+            for i in range(8):
+                self.celllist[k].updateimage(orientated_objects[k])
+                k+=1
+            self.celllist[k].text=orientated_objects[k]
+            k+=1
+
 
 
     def InputMove(self,button):
