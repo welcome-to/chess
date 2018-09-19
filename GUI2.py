@@ -286,6 +286,7 @@ class MainApp(App):
         self.move_label.text = ''
         self.board.draw(self.Orienteer.oriented_board(self.get_board()))
         self.GameProcessor.make_turn(self.start,self.end)
+        print(self.GameProcessor.board)
 
     def restart(self, button):
         print(self.main_layout.children)
