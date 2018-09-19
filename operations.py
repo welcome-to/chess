@@ -90,16 +90,15 @@ def is_correct(turn, board, player_color, previous_turn):
         print("No figure or wrong figure color")
         return False
 
-    list_of_moves = possible_moves_from_position(board, turn.start, player_color, previous_turn)
-    print("List of raw moves:", list_of_moves)
-
-    is_kamikadze = IsKamikadze(board, turn.start)
-    moves = list(filterfalse(is_kamikadze, list_of_moves))
-    print("List of moves:", moves)
-
-    if not turn.end in moves:
+    if not turn.end in allowed_moves_from_position(board, turn.start, player_color, previous_turn):
         return False
     return True
+
+
+def allowed_moves_from_position(board, position, player_color, previous_turn):
+    list_of_moves = possible_moves_from_position(board, position, player_color, previous_turn)
+    is_kamikadze = IsKamikadze(board, position)
+    return list(filterfalse(is_kamikadze, list_of_moves))
 
 
 def convert_pawns(board):
@@ -170,7 +169,7 @@ def possible_moves(board, player_color, previous_move):
     return sum(
         map(
             lambda item: [(item[0], boo) for boo in item[1]],
-            [(start[1], is_correct(board, start[1], player_color, previous_move)) for start in figures]
+            [(start[1], possible_moves_from_position(board, start[1], player_color, previous_move)) for start in figures]
         ),
         []
     )

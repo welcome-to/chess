@@ -54,7 +54,6 @@ def children_board():
 
 
 class TestAll(unittest.TestCase):
-    """
     def test_coordinates(self):
         word = 'e2'
         coord = Coordinates.from_string(word)
@@ -260,7 +259,6 @@ class TestAll(unittest.TestCase):
         self.assertTrue(wp is not None)
         self.assertEqual(wp.type, PAWN)
         self.assertEqual(wp.color, WHITE)
-    """
 
     def test_57(self):
         #board = Board()

@@ -74,6 +74,9 @@ class GameProcessor(object):
             self.log_file.write(str(command[0]).upper()+str(command[1]).upper())
         """
 
+    def allowed_moves(self):
+        return allowed_moves(board, self.current_player, self.last_move())
+
     def nextmove(self):
         start,end = self.algorithm.makemove(self.board,self.current_player)
         self.make_turn(start,end)
