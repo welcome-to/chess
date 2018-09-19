@@ -120,6 +120,7 @@ class MainApp(App):
         self.main_layout.remove_widget(self.main_layout.children[0])
         self.GameProcessor = GameProcessor()
         self.Orienteer = Orienteer()
+        self.clicks = 0
 
 
         self.gameplay = FloatLayout(
@@ -235,7 +236,11 @@ class MainApp(App):
         else:
             button.text = 'Loging: No'
     def cancel_move(self, button):
-        pass
+        self.clicks = 0
+        self.move_label.text = ''
+        self.start = None
+        self.end = None
+        self.board.UnlightAll()
 
     def get_board(self):
         board_list = []
@@ -258,13 +263,29 @@ class MainApp(App):
         board_list.append('')
         return board_list
     def InputMove(self, Index):
-        coordinates = (Index//10)-1 , 7-((Index%10)-1)
+        coordinates =  7-((Index%10)-1),(Index//10)-1
         coordinates = Coordinates(self.Orienteer.oriented_coordinates(coordinates)[0],self.Orienteer.oriented_coordinates(coordinates)[1])
         print(str(coordinates).upper())
+        if self.clicks == 0:
+            self.start = coordinates
+            self.board.LightRed(Index)
+            self.clicks = 1
+            self.move_label.text = (str(coordinates)+' -> ').upper()
+        else:
+            self.end = coordinates
+            self.board.LightGreen(Index)
+            self.clicks = 0
+            self.move_label.text += str(coordinates).upper()
+
+
+
 
     def commit_move(self, button):
         self.Orienteer.invert()
+        self.board.UnlightAll()
+        self.move_label.text = ''
         self.board.draw(self.Orienteer.oriented_board(self.get_board()))
+        self.GameProcessor.make_turn(self.start,self.end)
 
     def restart(self, button):
         print(self.main_layout.children)
