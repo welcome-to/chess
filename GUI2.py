@@ -10,6 +10,9 @@ from widgets import LabelB, BoardWidget
 from run import GameProcessor
 from copy import copy
 
+from board import Coordinates
+
+
 # Window configuration
 Config.set('graphics','resizable','0')
 Config.set('graphics','width','1200')
@@ -32,10 +35,10 @@ class Orienteer(object):
     def invert(self):
         self.orientation = another_orientation(self.orientation)
 
-    def oriented_coordinates(self,coordinates, board_size):
-        if self.orientation:
+    def oriented_coordinates(self,coordinates):
+        if not self.orientation:
             return coordinates
-        return board_size - coordinates[0], board_size - coordinates[1]
+        return 7 - coordinates[0], 7 - coordinates[1]
 
     def oriented_board(self,board):
         if self.orientation:
@@ -176,7 +179,7 @@ class MainApp(App):
             background_normal=''
         ))
         self.Orienteer.invert()
-        self.board = BoardWidget(self.Orienteer.oriented_board(self.get_board()))
+        self.board = BoardWidget(self.Orienteer.oriented_board(self.get_board()),self.InputMove)
         self.gameplay.add_widget(self.board)
         self.main_layout.add_widget(self.gameplay)
 
@@ -258,6 +261,10 @@ class MainApp(App):
             board_list.append(i)
         board_list.append('')
         return board_list
+    def InputMove(self, Index):
+        coordinates = (Index//10)-1 , 7-((Index%10)-1)
+        coordinates = Coordinates(self.Orienteer.oriented_coordinates(coordinates)[0],self.Orienteer.oriented_coordinates(coordinates)[1])
+        print(str(coordinates).upper())
 
     def commit_move(self, button):
         self.Orienteer.invert()

@@ -70,7 +70,7 @@ class ButtonRC(Button):
 #виджет доски 
 class  BoardWidget(GridLayout):
     #создание сетки доски без заполнения
-    def __init__(self, initial_objects):
+    def __init__(self, initial_objects,button_function):
         super().__init__(
             pos_hint={'center_x':0.5,'center_y':0.5},
             size_hint=(1, 1),
@@ -78,6 +78,7 @@ class  BoardWidget(GridLayout):
             rows=10
         )
         self.celllist = []
+        self.button_function = button_function
 
         self.celllist.append(LabelB(text = '',bcolor = BACKGROUND))
         for i in range(8):
@@ -134,9 +135,6 @@ class  BoardWidget(GridLayout):
         for i in range(10):
             self.celllist[k].text=orientated_objects[k]
             k+=1
-
-
-
     def InputMove(self,button):
         marked = zip(range(len(self.children)), self.children)
         index = list(
@@ -149,4 +147,8 @@ class  BoardWidget(GridLayout):
             )
         )[0][0]
         # FIXME: do something else
-        print(index)
+        self.button_function(index)
+
+
+
+    
