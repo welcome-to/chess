@@ -251,7 +251,7 @@ class MainApp(App):
         for i in range(8):
             board_list.append(str(i+1))
             for j in range(8):
-                figure = self.GameProcessor.board.data[i][j]
+                figure = self.GameProcessor.board.data[i][7-j]
                 if figure is None:
                     board_list.append('img/nothing.png')
                 else:
