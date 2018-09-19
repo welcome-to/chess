@@ -176,7 +176,7 @@ class MainApp(App):
             background_normal=''
         ))
         self.Orienteer.invert()
-        self.board = BoardWidget(self.Orienteer.oriented_board(self.get_board()),self.InputMove)
+        self.board = BoardWidget(self.Orienteer.oriented_board(self.get_board()),self.input_move)
         self.gameplay.add_widget(self.board)
         self.main_layout.add_widget(self.gameplay)
 
@@ -262,31 +262,28 @@ class MainApp(App):
             board_list.append(i)
         board_list.append('')
         return board_list
-    def InputMove(self, Index):
-        coordinates =  7-((Index%10)-1),(Index//10)-1
+
+    def input_move(self, index):
+        coordinates =  7-((index%10)-1),(index//10)-1
         coordinates = Coordinates(self.Orienteer.oriented_coordinates(coordinates)[0],self.Orienteer.oriented_coordinates(coordinates)[1])
         print(str(coordinates).upper())
         if self.clicks == 0:
             self.start = coordinates
-            self.board.LightRed(Index)
+            self.board.LightRed(index)
             self.clicks = 1
             self.move_label.text = (str(coordinates)+' -> ').upper()
         else:
             self.end = coordinates
-            self.board.LightGreen(Index)
+            self.board.LightGreen(index)
             self.clicks = 0
             self.move_label.text += str(coordinates).upper()
-
-
-
 
     def commit_move(self, button):
         self.Orienteer.invert()
         self.board.UnlightAll()
         self.move_label.text = ''
-        self.board.draw(self.Orienteer.oriented_board(self.get_board()))
         self.GameProcessor.make_turn(self.start,self.end)
-        print(self.GameProcessor.board)
+        self.board.draw(self.Orienteer.oriented_board(self.get_board()))
 
     def restart(self, button):
         print(self.main_layout.children)
