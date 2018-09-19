@@ -79,7 +79,7 @@ class MainApp(App):
 
         start_game_button = Button(
             text='Start game',
-            on_press=self.change_screen,
+            on_press=self.draw_game_screen,
             background_normal='',
             background_color=INITIAL_BUTTON_COLOR,
             color=[0, 0, 0, 1]
@@ -115,13 +115,9 @@ class MainApp(App):
         return self.main_layout
 
 
-    def change_screen(self, button):
-        self.main_layout.remove_widget(self.start_screen)
-        self.draw_game_screen()
 
-
-    def draw_game_screen(self):
-
+    def draw_game_screen(self,button):
+        self.main_layout.remove_widget(self.main_layout.children[0])
         self.GameProcessor = GameProcessor()
         self.Orienteer = Orienteer()
 
@@ -149,7 +145,7 @@ class MainApp(App):
 
         self.gameplay.add_widget(Button(
             text='Restart',
-            on_press=self.restart,
+            on_press=self.draw_game_screen,
             size_hint=[0.35,0.1],
             pos_hint={'center_x':1.25,'center_y':0.90},
             background_color=GAME_BUTTON_COLOR,
@@ -271,7 +267,7 @@ class MainApp(App):
         self.board.draw(self.Orienteer.oriented_board(self.get_board()))
 
     def restart(self, button):
-        pass
+        print(self.main_layout.children)
 
 
 if __name__ == "__main__":
