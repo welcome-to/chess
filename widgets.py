@@ -22,16 +22,16 @@ from const import *
 
 Builder.load_string("""
 <LabelB>:
-	bcolor: 1, 1, 1, 1
-	canvas.before:
-		Color:
-			rgba: self.bcolor
-	    Rectangle:
-    		pos: self.pos
-    		size: self.size
+    bcolor: 1, 1, 1, 1
+    canvas.before:
+        Color:
+            rgba: self.bcolor
+        Rectangle:
+            pos: self.pos
+            size: self.size
 """)
 class LabelB(Label):
-	bcolor = ListProperty([1,1,1,1])
+    bcolor = ListProperty([1,1,1,1])
 
 
 
@@ -47,24 +47,24 @@ Builder.load_string("""
 """)
 #создание класса клетки
 class Cell(FloatLayout):
-	bcolor = ListProperty([1,1,1,1])
-	def __init__(self,bcolor):
-		super().__init__()
-		self.bcolor = bcolor
-		self.image = Image(source = 'img/nothing.png',
-					       size_hint = (1,1),
-					       pos_hint = {'center_x': 0.5, 'center_y': 0.5})
-		self.add_widget(self.image)
-	def updateimage(self,source):
-		self.image.source = source
+    bcolor = ListProperty([1,1,1,1])
+    def __init__(self,bcolor):
+        super().__init__()
+        self.bcolor = bcolor
+        self.image = Image(source = 'img/nothing.png',
+                           size_hint = (1,1),
+                           pos_hint = {'center_x': 0.5, 'center_y': 0.5})
+        self.add_widget(self.image)
+    def updateimage(self,source):
+        self.image.source = source
 
-#создание специализированной кнопки (большой кастыль) кнопка помнит где она												исправить!!!!!!!!!!
+#создание специализированной кнопки (большой кастыль) кнопка помнит где она                                                исправить!!!!!!!!!!
 class ButtonRC(Button):
-	def loadroadandcolumn(self,row,column):
-		self.row = row
-		self.column = 7- column
-	def getrowandcolumn(self):
-		return (self.column,self.row)
+    def loadroadandcolumn(self,row,column):
+        self.row = row
+        self.column = 7- column
+    def getrowandcolumn(self):
+        return (self.column,self.row)
 
 
 
@@ -72,60 +72,63 @@ class ButtonRC(Button):
 
 #виджет доски 
 class  BoardWidget(GridLayout):
-	#создание сетки доски без заполнения
-	def __init__(self, initial_objects):
-		super().__init__(
-			pos_hint={'center_x':0.5,'center_y':0.5},
-			size_hint=(1, 1),
-			cols=10,
-			rows=10
-		)
-		celllist = []
+    #создание сетки доски без заполнения
+    def __init__(self, initial_objects):
+        super().__init__(
+            pos_hint={'center_x':0.5,'center_y':0.5},
+            size_hint=(1, 1),
+            cols=10,
+            rows=10
+        )
+        celllist = []
 
-		celllist.append(LabelB(text = '',bcolor = BACKGROUND))
-		for i in range(8):
-			celllist.append(LabelB(text = listoflaters[i],bcolor = BACKGROUND))
-		celllist.append(LabelB(text = '',bcolor = BACKGROUND))
-		cells=[]
-		for i in range(8):
-			row = []			
-			for j in range(8):
-				if (i + j) % 2 == 0:
-					colorB = COLOROFCELL2
-				else:
-					colorB = COLOROFCELL1
-				cell = Cell(bcolor = colorB)
+        celllist.append(LabelB(text = '',bcolor = BACKGROUND))
+        for i in range(8):
+            celllist.append(LabelB(text = listoflaters[i],bcolor = BACKGROUND))
+        celllist.append(LabelB(text = '',bcolor = BACKGROUND))
+        cells=[]
+        for i in range(8):
+            row = []
+            for j in range(8):
+                if (i + j) % 2 == 0:
+                    colorB = COLOROFCELL2
+                else:
+                    colorB = COLOROFCELL1
+                cell = Cell(bcolor = colorB)
 
-				button = ButtonRC(text = '',
-					              background_color = [0,0,0,0],
-					              background_normal = '',
-					              on_press = self.InputMove,
-					              size_hint = (1,1),
-					              pos_hint = {'center_x': 0.5, 'center_y': 0.5})
-				cell.add_widget(button)
-				row.append(cell)
-				cells.append(cell)
-		for i in range(8):
-			celllist.append(LabelB(text = str(8-i),bcolor = BACKGROUND))
-			for j in range(8):
-				celllist.append(cells[i*8+j])
-			celllist.append(LabelB(text = str(8-i),bcolor = BACKGROUND))
+                button = ButtonRC(text = '',
+                                  background_color = [0,0,0,0],
+                                  background_normal = '',
+                                  on_press = self.InputMove,
+                                  size_hint = (1,1),
+                                  pos_hint = {'center_x': 0.5, 'center_y': 0.5})
+                cell.add_widget(button)
+                row.append(cell)
+                cells.append(cell)
+        for i in range(8):
+            celllist.append(LabelB(text = str(8-i),bcolor = BACKGROUND))
+            for j in range(8):
+                celllist.append(cells[i*8+j])
+            celllist.append(LabelB(text = str(8-i),bcolor = BACKGROUND))
 
-		celllist.append(LabelB(text = '',bcolor = BACKGROUND))
-		for i in range(8):
-			celllist.append(LabelB(text = listoflaters[i],bcolor = BACKGROUND))
-		celllist.append(LabelB(text = '',bcolor = BACKGROUND))
+        celllist.append(LabelB(text = '',bcolor = BACKGROUND))
+        for i in range(8):
+            celllist.append(LabelB(text = listoflaters[i],bcolor = BACKGROUND))
+        celllist.append(LabelB(text = '',bcolor = BACKGROUND))
 
+        for i in celllist:
+            self.add_widget(i)
+        self.draw(initial_objects)
 
-
-		for i in celllist:
-			self.add_widget(i)
-		self.draw(initial_objects)
-
-	#заполнение доски в соответсвии с заданной упорядоченной доской
-	def draw(self, orientated_objects):
-		pass
+    #заполнение доски в соответсвии с заданной упорядоченной доской
+    def draw(self, orientated_objects):
+        pass
 
 
-	def InputMove(self,button):
-		pass
+    def InputMove(self,button):
+        pass
+        """
+        marked = zip(range(len(self.children)), self.children)
+        index = list(filter(lambda b: b[1] == button, marked))[0][0]
+        print(index)
+        """
