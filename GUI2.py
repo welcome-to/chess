@@ -34,12 +34,12 @@ class Orienteer(object):
 
 
     def oriented_coordinates(self,coordinates, board_size):
-        if (self.orientation == REGULAR):
+        if self.orientation:
             return coordinates
         return board_size - coordinates[0], board_size - coordinates[1]
 
     def oriented_board(self,board):
-    	if self.orientation == REGULAR:
+    	if self.orientation:
     		return board
     	return list(reversed(board))
 
@@ -241,7 +241,7 @@ class MainApp(App):
     def get_board(self):
         board_list = []
         board_list.append('')
-        for i in listoflaters:
+        for i in list(reversed(listoflaters)):
             board_list.append(i)
         board_list.append('')
         for i in range(8):
@@ -254,13 +254,14 @@ class MainApp(App):
                     board_list.append(figurecolor[figure.color]+figuretype[figure.type])
             board_list.append(str(i+1))
         board_list.append('')
-        for i in listoflaters:
+        for i in list(reversed(listoflaters)):
             board_list.append(i)
         board_list.append('')
         return board_list
 
     def commit_move(self, button):
-        pass
+        self.Orienteer.invert()
+        self.board.draw(self.Orienteer.oriented_board(self.get_board()))
 
     def restart(self, button):
         pass

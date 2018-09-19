@@ -134,6 +134,9 @@ class  BoardWidget(GridLayout):
                 k+=1
             self.celllist[k].text=orientated_objects[k]
             k+=1
+        for i in range(10):
+            self.celllist[k].text=orientated_objects[k]
+            k+=1
 
 
 
