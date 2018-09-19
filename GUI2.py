@@ -32,16 +32,16 @@ class Orienteer(object):
     def invert(self):
         self.orientation = another_orientation(self.orientation)
 
-
     def oriented_coordinates(self,coordinates, board_size):
         if self.orientation:
             return coordinates
         return board_size - coordinates[0], board_size - coordinates[1]
 
     def oriented_board(self,board):
-    	if self.orientation:
-    		return board
-    	return list(reversed(board))
+        if self.orientation:
+            return board
+        return list(reversed(board))
+
 
 class MainApp(App):
     def build(self):

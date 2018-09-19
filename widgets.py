@@ -67,9 +67,6 @@ class ButtonRC(Button):
         return (self.column,self.row)
 
 
-
-
-
 #виджет доски 
 class  BoardWidget(GridLayout):
     #создание сетки доски без заполнения
@@ -141,9 +138,15 @@ class  BoardWidget(GridLayout):
 
 
     def InputMove(self,button):
-        pass
-        """
         marked = zip(range(len(self.children)), self.children)
-        index = list(filter(lambda b: b[1] == button, marked))[0][0]
+        index = list(
+            filter(
+                lambda b: b[1].children[0] == button,
+                filter(
+                    lambda b: isinstance(b[1], Cell),
+                    marked
+                )
+            )
+        )[0][0]
+        # FIXME: do something else
         print(index)
-        """
