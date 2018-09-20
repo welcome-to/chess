@@ -191,10 +191,37 @@ class MainApp(App):
             source = TIE_IMAGE
             text = 'potom'
         self.Gameover = FloatLayout()
-        self.Gameover.add_widget(Image(source = source, size_hint = (1,1),pos_hint = {'center_x': 0.5,'center_y':0.5}))
-        self.Gameover.add_widget(LabelB(bcolor = [0,0,0,0],text = text,size_hint = (0.3,1),pos_hint = {'center_x': 0.5,'center_y':0.7}, color = [1,0,0,1],font_size = 160,font_name = FAIL))
-        self.Gameover.add_widget(Button(text = 'Restart',color = [0,0,0,1],on_press = self.draw_game_screen,background_normal = '', background_color = [1,0,0,1],pos_hint = {'center_x': 0.25,'center_y':0.15},size_hint = (0.25,0.15)))
-        self.Gameover.add_widget(Button(text = 'Quit',color = [0,0,0,1],on_press = self.leave,background_normal = '', background_color = [1,0,0,1],pos_hint = {'center_x': 0.75,'center_y': 0.15},size_hint = (0.25,0.15)))
+        self.Gameover.add_widget(Image(
+            source = source,
+            size_hint = (1,1),
+            pos_hint = {'center_x': 0.5,'center_y':0.5}
+        ))
+        self.Gameover.add_widget(LabelB(
+            bcolor = [0,0,0,0],
+            text = text,
+            size_hint = (0.3,1),
+            pos_hint = {'center_x': 0.5,'center_y':0.7},
+            color = [1,0,0,1],
+            font_size = 160,
+            font_name = FAIL
+        ))
+        self.Gameover.add_widget(Button(
+            text = 'Restart',
+            color = [0,0,0,1],
+            on_press = self.draw_game_screen,
+            background_normal = '',
+            background_color = [1,0,0,1],
+            pos_hint = {'center_x': 0.25,'center_y':0.15},
+            size_hint = (0.25,0.15)
+        ))
+        self.Gameover.add_widget(Button(
+            text = 'Quit',color = [0,0,0,1],
+            on_press = self.leave,
+            background_normal = '',
+            background_color = [1,0,0,1],
+            pos_hint = {'center_x': 0.75,'center_y': 0.15},
+            size_hint = (0.25,0.15)
+        ))
         self.main_layout.add_widget(self.Gameover)
         print(reason)
 
