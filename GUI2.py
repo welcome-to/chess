@@ -7,7 +7,7 @@ from kivy.uix.image import Image
 
 from const import *
 from widgets import LabelB, BoardWidget
-from run import GameProcessor
+from run import GameProcessor, game_result
 from copy import copy
 
 from board import Coordinates
@@ -182,6 +182,21 @@ class MainApp(App):
 
     def leave(self, button):
         self.stop()
+    def gameover(self,reason):
+        self.main_layout.remove_widget(self.gameplay)
+        if reason != TIE:
+            source = BLACK_WIN_IMAGE
+            text = 'You Lose'
+        else:
+            source = TIE_IMAGE
+            text = 'potom'
+        self.Gameover = FloatLayout()
+        self.Gameover.add_widget(Image(source = source, size_hint = (1,1),pos_hint = {'center_x': 0.5,'center_y':0.5}))
+        self.Gameover.add_widget(LabelB(bcolor = [0,0,0,0],text = text,size_hint = (0.3,1),pos_hint = {'center_x': 0.5,'center_y':0.7}, color = [1,0,0,1],font_size = 160,font_name = FAIL))
+        self.Gameover.add_widget(Button(text = 'Restart',color = [0,0,0,1],on_press = self.draw_game_screen,background_normal = '', background_color = [1,0,0,1],pos_hint = {'center_x': 0.25,'center_y':0.15},size_hint = (0.25,0.15)))
+        self.Gameover.add_widget(Button(text = 'Quit',color = [0,0,0,1],on_press = self.leave,background_normal = '', background_color = [1,0,0,1],pos_hint = {'center_x': 0.75,'center_y': 0.15},size_hint = (0.25,0.15)))
+        self.main_layout.add_widget(self.Gameover)
+        print(reason)
 
     def show_settings(self, button):
         self.start_screen.remove_widget(self.buttons)
@@ -284,9 +299,9 @@ class MainApp(App):
         self.move_label.text = ''
         self.GameProcessor.make_turn(self.start,self.end)
         self.board.draw(self.Orienteer.oriented_board(self.get_board()))
-
-    def restart(self, button):
-        print(self.main_layout.children)
+        a = game_result(self.GameProcessor)
+        if not a[0]:
+            self.gameover(a[1])
 
 
 if __name__ == "__main__":
