@@ -186,7 +186,7 @@ class MainApp(App):
         self.main_layout.remove_widget(self.gameplay)
         if reason != TIE:
             source = BLACK_WIN_IMAGE
-            text = 'You Lose'
+            text = ' You Lose '
         else:
             source = TIE_IMAGE
             text = 'potom'
