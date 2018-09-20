@@ -130,7 +130,7 @@ def game_result(GameProcessor):
     if result == None:
         return [True]
     elif result == WHITE_WIN:
-        return[False, WHITE_WIN]
+        return [False, WHITE_WIN]
     elif result == BLACK_WIN:
         return [False, BLACK_WIN]
     else:

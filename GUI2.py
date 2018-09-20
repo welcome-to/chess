@@ -326,7 +326,15 @@ class MainApp(App):
         self.move_label.text = ''
         self.GameProcessor.make_turn(self.start,self.end)
         self.board.draw(self.Orienteer.oriented_board(self.get_board()))
-        a = game_result(self.GameProcessor)
+        result = self.GameProcessor.game_result()
+        if result == None:
+            a = [True]
+        elif result == WHITE_WIN:
+            a = [False, WHITE_WIN]
+        elif result == BLACK_WIN:
+            a = [False, BLACK_WIN]
+        else:
+            a = [False, TIE]
         if not a[0]:
             self.gameover(a[1])
 
