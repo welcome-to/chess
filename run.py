@@ -125,16 +125,6 @@ def play(first, second):
 
     return gp.game_result()
 
-def game_result(GameProcessor):
-    result = GameProcessor.game_result()
-    if result == None:
-        return [True]
-    elif result == WHITE_WIN:
-        return [False, WHITE_WIN]
-    elif result == BLACK_WIN:
-        return [False, BLACK_WIN]
-    else:
-        return [False, TIE]
 
 def print_result(game_result):
     print({
