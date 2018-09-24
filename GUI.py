@@ -79,7 +79,7 @@ class MainApp(App):
 
         start_game_button = Button(
             text='Start game',
-            on_press=self.draw_game_screen,
+            on_press=self.game_mode,
             background_normal='',
             background_color=INITIAL_BUTTON_COLOR,
             color=[0, 0, 0, 1]
@@ -113,8 +113,39 @@ class MainApp(App):
         self.main_layout.add_widget(self.start_screen)
 
         return self.main_layout
-
-
+    def game_mode(self,button):
+        self.start_screen.remove_widget(self.buttons)
+        self.game_mode = BoxLayout(
+            orientation='vertical',
+            spacing=10,
+            size_hint=(0.3, 0.4),
+            pos_hint={'center_x': 0.7, 'center_y': 0.4}
+        )
+        one_player = Button(
+            text='1 Player',
+            on_press=self.draw_game_screen,
+            background_normal='',
+            background_color=INITIAL_BUTTON_COLOR,
+            color=[0, 0, 0, 1]
+        )
+        two_players = Button(
+            text='2 Player',
+            on_press=self.draw_game_screen,
+            background_normal='',
+            background_color=INITIAL_BUTTON_COLOR,
+            color=[0, 0, 0, 1]
+        )
+        back_to_start_screen = Button(
+            text='Back',
+            on_press=self.back_to_start,
+            background_normal='',
+            background_color=INITIAL_BUTTON_COLOR,
+            color=[0, 0, 0, 1]
+        )
+        self.game_mode.add_widget(one_player)
+        self.game_mode.add_widget(two_players)
+        self.game_mode.add_widget(back_to_start_screen)
+        self.start_screen.add_widget(self.game_mode)
 
     def draw_game_screen(self,button):
         self.main_layout.remove_widget(self.main_layout.children[0])
@@ -263,7 +294,7 @@ class MainApp(App):
 
     def back_to_start(self, button):
 
-        self.start_screen.remove_widget(self.settings)
+        self.start_screen.remove_widget(self.start_screen.children[0])
         self.start_screen.add_widget(self.buttons)
 
     def crimea(self, button):
