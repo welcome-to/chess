@@ -10,17 +10,6 @@ from copy import deepcopy
 from datetime import datetime
 
 
-class HumanPlayer(Algorithm):
-    def __init__(self, name):
-        super(HumanPlayer, self).__init__(name)
-
-    def __repr__(self):
-        return str(self.name)
-
-    def make_turn(self, board):
-        line = input()
-        return line
-
 
 class GameProcessor(object):
     def __init__(self,game_mode):
@@ -107,22 +96,6 @@ class GameProcessor(object):
             )
 
 
-def play(first, second):
-    gp = GameProcessor()
-
-    current_player = first
-    next_player = second
-
-    while gp.game_result() is None:
-        print(gp.board)
-        print("Player: {0}".format(current_player))
-        print("Enter your turn. Example: 'e2 e4' or 'tie'")
-        turn = current_player.make_turn(deepcopy(gp.board))
-        gp.make_turn(turn)
-        current_player, next_player = next_player, current_player
-
-    return gp.game_result()
-
 
 def print_result(game_result):
     print({
@@ -130,10 +103,3 @@ def print_result(game_result):
         1: "Black win!",
         2: "Tie!"
     }[game_result])
-
-
-if __name__ == "__main__":
-    first = HumanPlayer("xyu1")
-    second = HumanPlayer("xyu2")
-    result = play(first, second)
-    print_result(result)
