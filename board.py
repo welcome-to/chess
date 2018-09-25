@@ -9,7 +9,7 @@ class Figure(object):
         self.type = type
 
     def __repr__(self):
-        return "{0}|{1}".format({WHITE: "W", BLACK: "B"}[self.color], self.type)
+        return "{0}|{1}".format(self.color, self.type)
 
 
 class Move(object):
