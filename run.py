@@ -31,12 +31,14 @@ class HumanPlayer(Algorithm):
 
 
 class GameProcessor(object):
-    def __init__(self):
+    def __init__(self,game_mode):
         self.board = Board()
+        self.game_mode = game_mode
         self.log = False
         self.boards = []
         self.turns = []
-        self.algorithm = GameBrains(BLACK)
+        if self.game_mode == ONEPLAYER:
+            self.algorithm = GameBrains(BLACK)
         # outside make_turn `current player' is the one whose turn is next
         self.current_player = WHITE
 
@@ -66,6 +68,11 @@ class GameProcessor(object):
         self.current_player = another_color(self.current_player)
 
         self.game_status = game_status(self.board, self.current_player, turn)
+        if (self.game_status == None) and (self.game_mode == ONEPLAYER) and (self.current_player == BLACK):
+            print('Xyu')
+            self.nextmove()
+
+
 
         """
         if self.log:

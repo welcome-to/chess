@@ -114,7 +114,9 @@ class MainApp(App):
 
         return self.main_layout
     def game_mode(self,button):
-        self.start_screen.remove_widget(self.buttons)
+        print(self.start_screen.children)
+        self.start_screen.remove_widget(self.start_screen.children[0])
+        print(self.start_screen.children)
         self.game_mode = BoxLayout(
             orientation='vertical',
             spacing=10,
@@ -149,7 +151,11 @@ class MainApp(App):
 
     def draw_game_screen(self,button):
         self.main_layout.remove_widget(self.main_layout.children[0])
-        self.GameProcessor = GameProcessor()
+        if button.text == '1 Player':
+            self.game_mode = ONEPLAYER
+        else:
+            self.game_mode = TWOPLAYERS
+        self.GameProcessor = GameProcessor(self.game_mode)
         self.Orienteer = Orienteer()
         self.clicks = 0
 
@@ -296,6 +302,7 @@ class MainApp(App):
 
         self.start_screen.remove_widget(self.start_screen.children[0])
         self.start_screen.add_widget(self.buttons)
+        print(self.start_screen.children)
 
     def crimea(self, button):
         if button.text == 'Whose Crimea?: Russian':
@@ -352,7 +359,8 @@ class MainApp(App):
             self.move_label.text += str(coordinates).upper()
 
     def commit_move(self, button):
-        self.Orienteer.invert()
+        if self.game_mode == TWOPLAYERS:
+            self.Orienteer.invert()
         self.board.UnlightAll()
         self.move_label.text = ''
         self.GameProcessor.make_turn(self.start,self.end)
