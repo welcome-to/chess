@@ -333,7 +333,7 @@ class MainApp(App):
             for j in range(8):
                 figure = self.GameProcessor.board.data[i][7-j]
                 if figure is None:
-                    board_list.append('img/nothing.png')
+                    board_list.append(NOTHING)
                 else:
                     board_list.append(figurecolor[figure.color]+figuretype[figure.type])
             board_list.append(str(i+1))
