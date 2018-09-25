@@ -22,8 +22,8 @@ WHITE_WIN = 0
 BLACK_WIN = 1
 TIE = 2
 
-WHITE_WIN_IMAGE = 'img/kkk.jpg'
-BLACK_WIN_IMAGE = 'img/fail.jpg'
+
+WIN_IMAGE = 'img/fail.jpg'
 TIE_IMAGE = 'img/tie.jpg'
 INITIAL_BACKGROUND = 'img/fon.jpg'
 GAME_BACKGROUND ='img/fon2.jpg'
@@ -63,14 +63,15 @@ CASTLING_DATA = {
     }
 }
 
-INDEX_TO_LETTER = {0:'a',
+INDEX_TO_LETTER = {
+0 : 'a',
 1 : 'b',
 2 : 'c',
 3 : 'd',
-4 :'e',
-5 :'f',
-6 :'g',
-7 :'h'}
+4 : 'e',
+5 : 'f',
+6 : 'g',
+7 : 'h'}
 LETTER_TO_INDEX = {'A' : 0,
          'B' : 1,
          'C' : 2,

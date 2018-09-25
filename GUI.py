@@ -222,7 +222,7 @@ class MainApp(App):
     def gameover(self,reason):
         self.main_layout.remove_widget(self.gameplay)
         if reason != TIE:
-            source = BLACK_WIN_IMAGE
+            source = WIN_IMAGE
             text = ' You Lose '
         else:
             source = TIE_IMAGE
