@@ -114,9 +114,7 @@ class MainApp(App):
 
         return self.main_layout
     def game_mode(self,button):
-        print(self.start_screen.children)
         self.start_screen.remove_widget(self.start_screen.children[0])
-        print(self.start_screen.children)
         self.game_mode = BoxLayout(
             orientation='vertical',
             spacing=10,
@@ -302,7 +300,6 @@ class MainApp(App):
 
         self.start_screen.remove_widget(self.start_screen.children[0])
         self.start_screen.add_widget(self.buttons)
-        print(self.start_screen.children)
 
     def crimea(self, button):
         if button.text == 'Whose Crimea?: Russian':
@@ -346,7 +343,6 @@ class MainApp(App):
     def input_move(self, index):
         coordinates =  7-((index%10)-1),(index//10)-1
         coordinates = Coordinates(self.Orienteer.oriented_coordinates(coordinates)[0],self.Orienteer.oriented_coordinates(coordinates)[1])
-        print(str(coordinates).upper())
         if self.clicks == 0:
             self.start = coordinates
             self.board.LightRed(index)
