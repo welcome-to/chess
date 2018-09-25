@@ -48,6 +48,7 @@ class Orienteer(object):
 
 class MainApp(App):
     def build(self):
+        self.savelog = False
         self.start_screen = FloatLayout(
             size_hint=(1, 1),
             pos_hint={'center_x': 0.5, 'center_y': 0.5}
@@ -154,6 +155,7 @@ class MainApp(App):
         else:
             self.game_mode = TWOPLAYERS
         self.GameProcessor = GameProcessor(self.game_mode)
+        self.GameProcessor.savelog(self.savelog)
         self.Orienteer = Orienteer()
         self.clicks = 0
 
@@ -310,8 +312,10 @@ class MainApp(App):
     def loging(self, button):
         if button.text == 'Loging: No':
             button.text = 'Loging: Yes'
+            self.savelog = True 
         else:
             button.text = 'Loging: No'
+            self.savelog = False
     def cancel_move(self, button):
         self.clicks = 0
         self.move_label.text = ''
