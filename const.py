@@ -4,12 +4,12 @@ BLACK = 1
 ONEPLAYER = 0
 TWOPLAYERS = 1
 
-COLOROFCELL1 = [150/255,75/255,0/255,1]
+COLOROFCELL1 = [.6,.3,0,1]
 COLOROFCELL2 = [.8,.7,.6,1]
-INITIAL_BUTTON_COLOR = [248/255,176/255,152/255,1]
-GAME_BUTTON_COLOR = [100/255,50/255,0/255,1]
-BACKGROUND =  [100/255,50/255,0/255,1]
-BACKGROUND1 =  [177/255,177/255,175/255,1]
+INITIAL_BUTTON_COLOR = [.97,.69,.59,1]
+GAME_BUTTON_COLOR = [.39,.2,0,1]
+BACKGROUND =  [.39,.2,0,1]
+BACKGROUND1 =  [.69,.69,.68,1]
 
 PAWN = 'PAWN'
 ROOK = 'ROOK'
@@ -108,16 +108,6 @@ figuretype = {
              }
 figurecolor = {WHITE : 'img/w',BLACK : 'img/b'}
 
-
-sourcelist = [
-['img/w_rook.png','img/w_knight.png','img/w_bishop.png','img/w_king.png','img/w_queen.png','img/w_bishop.png','img/w_knight.png','img/w_rook.png'],
-['img/w_pawn.png','img/w_pawn.png','img/w_pawn.png','img/w_pawn.png','img/w_pawn.png','img/w_pawn.png','img/w_pawn.png','img/w_pawn.png'],
-['img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png'],
-['img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png'],
-['img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png'],
-['img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png','img/nothing.png'],
-['img/b_pawn.png','img/b_pawn.png','img/b_pawn.png','img/b_pawn.png','img/b_pawn.png','img/b_pawn.png','img/b_pawn.png','img/b_pawn.png'],
-['img/b_rook.png','img/b_knight.png','img/b_bishop.png','img/b_king.png','img/b_queen.png','img/b_bishop.png','img/b_knight.png','img/b_rook.png']]
 
 
 LOGDIR = 'logs'
