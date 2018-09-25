@@ -80,7 +80,7 @@ class MainApp(App):
 
         start_game_button = Button(
             text='Start game',
-            on_press=self.game_mode,
+            on_press=self.c_game_mode,
             background_normal='',
             background_color=INITIAL_BUTTON_COLOR,
             color=[0, 0, 0, 1]
@@ -114,7 +114,7 @@ class MainApp(App):
         self.main_layout.add_widget(self.start_screen)
 
         return self.main_layout
-    def game_mode(self,button):
+    def c_game_mode(self,button):
         self.start_screen.remove_widget(self.start_screen.children[0])
         self.game_mode = BoxLayout(
             orientation='vertical',
@@ -299,7 +299,6 @@ class MainApp(App):
         self.start_screen.add_widget(self.settings)
 
     def back_to_start(self, button):
-
         self.start_screen.remove_widget(self.start_screen.children[0])
         self.start_screen.add_widget(self.buttons)
 
