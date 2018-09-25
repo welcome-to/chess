@@ -20,10 +20,7 @@ def game_status(board, current_player, previous_turn):
     if all_moves: # there are moves, so the game is not over
         return None
 
-    if current_player == WHITE:
-        enemy_color = BLACK
-    else:
-        enemy_color = WHITE
+    enemy_color = another_color(current_player)
     king_position = figures_on_board(board, type=KING, color=current_player)[0][1]
 
     enemy_moves = possible_moves(board, enemy_color, None)
