@@ -74,8 +74,7 @@ class Coordinates(object):
     def __repr__(self):
         if not self:
             raise InternalError("Invalid coordinates")
-        index_to_letter = {0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f', 6: 'g', 7: 'h'}
-        return "{0}{1}".format(index_to_letter[self.x], self.y + 1)
+        return "{0}{1}".format(INDEX_TO_LETTER[self.x], self.y + 1)
 
     def __eq__(self,other):
         if ((self.x == other.x) and (self.y == other.y)): 
