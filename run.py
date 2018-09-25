@@ -69,7 +69,6 @@ class GameProcessor(object):
 
         self.game_status = game_status(self.board, self.current_player, turn)
         if (self.game_status == None) and (self.game_mode == ONEPLAYER) and (self.current_player == BLACK):
-            print('Xyu')
             self.nextmove()
 
 
@@ -85,7 +84,7 @@ class GameProcessor(object):
         return allowed_moves(board, self.current_player, self.last_move())
 
     def nextmove(self):
-        start,end = self.algorithm.makemove(self.board,self.current_player)
+        start,end = self.algorithm.makemove(self.board)
         self.make_turn(start,end)
 
     def game_result(self):
