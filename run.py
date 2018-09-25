@@ -10,14 +10,6 @@ from copy import deepcopy
 from datetime import datetime
 
 
-class Algorithm(object):
-    def __init__(self, name):
-        self.name = name
-
-    def make_turn(self, position):
-        raise NotImplementedError()
-
-
 class HumanPlayer(Algorithm):
     def __init__(self, name):
         super(HumanPlayer, self).__init__(name)
