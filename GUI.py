@@ -387,17 +387,8 @@ class MainApp(App):
         self.GameProcessor.make_turn(self.start,self.end)
         self.board.draw(self.Orienteer.oriented_board(self.get_board()))
         result = self.GameProcessor.game_result()
-        print('result: ' + str(result))
-        if result == None:
-            a = [True]
-        elif result == WHITE_WIN:
-            a = [False, WHITE_WIN]
-        elif result == BLACK_WIN:
-            a = [False, BLACK_WIN]
-        else:
-            a = [False, TIE]
-        if not a[0]:
-            self.gameover(a[1])
+        if not result == None:
+            self.gameover(result)
 
 
 if __name__ == "__main__":
