@@ -1,5 +1,5 @@
-WHITE = "W"
-BLACK = "B"
+WHITE = "White"
+BLACK = "Black"
 
 ONEPLAYER = 0
 TWOPLAYERS = 1
@@ -18,8 +18,8 @@ BISHOP = 'BISHOP'
 QUEEN = 'QUEEN'
 KING = 'KING'
 
-WHITE_WIN = "W"
-BLACK_WIN = "B"
+WHITE_WIN = "White"
+BLACK_WIN = "Black"
 TIE = "TIE"
 
 

@@ -11,6 +11,7 @@ from run import GameProcessor
 from copy import copy
 
 from board import Coordinates
+from operations import another_color
 
 
 # Window configuration
@@ -235,7 +236,8 @@ class MainApp(App):
         self.main_layout.remove_widget(self.gameplay)
         if reason != TIE:
             source = WIN_IMAGE
-            text = ' You Lose '
+            color = another_color(reason)
+            text = ' You Lose ('+ color + ') '
         else:
             source = TIE_IMAGE
             text = ' potom '
