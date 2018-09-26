@@ -18,9 +18,9 @@ BISHOP = 'BISHOP'
 QUEEN = 'QUEEN'
 KING = 'KING'
 
-WHITE_WIN = 0
-BLACK_WIN = 1
-TIE = 2
+WHITE_WIN = "W"
+BLACK_WIN = "B"
+TIE = "TIE"
 
 
 WIN_IMAGE = 'img/fail.jpg'
