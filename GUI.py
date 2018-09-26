@@ -176,7 +176,7 @@ class MainApp(App):
             text='Quit',
             on_press=self.leave,
             size_hint=[0.35,0.1],
-            pos_hint={'center_x':1.25,'center_y':0.78},
+            pos_hint={'center_x':1.25,'center_y':0.66},
             background_color=GAME_BUTTON_COLOR,
             background_normal=''
         ))
@@ -186,6 +186,14 @@ class MainApp(App):
             on_press=self.draw_game_screen,
             size_hint=[0.35,0.1],
             pos_hint={'center_x':1.25,'center_y':0.90},
+            background_color=GAME_BUTTON_COLOR,
+            background_normal=''
+        ))
+        self.gameplay.add_widget(Button(
+            text='Main menu',
+            on_press=self.back_to_main_menu,
+            size_hint=[0.35,0.1],
+            pos_hint={'center_x':1.25,'center_y':0.78},
             background_color=GAME_BUTTON_COLOR,
             background_normal=''
         ))
@@ -219,6 +227,10 @@ class MainApp(App):
 
     def leave(self, button):
         self.stop()
+    def back_to_main_menu(self,button):
+        self.main_layout.remove_widget(self.main_layout.children[0])
+        self.main_layout.add_widget(self.start_screen)
+
     def gameover(self,reason):
         self.main_layout.remove_widget(self.gameplay)
         if reason != TIE:
@@ -226,8 +238,9 @@ class MainApp(App):
             text = ' You Lose '
         else:
             source = TIE_IMAGE
-            text = 'potom'
+            text = ' potom '
         self.Gameover = FloatLayout()
+        print(source)
         self.Gameover.add_widget(Image(
             source = source,
             size_hint = (1,1),
@@ -248,16 +261,24 @@ class MainApp(App):
             on_press = self.draw_game_screen,
             background_normal = '',
             background_color = [1,0,0,1],
-            pos_hint = {'center_x': 0.25,'center_y':0.15},
-            size_hint = (0.25,0.15)
+            pos_hint = {'center_x': 0.20,'center_y':0.15},
+            size_hint = (0.20,0.15)
         ))
         self.Gameover.add_widget(Button(
             text = 'Quit',color = [0,0,0,1],
             on_press = self.leave,
             background_normal = '',
             background_color = [1,0,0,1],
-            pos_hint = {'center_x': 0.75,'center_y': 0.15},
-            size_hint = (0.25,0.15)
+            pos_hint = {'center_x': 0.80,'center_y': 0.15},
+            size_hint = (0.20,0.15)
+        ))
+        self.Gameover.add_widget(Button(
+            text = 'Main menu',color = [0,0,0,1],
+            on_press = self.back_to_start,
+            background_normal = '',
+            background_color = [1,0,0,1],
+            pos_hint = {'center_x': 0.5,'center_y': 0.15},
+            size_hint = (0.20,0.15)
         ))
         self.main_layout.add_widget(self.Gameover)
         print(reason)
@@ -301,6 +322,7 @@ class MainApp(App):
     def back_to_start(self, button):
         self.start_screen.remove_widget(self.start_screen.children[0])
         self.start_screen.add_widget(self.buttons)
+        self.back_to_main_menu('')
 
     def crimea(self, button):
         if button.text == 'Whose Crimea?: Russian':
@@ -365,6 +387,7 @@ class MainApp(App):
         self.GameProcessor.make_turn(self.start,self.end)
         self.board.draw(self.Orienteer.oriented_board(self.get_board()))
         result = self.GameProcessor.game_result()
+        print('result: ' + str(result))
         if result == None:
             a = [True]
         elif result == WHITE_WIN:
