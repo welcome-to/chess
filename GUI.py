@@ -391,8 +391,3 @@ class MainApp(App):
         result = self.GameProcessor.game_result()
         if not result == None:
             self.gameover(result)
-
-
-if __name__ == "__main__":
-    app = MainApp()
-    app.run()
