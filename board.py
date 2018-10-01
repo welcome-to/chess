@@ -10,6 +10,10 @@ class Figure(object):
 
     def __repr__(self):
         return "{0}|{1}".format(self.color, self.type)
+    def __eq__(self,other_figure):
+        if (self.color == other_figure.color) and (self.type == other_figure.type) and (self.has_moved == other_figure.has_moved):
+            return True
+        return False
 
 
 class Move(object):
@@ -149,6 +153,13 @@ class Board(object):
         return '\n'.join(reversed(
             [' '.join(str(element) for element in lst) for lst in self.data]
         ))
+    def __eq__(self,other_board):
+        for i in range(8):
+            for j in range(8):
+                if self.data[i][j] != other_board.data[i][j]:
+                    return False
+        return True
+
 
 
 def figures_on_board(board, type=None, color=None):
