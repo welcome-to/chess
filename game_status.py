@@ -10,7 +10,10 @@ class GameCondition(object):
         self.player1
         self.player2
         self.board_list = []
-    def add_board(self,board):
+        self.last_pawn_move = 0
+    def add_board(self,board,pawn_move):
+        if pawn_move:
+            self.last_pawn_move+=1
         for i in self.board_list:
             if board == i[0]:
                 i[1]+=1
