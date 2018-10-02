@@ -4,6 +4,7 @@ from kivy.config import Config
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
+from kivy.uix.filechooser import FileChooserIconView
 
 from const import *
 from widgets import LabelB, BoardWidget
@@ -109,6 +110,8 @@ class MainApp(App):
 
         self.start_screen.add_widget(background_image)
         self.start_screen.add_widget(game_label)
+
+
 
         self.start_screen.add_widget(self.buttons)
         self.main_layout = FloatLayout()
