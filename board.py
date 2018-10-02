@@ -11,6 +11,8 @@ class Figure(object):
     def __repr__(self):
         return "{0}|{1}".format(self.color, self.type)
     def __eq__(self,other_figure):
+        if other_figure == None:
+            return False
         if (self.color == other_figure.color) and (self.type == other_figure.type) and (self.has_moved == other_figure.has_moved):
             return True
         return False

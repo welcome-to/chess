@@ -1,5 +1,6 @@
 from board import Board
 from const import *
+from pickle import dump, load
 
 from copy import deepcopy
 
@@ -26,4 +27,17 @@ class GameCondition(object):
 
 def satisfies_tie_conditions(game_condition):
     return game_condition.idle_moves >= MAX_IDLE_MOVES or \
-           list(filter(lambda (x, y): y >= MAX_REPETITIONS, game_condition.board_list))
+           list(filter(lambda x, y: y >= MAX_REPETITIONS, game_condition.board_list))
+
+
+
+def save_to_file(dir,GC):
+    f = open(dir,'wb')
+    dump(GC,f)
+    f.close
+def load_from_file(dir):
+    f = open(dir,'rb')
+    GC = load(f)
+    print(GC)
+    print(GC.player1,GC.player2,GC.board_list)
+    f.close()
