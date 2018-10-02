@@ -1,9 +1,12 @@
 from board import Board
+from const import *
+
 from copy import deepcopy
 
 
 class GameCondition(object):
     def __init__(self, game_type, player1, player2):
+        # FIXME: move away to gui
         self.game_type = game_type
         self.player1 = player1
         self.player2 = player2
@@ -19,3 +22,8 @@ class GameCondition(object):
                 return
 
         self.board_list.append(((deepcopy(board), 1)))
+
+
+def satisfies_tie_conditions(game_condition):
+    return game_condition.idle_moves >= MAX_IDLE_MOVES or \
+           list(filter(lambda (x, y): y >= MAX_REPETITIONS, game_condition.board_list))
