@@ -27,7 +27,7 @@ class GameProcessor(object):
         self.game_status = None
 
     # `start, end' are two Coordinates objects
-    def make_turn(self, start, end):
+    def make_move(self, start, end):
         if self.game_result() is not None:
             raise RuntimeError("Game over")
 
@@ -52,14 +52,6 @@ class GameProcessor(object):
         if (self.game_status == None) and (self.game_mode == ONEPLAYER) and (self.current_player == BLACK):
             self.nextmove()
 
-
-
-        """
-        if self.log:
-            print(1)
-            print(str(command[0]).upper()+str(command[1]).upper())
-            self.log_file.write(str(command[0]).upper()+str(command[1]).upper())
-        """
 
     def allowed_moves(self):
         return allowed_moves(board, self.current_player, self.last_move())

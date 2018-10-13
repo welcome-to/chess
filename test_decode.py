@@ -39,7 +39,7 @@ def board_after(moves_list):
         if gp.game_result() is not None:
             raise RuntimeError("It's gameover but the game continues")
         move = Move.from_string(move)
-        gp.make_turn(move.start, move.end)
+        gp.make_move(move.start, move.end)
 
     return gp.board
 

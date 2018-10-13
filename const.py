@@ -7,13 +7,6 @@ TWOPLAYERS = 1
 MAX_IDLE_MOVES = 50
 MAX_REPETITIONS = 3
 
-COLOROFCELL1 = [.6,.3,0,1]
-COLOROFCELL2 = [.8,.7,.6,1]
-INITIAL_BUTTON_COLOR = [.97,.69,.59,1]
-GAME_BUTTON_COLOR = [.39,.2,0,1]
-BACKGROUND =  [.39,.2,0,1]
-BACKGROUND1 =  [.69,.69,.68,1]
-
 PAWN = 'PAWN'
 ROOK = 'ROOK'
 KNIGHT = 'KNIGHT'
@@ -25,46 +18,38 @@ WHITE_WIN = "White"
 BLACK_WIN = "Black"
 TIE = "TIE"
 
-
-WIN_IMAGE = 'img/fail.jpg'
-TIE_IMAGE = 'img/tie.jpg'
-INITIAL_BACKGROUND = 'img/fon.jpg'
-GAME_BACKGROUND ='img/fon2.jpg'
-FONT = 'img/11895.ttf'
-FAIL = 'img/11464.ttf'
-
-listoflaters = ['A','B','C','D','E','F','G','H']
-
-# orientation
-REGULAR = True
-INVERSE = False
+COMMON_MOVE = "common_move"
+CASTLING_MOVE = "castling_move"
+E_P_MOVE = "e_p_move"
 
 CASTLING_DATA = {
     'e1g1': {
-        'rook_move': 'h1f1',
+        'rook_move': ('h1', 'f1'),
         'inner_fields': ['f1', 'g1'],
         'safe_fields': ['e1', 'f1', 'g1'],
         'color': WHITE
     },
     'e8g8': {
-        'rook_move': 'h8f8',
+        'rook_move': ('h8', 'f8'),
         'inner_fields': ['f8', 'g8'],
         'safe_fields': ['e8', 'f8', 'g8'],
         'color': BLACK
     },
     'e1c1': {
-        'rook_move': 'a1d1',
+        'rook_move': ('a1', 'd1'),
         'inner_fields': ['b1', 'c1', 'd1'],
         'safe_fields': ['e1', 'd1', 'c1'],
         'color': WHITE
     },
     'e8c8': {
-        'rook_move': 'a8d8',
+        'rook_move': ('a8', 'd8'),
         'inner_fields': ['b8', 'c8', 'd8'],
         'safe_fields': ['e8', 'd8', 'c8'],
         'color': BLACK
     }
 }
+
+# FIXME: this
 
 INDEX_TO_LETTER = {
 0 : 'a',
@@ -75,6 +60,7 @@ INDEX_TO_LETTER = {
 5 : 'f',
 6 : 'g',
 7 : 'h'}
+
 LETTER_TO_INDEX = {'A' : 0,
          'B' : 1,
          'C' : 2,
@@ -91,6 +77,16 @@ LETTER_TO_INDEX = {'A' : 0,
          'f' : 5,
          'g' : 6,
          'h' : 7}
+
+LOGDIR = 'logs'
+LOG_FILE_PATTERN = "log.txt.{0}"
+
+WIN_IMAGE = 'img/fail.jpg'
+TIE_IMAGE = 'img/tie.jpg'
+INITIAL_BACKGROUND = 'img/fon.jpg'
+GAME_BACKGROUND ='img/fon2.jpg'
+FONT = 'img/11895.ttf'
+FAIL = 'img/11464.ttf'
 
 NOTHING = 'img/nothing.png'
 figuretypeback = {
@@ -112,7 +108,17 @@ figuretype = {
              }
 figurecolor = {WHITE : 'img/w',BLACK : 'img/b'}
 
+# orientation
+REGULAR = True
+INVERSE = False
 
+# FIXME: this
 
-LOGDIR = 'logs'
-LOG_FILE_PATTERN = "log.txt.{0}"
+listoflaters = ['A','B','C','D','E','F','G','H']
+
+COLOROFCELL1 = [.6,.3,0,1]
+COLOROFCELL2 = [.8,.7,.6,1]
+INITIAL_BUTTON_COLOR = [.97,.69,.59,1]
+GAME_BUTTON_COLOR = [.39,.2,0,1]
+BACKGROUND =  [.39,.2,0,1]
+BACKGROUND1 =  [.69,.69,.68,1]

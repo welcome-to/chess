@@ -374,6 +374,7 @@ class MainApp(App):
         coordinates =  7-((index%10)-1),(index//10)-1
         coordinates = Coordinates(self.Orienteer.oriented_coordinates(coordinates)[0],self.Orienteer.oriented_coordinates(coordinates)[1])
         if self.clicks == 0:
+            self.board.UnlightAll()
             self.start = coordinates
             self.board.LightRed(index)
             self.clicks = 1
@@ -389,7 +390,7 @@ class MainApp(App):
             self.Orienteer.invert()
         self.board.UnlightAll()
         self.move_label.text = ''
-        self.GameProcessor.make_turn(self.start,self.end)
+        self.GameProcessor.make_move(self.start,self.end)
         self.board.draw(self.Orienteer.oriented_board(self.get_board()))
         result = self.GameProcessor.game_result()
         if not result == None:

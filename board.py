@@ -13,24 +13,40 @@ class Figure(object):
     def __eq__(self,other_figure):
         if other_figure == None:
             return False
-        if (self.color == other_figure.color) and (self.type == other_figure.type) and (self.has_moved == other_figure.has_moved):
+        if (self.color == other_figure.color) and \
+           (self.type == other_figure.type) and \
+           (self.has_moved == other_figure.has_moved):
+
             return True
+
         return False
 
 
 class Move(object):
-    def __init__(self, start, end, is_roque=False):
+    def __init__(
+        self, start, end,
+        type=None,
+        is_trusted=False,
+        to_be_eaten=None,
+        extra_move=None,
+        restored_figure=None
+    ):
         self.start = start
         self.end = end
-        self.is_roque = is_roque
+        self.type = type
+        self.is_trusted = is_trusted
+        self.to_be_eaten = to_be_eaten
+        self.extra_move = extra_move
+        self.restored_figure = restored_figure
 
+    """
     @staticmethod
     def from_string(line):
         try:
             return Move(Coordinates.from_string(line[:2]), Coordinates.from_string(line[2:]))
         except:
             raise InvalidMove("Incorrect input: {0}".format(line))
-
+    """
     def __repr__(self):
         return str(self.start) + str(self.end)
 
@@ -143,6 +159,7 @@ class Board(object):
 
 
     def figure_on_position(self, coordinates):
+        # FIXME: this
         try:
             return self.data[coordinates.y][coordinates.x]
         except:
@@ -161,7 +178,6 @@ class Board(object):
                 if self.data[i][j] != other_board.data[i][j]:
                     return False
         return True
-
 
 
 def figures_on_board(board, type=None, color=None):

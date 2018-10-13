@@ -39,20 +39,20 @@ def another_color(color):
     return WHITE if color == BLACK else BLACK
 
 
-def is_castling(move, board):
-    figure = board.figure_on_position(move.start)
+#def is_castling(move, board):
+def is_castling(start, end, board):
+    figure = board.figure_on_position(start)
     if figure is None or figure.type is not KING:
         return False
-    return str(move) in CASTLING_DATA.keys()
+    return (str(start) + str(end)) in CASTLING_DATA.keys()
 
 
 def is_castling_correct(king_move, board, player_color):
     castling_data = CASTLING_DATA[str(king_move)]
     rook_move = Move.from_string(castling_data['rook_move'])
 
-    # FIXME: there are excess conditions here
     king = board.figure_on_position(king_move.start)
-    if king is None or king.color != player_color or king.color != CASTLING_DATA[str(king_move)]['color']:
+    if king.color != player_color or king.color != CASTLING_DATA[str(king_move)]['color']:
         return False
 
     rook = board.figure_on_position(rook_move.start)
@@ -203,13 +203,14 @@ def possible_moves_from_position(board, position, player_color, previous_move):
     return moves
 
 
-def is_e_p(move, board):
-    figure = board.figure_on_position(move.start)
+#def is_e_p(move, board):
+def is_e_p(start, end, board):
+    figure = board.figure_on_position(start)
     if not figure.type == PAWN:
         return False
-    if move.start.x == move.end.x:
+    if start.x == end.x:
         return False
-    return board.figure_on_position(move.end) is None
+    return board.figure_on_position(end) is None
 
 
 def make_e_p(board, move):
@@ -313,8 +314,10 @@ def raw_possible_moves_rook(position,board):
 def raw_possible_moves_knight(position):
     return list(filter(
         bool,
-        [position.top().top_right(),position.top().top_left(),position.bottom().bottom_right(),position.bottom().bottom_left(),
-         position.left().top_left(),position.left().bottom_left(),position.right().top_right(),position.right().bottom_right()]
+        [position.top().top_right(),position.top().top_left(),
+         position.bottom().bottom_right(),position.bottom().bottom_left(),
+         position.left().top_left(),position.left().bottom_left(),
+         position.right().top_right(),position.right().bottom_right()]
     ))
 
 
@@ -349,3 +352,33 @@ def raw_possible_moves_bishop(position,board):
 
 def raw_possible_moves_queen(position,board):
     return raw_possible_moves_rook(position,board) + raw_possible_moves_bishop(position,board)
+
+def create_move(start, end, board):
+    if is_castling(start, end, board):
+        king_move = str(start) + str(end)
+
+        rook_move = CASTLING_DATA[king_move]['rook_move']
+        extra_move = Move(*map(Coordinates.from_string, rook_move))
+        return Move(start, end, type=CASTLING_MOVE, extra_move=extra_move)
+
+    if is_e_p(start, end, board):
+        return Move(start, end, type=E_P_MOVE, to_be_eaten=end)
+
+    return Move(start, end, type=COMMON_MOVE)
+
+
+def commit_move(move, board, prev_move, player_color):
+    if move.is_trusted:
+        board.move(move.start, move.end)
+        if move.restored_figure is not None:
+            board.put(move.restored_figure)
+        if move.extra_move is not None:
+            board.move(move.extra_move.start, move.extra_move.end)
+        return
+
+    if move.type == CASTLING_TYPE:
+        if is_castling_correct(move, board, player_color):
+            board.move(move.start, move.end)
+            board.move(move.extra_move.start, move.extra_move.end)
+
+
