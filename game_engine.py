@@ -3,6 +3,7 @@ from const import *
 from exception import InvalidMove, InternalError, NotImplementedError
 from operations import convert_pawns, is_correct, is_castling, is_e_p, game_status, make_castling, make_e_p, another_color, create_move, commit_move
 from Electronic_Kasparov import GameBrains
+from game_status import *
 
 import os
 
@@ -18,6 +19,8 @@ class GameProcessor(object):
         self.log = False
         self.boards = []
         self.turns = []
+        player1.player2 = 1,1
+        self.GameCondition = GC(self.game_mode,player1,player2,log)
         if self.game_mode == ONEPLAYER:
             self.algorithm = GameBrains(BLACK)
         # outside make_turn `current player' is the one whose turn is next
@@ -67,6 +70,16 @@ class GameProcessor(object):
             self.log_file = open(
                 os.path.join(LOGDIR, LOG_FILE_PATTERN.format(datetime.now().strftime("%Y-%m-%d-%H:%M:%S"))), 'w'
             )
+    @staticmethod
+    def loadfromGC(dir):
+        GC = load_from_file(dir)
+        GameProcessor =  GameProcessor(GC.game_type)
+        GameProcessor.log = GC.log
+        GameProcessor.current_player = GC.current_player
+        GameProcessor.board = GC.current_board
+        GameProcessor.GameCondition = GC
+        return GameProcessor
+
 
 
 
