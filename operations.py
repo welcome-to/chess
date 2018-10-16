@@ -375,7 +375,8 @@ def commit_move(move, board, prev_move, player_color):
         if move.extra_move is not None:
             board.move(move.extra_move.start, move.extra_move.end)
 
-    elif move.type == CASTLING_TYPE:
+    elif move.type == CASTLING_MOVE:
+        print('Xyu2')
         if is_castling_correct(move, board, player_color):
             board.move(move.start, move.end)
             board.move(move.extra_move.start, move.extra_move.end)
@@ -390,6 +391,8 @@ def commit_move(move, board, prev_move, player_color):
         raise InvalidMove("Incorrect castling")
 
     else:
+        print('Xyu1')
+        # ?? What if E_P
         eaten_figure = board.figure_on_position(move.end)
         if move.type == E_P_MOVE:
 
@@ -402,7 +405,7 @@ def commit_move(move, board, prev_move, player_color):
                 raise InvalidMove("Incorrect e.p.")
 
         elif move.type != COMMON_MOVE:
-            raise InternalError("Wrong move type. This couldn't happen"):
+            raise InternalError("Wrong move type. This couldn't happen")
 
         # check if the turn is possible
         # ...

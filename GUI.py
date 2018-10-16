@@ -8,7 +8,7 @@ from kivy.uix.filechooser import FileChooserIconView
 
 from const import *
 from widgets import LabelB, BoardWidget
-from run import GameProcessor
+from game_engine import GameProcessor
 from copy import copy
 
 from board import Coordinates

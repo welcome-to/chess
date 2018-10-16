@@ -1,7 +1,7 @@
 from board import Board, Move
 from const import *
 from exception import InvalidMove, InternalError, NotImplementedError
-from operations import convert_pawns, is_correct, is_castling, is_e_p, game_status, make_castling, make_e_p, another_color
+from operations import convert_pawns, is_correct, is_castling, is_e_p, game_status, make_castling, make_e_p, another_color, create_move, commit_move
 from Electronic_Kasparov import GameBrains
 
 import os
@@ -31,26 +31,10 @@ class GameProcessor(object):
         if self.game_result() is not None:
             raise RuntimeError("Game over")
 
-        turn = Move(start, end)
-
-        if not is_correct(turn, self.board, self.current_player, self.last_move()):
-            self._run_technical_defeat()
-            return
-        if is_castling(turn, self.board):
-            make_castling(self.board, turn)
-        elif is_e_p(turn, self.board):
-            make_e_p(self.board, turn)
-        else: # move
-            self.board.move(turn.start, turn.end)
-        convert_pawns(self.board)
-        self.boards.append(deepcopy(self.board))
-        self.turns.append(deepcopy(turn))
-
-        self.current_player = another_color(self.current_player)
-
-        self.game_status = game_status(self.board, self.current_player, turn)
-        if (self.game_status == None) and (self.game_mode == ONEPLAYER) and (self.current_player == BLACK):
-            self.nextmove()
+        move = create_move(start,end,self.board)
+        commit_move(move,self.board,self.last_move,self.current_player)
+            
+        self.turns.append(move)
 
 
     def allowed_moves(self):
