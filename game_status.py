@@ -1,6 +1,7 @@
 from board import Board
 from const import *
 from pickle import dump, load
+from operations import another_color
 
 from copy import deepcopy
 
@@ -13,9 +14,13 @@ class GameCondition(object):
         self.player2 = player2
         self.board_list = []
         self.idle_moves = 0
+        self.current_player = WHITE
+        self.current_board = []
 
     def add_move_info(self, board, is_move_idle):
         self.idle_moves = self.idle_moves + 1 if is_move_idle else 0
+        self.current_player = another_color(self.current_player)
+        self.current_board = board
 
         for i in self.board_list:
             if board == i[0]:
@@ -38,6 +43,5 @@ def save_to_file(dir,GC):
 def load_from_file(dir):
     f = open(dir,'rb')
     GC = load(f)
-    print(GC)
-    print(GC.player1,GC.player2,GC.board_list)
     f.close()
+    return GC
