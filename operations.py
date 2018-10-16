@@ -374,11 +374,43 @@ def commit_move(move, board, prev_move, player_color):
             board.put(move.restored_figure)
         if move.extra_move is not None:
             board.move(move.extra_move.start, move.extra_move.end)
-        return
 
-    if move.type == CASTLING_TYPE:
+    elif move.type == CASTLING_TYPE:
         if is_castling_correct(move, board, player_color):
             board.move(move.start, move.end)
             board.move(move.extra_move.start, move.extra_move.end)
 
+            return Move(
+                move.end,
+                move.start,
+                is_trusted=True,
+                extra_move=Move(move.extra_move.end, move.extra_move.start)
+            )
+
+        raise InvalidMove("Incorrect castling")
+
+    else:
+        eaten_figure = board.figure_on_position(move.end)
+        if move.type == E_P_MOVE:
+
+            if prev_move is None or \
+               not is_pawn_jump(board, prev_move, another_color(player_color)) or \
+               abs(prev_move.start.x - move.start.x) != 1 or \
+               prev_move.start.y - move.end.y != move.end.y - prev_move.end.y or \
+               abs(prev_move.start.y - move.end.y) != 1:
+
+                raise InvalidMove("Incorrect e.p.")
+
+        elif move.type != COMMON_MOVE:
+            raise InternalError("Wrong move type. This couldn't happen"):
+
+        # check if the turn is possible
+        # ...
+
+        return Move(
+            move.end,
+            move.start,
+            is_trusted=True,
+            restored_figure=eaten_figure
+        )
 
