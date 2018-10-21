@@ -19,7 +19,7 @@ class GameProcessor(object):
         self.log = False
         self.boards = []
         self.turns = []
-        player1.player2 = 1,1
+        player1,player2 = 1,1
         self.GameCondition = GC(self.game_mode,player1,player2,log)
         if self.game_mode == ONEPLAYER:
             self.algorithm = GameBrains(BLACK)

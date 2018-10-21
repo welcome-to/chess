@@ -111,20 +111,15 @@ class Board(object):
             self.data[1][i] = Figure(WHITE, PAWN)
             self.data[6][i] = Figure(BLACK, PAWN)
 
-        self.data[0][0] = Figure(WHITE, ROOK)
-        self.data[0][7] = Figure(WHITE, ROOK)
-        self.data[7][0] = Figure(BLACK, ROOK)
-        self.data[7][7] = Figure(BLACK, ROOK)
+        for i in range(2):
+            self.data[0][i * 7] = Figure(WHITE, ROOK)
+            self.data[7][i * 7] = Figure(BLACK, ROOK)
 
-        self.data[0][1] = Figure(WHITE, KNIGHT)
-        self.data[0][6] = Figure(WHITE, KNIGHT)
-        self.data[7][1] = Figure(BLACK, KNIGHT)
-        self.data[7][6] = Figure(BLACK, KNIGHT)
+            self.data[0][1 + i * 5] = Figure(WHITE, KNIGHT)
+            self.data[7][1 + i * 5] = Figure(BLACK, KNIGHT)
 
-        self.data[0][2] = Figure(WHITE, BISHOP)
-        self.data[0][5] = Figure(WHITE, BISHOP)
-        self.data[7][2] = Figure(BLACK, BISHOP)
-        self.data[7][5] = Figure(BLACK, BISHOP)
+            self.data[0][2 + i * 3] = Figure(WHITE, BISHOP)
+            self.data[7][2 + i * 3] = Figure(BLACK, BISHOP)
 
         self.data[0][3] = Figure(WHITE, QUEEN)
         self.data[7][3] = Figure(BLACK, QUEEN)
