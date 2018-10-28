@@ -27,7 +27,7 @@ class Move(object):
         self, start, end,
         type=None,
         is_trusted=False,
-        to_be_eaten=None,
+        eaten_position=None,
         extra_move=None,
         restored_figure=None
     ):
@@ -35,7 +35,7 @@ class Move(object):
         self.end = end
         self.type = type
         self.is_trusted = is_trusted
-        self.to_be_eaten = to_be_eaten
+        self.eaten_position = eaten_position
         self.extra_move = extra_move
         self.restored_figure = restored_figure
 

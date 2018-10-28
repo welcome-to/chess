@@ -1,6 +1,6 @@
 from board import Figure, Move, Coordinates, figures_on_board
 from const import *
-from exception import InternalError
+from exception import InternalError, InvalidMove
 
 from copy import deepcopy
 from functools import reduce
@@ -49,7 +49,8 @@ def is_castling(start, end, board):
 
 def is_castling_correct(king_move, board, player_color):
     castling_data = CASTLING_DATA[str(king_move)]
-    rook_move = Move.from_string(castling_data['rook_move'])
+    #rook_move = Move.from_string(castling_data['rook_move'])
+    rook_move = king_move.extra_move
 
     king = board.figure_on_position(king_move.start)
     if king.color != player_color or king.color != CASTLING_DATA[str(king_move)]['color']:
@@ -134,8 +135,10 @@ class NotBeatingSameColor(object):
             return False
 
 
+# FIXME: fields_under_attack
 def fields_under_attack(board, enemy_color):
-    attacked = [possible_moves_from_position(board, item[1], enemy_color, None) for item in figures_on_board(board, color=enemy_color)]
+    attacked = [possible_common_moves_from_position(board, item[1], enemy_color, None) for item in figures_on_board(board, color=enemy_color)]
+    # FIXME: e_p_moves
     return reduce(lambda x,y: set(x) | set(y), attacked, set())
 
 
@@ -173,6 +176,10 @@ def possible_moves(board, player_color, previous_move):
 
 
 def possible_moves_from_position(board, position, player_color, previous_move):
+    pass
+
+
+def possible_common_moves_from_position(board, position, player_color):
     figure = board.figure_on_position(position)
 
     if figure is None:
@@ -187,7 +194,7 @@ def possible_moves_from_position(board, position, player_color, previous_move):
         KING: raw_possible_moves_king
     }
     given_args = {
-        PAWN: [position,board,previous_move],
+        PAWN: [position,board],
         ROOK: [position,board],
         KNIGHT: [position],
         BISHOP: [position,board],
@@ -213,6 +220,16 @@ def is_e_p(start, end, board):
     return board.figure_on_position(end) is None
 
 
+def is_e_p_correct(board, move, prev_move, player_color):
+    if not is_pawn_jump(board, prev_move, another_color(player_color)):
+        return False
+    if abs(prev_move.start.x - move.start.x) != 1 or \
+       prev_move.start.y - move.end.y != move.end.y - prev_move.end.y or \
+       abs(prev_move.start.y - move.end.y) != 1:
+       return False
+    return True
+
+
 def make_e_p(board, move):
     board.move(move.start, move.end)
     enemy_pos = Coordinates(move.end.x, move.start.y)
@@ -220,6 +237,7 @@ def make_e_p(board, move):
 
 
 def is_pawn_jump(board, move, color):
+    print("move: {0}, type: {1}".format(move, type(move)))
     figure = board.figure_on_position(move.end)
     if figure is None or figure.color != color:
         raise InternalError("This could not happen")
@@ -241,7 +259,7 @@ class TryEat(object):
                 return position
 
 
-def raw_possible_moves_pawn(position, board, previous_move):
+def raw_possible_moves_pawn(position, board):
     pawn = board.figure_on_position(position)
     full = []
     try_eat = TryEat(board, pawn.color)
@@ -265,13 +283,31 @@ def raw_possible_moves_pawn(position, board, previous_move):
             map(try_eat, [position.top_left(), position.top_right()])
         ))
 
+    """
     if previous_move is not None and is_pawn_jump(board, previous_move, another_color(pawn.color)):
         if pawn.color == BLACK:
             full.append(previous_move.end.bottom())
         else:
             full.append(previous_move.end.top())
+    """
 
     return full
+
+
+def possible_e_p_from_position(position, board, previous_move, player_color):
+    if not previous_move or not position in [1, 6] or not is_pawn_jump(board, previous_move, color):
+        return []
+    
+    return filter(
+        lambda move: is_e_p_correct(board, move, previous_move, player_color),
+        map(
+            lambda end: Move(position, end, is_trusted=True),
+            filter(bool, [
+                position.top_left(), position.top_right(),
+                position.bottom_left(), position.bottom_right()
+            ])
+        )
+    )
 
 
 def raw_possible_moves_king(position):
@@ -353,6 +389,7 @@ def raw_possible_moves_bishop(position,board):
 def raw_possible_moves_queen(position,board):
     return raw_possible_moves_rook(position,board) + raw_possible_moves_bishop(position,board)
 
+
 def create_move(start, end, board):
     if is_castling(start, end, board):
         king_move = str(start) + str(end)
@@ -361,8 +398,9 @@ def create_move(start, end, board):
         extra_move = Move(*map(Coordinates.from_string, rook_move))
         return Move(start, end, type=CASTLING_MOVE, extra_move=extra_move)
 
+    eaten_position = Coordinates(end.x, start.y)
     if is_e_p(start, end, board):
-        return Move(start, end, type=E_P_MOVE, to_be_eaten=end)
+        return Move(start, end, type=E_P_MOVE, eaten_position=eaten_position)
 
     return Move(start, end, type=COMMON_MOVE)
 
@@ -376,7 +414,7 @@ def commit_move(move, board, prev_move, player_color):
             board.move(move.extra_move.start, move.extra_move.end)
 
     elif move.type == CASTLING_MOVE:
-        print('Xyu2')
+        print('Xyu2 (castling)')
         if is_castling_correct(move, board, player_color):
             board.move(move.start, move.end)
             board.move(move.extra_move.start, move.extra_move.end)
@@ -391,24 +429,30 @@ def commit_move(move, board, prev_move, player_color):
         raise InvalidMove("Incorrect castling")
 
     else:
-        print('Xyu1')
+        print('Xyu1 (not castling)')
         # ?? What if E_P
-        eaten_figure = board.figure_on_position(move.end)
+        #eaten_figure = board.figure_on_position(move.end)
         if move.type == E_P_MOVE:
 
-            if prev_move is None or \
-               not is_pawn_jump(board, prev_move, another_color(player_color)) or \
-               abs(prev_move.start.x - move.start.x) != 1 or \
-               prev_move.start.y - move.end.y != move.end.y - prev_move.end.y or \
-               abs(prev_move.start.y - move.end.y) != 1:
-
+            if prev_move is None or not is_e_p_correct(board, move, prev_move, player_color):
                 raise InvalidMove("Incorrect e.p.")
 
-        elif move.type != COMMON_MOVE:
-            raise InternalError("Wrong move type. This couldn't happen")
+            eaten_figure = board.figure_on_position(move.eaten_position)
 
-        # check if the turn is possible
-        # ...
+            board.move(move.start, move.end)
+            board.pop(move.eaten_position)            
+
+
+        elif move.type == COMMON_MOVE:
+            eaten_figure = board.figure_on_position(move.end)
+
+            if move.end not in possible_common_moves_from_position(board, move.start, player_color):
+                raise InvalidMove("Incorrect move")
+            else:
+                board.move(move.start, move.end)
+
+        else:
+            raise InternalError("Wrong move type. This couldn't happen")
 
         return Move(
             move.end,

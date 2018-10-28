@@ -20,7 +20,7 @@ class GameProcessor(object):
         self.boards = []
         self.turns = []
         player1,player2 = 1,1
-        self.GameCondition = GC(self.game_mode,player1,player2,log)
+        self.game_condition = GameCondition()#self.game_mode, player1, player2, None)#log)
         if self.game_mode == ONEPLAYER:
             self.algorithm = GameBrains(BLACK)
         # outside make_turn `current player' is the one whose turn is next
@@ -35,7 +35,7 @@ class GameProcessor(object):
             raise RuntimeError("Game over")
 
         move = create_move(start,end,self.board)
-        commit_move(move,self.board,self.last_move,self.current_player)
+        commit_move(move,self.board,self.last_move(),self.current_player)
             
         self.turns.append(move)
 
