@@ -14,7 +14,7 @@ import sys
 def game_status(board, current_player, previous_turn):
     # are there possible moves for `current_player'?
     all_moves = list(filterfalse(
-        lambda item: IsKamikadze(board, item[0])(item[1]),
+        lambda item: is_kamikadze(board,item,previous_move,current_player),
         possible_moves(board, current_player, previous_turn)
     ))
     if all_moves: # there are moves, so the game is not over
@@ -134,7 +134,6 @@ class NotBeatingSameColor(object):
         else:
             return False
 
-
 # FIXME: fields_under_attack
 def fields_under_attack(board, enemy_color):
     attacked = [possible_common_moves_from_position(board, item[1], enemy_color, None) for item in figures_on_board(board, color=enemy_color)]
@@ -142,41 +141,34 @@ def fields_under_attack(board, enemy_color):
     return reduce(lambda x,y: set(x) | set(y), attacked, set())
 
 
-class IsKamikadze(object):
-    def __init__(self, board, initial_position):
-        self.board = deepcopy(board)
-        self.figure = board.figure_on_position(initial_position)
-        self.enemy_color = another_color(self.figure.color)
-        self.figure_set = figures_on_board(self.board, color=self.enemy_color)
+def is_kamikadze(board,move,previous_move,current_player):
+    back_move = commit_move(move,board,previous_move,current_player)
+    king_pos = figures_on_board(board, type=KING, color=self.figure.color)[0][1]
+    enemy_color = another_color(board.figure_on_position(move.start))
+    #figure_set = figures_on_board(board, color=enemy_color)
+    if king_pos in fields_under_attack(board, enemy_color):
+        commit_move(back_move)
+        return True
 
-        self.board.pop(initial_position)
-
-    def __call__(self,final_position):
-        board = deepcopy(self.board)
-        board.put(final_position,self.figure)
-        king_pos = figures_on_board(board, type=KING, color=self.figure.color)[0][1]
-        enemy_color = another_color(self.figure.color)
-        figure_set = figures_on_board(board, color=enemy_color)
-        for i in figure_set:
-            if king_pos in possible_moves_from_position(board,i[1],self.enemy_color,None):
-                #print ("Figure in position {0} will eat our beloved James LVII".format(str(i[1])))
-                return True
-        return False
+    commit_move(back_move)
+    return False
 
 
 def possible_moves(board, player_color, previous_move):
     figures = figures_on_board(board, color=player_color)
     return sum(
-        map(
-            lambda item: [(item[0], boo) for boo in item[1]],
-            [(start[1], possible_moves_from_position(board, start[1], player_color, previous_move)) for start in figures]
-        ),
+        [(possible_moves_from_position(board, start[1], player_color, previous_move)) for start in figures],
         []
     )
 
 
 def possible_moves_from_position(board, position, player_color, previous_move):
-    pass
+    result = []
+    for item in possible_common_moves_from_position(board, position, player_color):
+        result.append(Move(position, item, type=E_P_MOVE, eaten_position=Coordinates(position.x, item.y)))
+    for item in possible_e_p_from_position(board, position, player_color, previous_move):
+        result.append(Move(position, item, type=COMMON_MOVE))
+    return(result)
 
 
 def possible_common_moves_from_position(board, position, player_color):
@@ -209,6 +201,20 @@ def possible_common_moves_from_position(board, position, player_color):
 
     return moves
 
+def possible_e_p_from_position(board, position, player_color, previous_move):
+    if not previous_move or not position in [1, 6] or not is_pawn_jump(board, previous_move, color):
+        return []
+    
+    return filter(
+        lambda move: is_e_p_correct(board, move, previous_move, player_color),
+        map(
+            lambda end: Move(position, end, is_trusted=True),
+            filter(bool, [
+                position.top_left(), position.top_right(),
+                position.bottom_left(), position.bottom_right()
+            ])
+        )
+    )
 
 #def is_e_p(move, board):
 def is_e_p(start, end, board):
@@ -283,31 +289,9 @@ def raw_possible_moves_pawn(position, board):
             map(try_eat, [position.top_left(), position.top_right()])
         ))
 
-    """
-    if previous_move is not None and is_pawn_jump(board, previous_move, another_color(pawn.color)):
-        if pawn.color == BLACK:
-            full.append(previous_move.end.bottom())
-        else:
-            full.append(previous_move.end.top())
-    """
-
     return full
 
 
-def possible_e_p_from_position(position, board, previous_move, player_color):
-    if not previous_move or not position in [1, 6] or not is_pawn_jump(board, previous_move, color):
-        return []
-    
-    return filter(
-        lambda move: is_e_p_correct(board, move, previous_move, player_color),
-        map(
-            lambda end: Move(position, end, is_trusted=True),
-            filter(bool, [
-                position.top_left(), position.top_right(),
-                position.bottom_left(), position.bottom_right()
-            ])
-        )
-    )
 
 
 def raw_possible_moves_king(position):

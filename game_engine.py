@@ -15,14 +15,14 @@ from datetime import datetime
 class GameProcessor(object):
     def __init__(self,game_mode):
         self.board = Board()
-        self.game_mode = game_mode
+        #self.game_mode = game_mode
         self.log = False
         self.boards = []
         self.turns = []
-        player1,player2 = 1,1
+        #player1,player2 = 1,1
         self.game_condition = GameCondition()#self.game_mode, player1, player2, None)#log)
-        if self.game_mode == ONEPLAYER:
-            self.algorithm = GameBrains(BLACK)
+        #if self.game_mode == ONEPLAYER:
+        #    self.algorithm = GameBrains(BLACK)
         # outside make_turn `current player' is the one whose turn is next
         self.current_player = WHITE
 
@@ -43,14 +43,17 @@ class GameProcessor(object):
     def allowed_moves(self):
         return allowed_moves(board, self.current_player, self.last_move())
 
+    """
     def nextmove(self):
         start,end = self.algorithm.makemove(self.board)
         self.make_turn(start,end)
+    """
 
     def game_result(self):
         if self.technical_winner is not None:
             return self.technical_winner # dirty
         return self.game_status
+        #return game_status(se)
 
     def last_move(self):
         result = None
