@@ -35,7 +35,8 @@ def game_status(board, current_player, previous_turn):
     return TIE
 
 def is_pawn_moved(board,move):
-    if board.figure_on_position(move.start).type == PAWN:
+    figure = board.figure_on_position(move.end)
+    if figure is not None and figure.type == PAWN:
         return True
     return False
 def another_color(color):
