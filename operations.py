@@ -34,7 +34,10 @@ def game_status(board, current_player, previous_turn):
     print("It's stalemate.", file=sys.stderr)
     return TIE
 
-
+def is_pawn_moved(board,move):
+    if board.figure_on_position(move.start).type == PAWN:
+        return True
+    return False
 def another_color(color):
     return WHITE if color == BLACK else BLACK
 
