@@ -24,7 +24,7 @@ def game_status(board, current_player, previous_turn):
     king_position = figures_on_board(board, type=KING, color=current_player)[0][1]
 
     enemy_moves = possible_moves(board, enemy_color, None)
-    if list(filter(lambda item: item[1] == king_position, enemy_moves)): # king can be eaten. checkmate
+    if list(filter(lambda item: item.end == king_position, enemy_moves)): # king can be eaten. checkmate
         print("It's checkmate.", file=sys.stderr)
         if current_player == WHITE:
             return BLACK_WIN

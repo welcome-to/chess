@@ -7,25 +7,12 @@ from copy import deepcopy
 
 
 class GameCondition(object):
-    def __init__(self):#, game_type, player1, player2,log):
-        # FIXME: move away to gui
-        """
-        self.game_type = game_type
-        self.player1 = player1
-        self.player2 = player2
-        self.current_player = WHITE
-        self.current_board = []
-        self.log = log
-        """
+    def __init__(self):
         self.board_list = []
         self.idle_moves = 0
         
     def add_move_info(self, board, is_move_idle):
         self.idle_moves = self.idle_moves + 1 if is_move_idle else 0
-        #self.current_player = another_color(self.current_player)
-        #self.current_board = board
-
-        # FIXME
         for i in self.board_list:
             if board == i[0]:
                 i[1] += 1

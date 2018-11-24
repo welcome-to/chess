@@ -15,14 +15,10 @@ from datetime import datetime
 class GameProcessor(object):
     def __init__(self,game_mode):
         self.board = Board()
-        #self.game_mode = game_mode
         self.log = False
         self.boards = []
         self.turns = []
-        #player1,player2 = 1,1
-        self.game_condition = GameCondition()#self.game_mode, player1, player2, None)#log)
-        #if self.game_mode == ONEPLAYER:
-        #    self.algorithm = GameBrains(BLACK)
+        self.game_condition = GameCondition()
         # outside make_turn `current player' is the one whose turn is next
         self.current_player = WHITE
 
@@ -33,27 +29,22 @@ class GameProcessor(object):
     def make_move(self, start, end):
         if self.game_result() is not None:
             raise RuntimeError("Game over")
-        print("Make move: ", start, end, " player: ", self.current_player)
 
-        move = create_move(start, end, self.board, self.current_player)
-        
-        
-        if is_kamikadze(self.board, move, self.last_move()):
-            self.technical_winner = another_color( self.current_player)
-        commit_move(move,self.board,self.last_move(),self.current_player)
-        self.turns.append(move)
+        print("Make move: ", start, end, " player: ", self.current_player)
+        try:
+            move = create_move(start, end, self.board, self.current_player)
+            if is_kamikadze(self.board, move, self.last_move()):
+                self.technical_winner = another_color( self.current_player)
+            commit_move(move,self.board,self.last_move(),self.current_player)
+            self.turns.append(move)
+        except:
+            self._run_technical_defeat()
+
         self.update_game_status()
         self.current_player = another_color(self.current_player)
 
-
     def update_game_status(self):      
         self.game_status = game_status(self.board, another_color(self.current_player), self.last_move())
-
-
-
-    def allowed_moves(self):
-        return allowed_moves(board, self.current_player, self.last_move())
-
 
     def game_result(self):
         if self.technical_winner is not None:
