@@ -18,12 +18,12 @@ class GameCondition(object):
                 i[1] += 1
                 return
 
-        self.board_list.append(((deepcopy(board), 1)))
+        self.board_list.append(([deepcopy(board), 1]))
 
 
 def satisfies_tie_conditions(game_condition):
     return game_condition.idle_moves >= MAX_IDLE_MOVES or \
-           list(filter(lambda x, y: y >= MAX_REPETITIONS, game_condition.board_list))
+           list(filter(lambda y: y[1] >= MAX_REPETITIONS, game_condition.board_list))
 
 
 
