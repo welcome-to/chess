@@ -230,7 +230,7 @@ class MainApp(App):
         self.main_layout.add_widget(self.gameplay)
 
     def leave(self, button):
-        self.stop()
+        exit()
     def back_to_main_menu(self,button):
         self.main_layout.remove_widget(self.main_layout.children[0])
         self.main_layout.add_widget(self.start_screen)
@@ -393,5 +393,6 @@ class MainApp(App):
         self.GameProcessor.make_move(self.start,self.end)
         self.board.draw(self.Orienteer.oriented_board(self.get_board()))
         result = self.GameProcessor.game_result()
+        print(result)
         if not result == None:
             self.gameover(result)

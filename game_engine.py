@@ -1,7 +1,7 @@
 from board import Board, Move
 from const import *
 from exception import InvalidMove, InternalError, NotImplementedError
-from operations import convert_pawns, is_correct, is_castling, is_e_p, game_status, make_castling, make_e_p, another_color, create_move, commit_move
+from operations import convert_pawns, is_kamikadze, is_correct, is_castling, is_e_p, game_status, make_castling, make_e_p, another_color, create_move, commit_move
 from Electronic_Kasparov import GameBrains
 from game_status import *
 
@@ -33,21 +33,27 @@ class GameProcessor(object):
     def make_move(self, start, end):
         if self.game_result() is not None:
             raise RuntimeError("Game over")
+        print("Make move: ", start, end, " player: ", self.current_player)
 
-        move = create_move(start,end,self.board)
+        move = create_move(start, end, self.board, self.current_player)
+        
+        
+        if is_kamikadze(self.board, move, self.last_move()):
+            self.technical_winner = another_color( self.current_player)
         commit_move(move,self.board,self.last_move(),self.current_player)
-            
         self.turns.append(move)
+        self.update_game_status()
+        self.current_player = another_color(self.current_player)
+
+
+    def update_game_status(self):      
+        self.game_status = game_status(self.board, another_color(self.current_player), self.last_move())
+
 
 
     def allowed_moves(self):
         return allowed_moves(board, self.current_player, self.last_move())
 
-    """
-    def nextmove(self):
-        start,end = self.algorithm.makemove(self.board)
-        self.make_turn(start,end)
-    """
 
     def game_result(self):
         if self.technical_winner is not None:

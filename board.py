@@ -26,17 +26,21 @@ class Move(object):
     def __init__(
         self, start, end,
         type=None,
-        is_trusted=False,
+        is_back_move=False,
         eaten_position=None,
         extra_move=None,
+        lost_virginity=False,
         restored_figure=None
     ):
+        if restored_figure is not None and eaten_position is None:
+            raise RuntimeError("Look! Shit.")
         self.start = start
         self.end = end
         self.type = type
-        self.is_trusted = is_trusted
+        self.is_back_move = is_back_move
         self.eaten_position = eaten_position
         self.extra_move = extra_move
+        self.lost_virginity = lost_virginity
         self.restored_figure = restored_figure
 
     """
@@ -48,7 +52,10 @@ class Move(object):
             raise InvalidMove("Incorrect input: {0}".format(line))
     """
     def __repr__(self):
-        return str(self.start) + str(self.end)
+        result = str(self.start) + str(self.end)
+        if self.eaten_position is not None:
+            result += " eaten:" + str(self.eaten_position)
+        return result
 
 
 class Coordinates(object):
@@ -134,7 +141,8 @@ class Board(object):
     def pop(self, position):
         figure = self.figure_on_position(position)
         if figure is None:
-            raise InvalidMove("No figure at {0}".format(start))
+            print(self)
+            raise InvalidMove("No figure at {0}".format(position))
         self.data[position.y][position.x] = None
         self.updateselffigures()
         return figure
