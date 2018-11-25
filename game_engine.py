@@ -40,7 +40,6 @@ class GameProcessor(object):
             self.game_condition.add_move_info(self.board,not is_pawn_moved(self.board,move))
         except:
             self._run_technical_defeat()
-        print(list(map(str,allowed_moves(self.board,another_color(self.current_player),self.last_move()))))
 
 
 
