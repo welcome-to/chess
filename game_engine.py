@@ -1,7 +1,7 @@
 from board import Board, Move
 from const import *
 from exception import InvalidMove, InternalError, NotImplementedError
-from operations import convert_pawns, is_pawn_moved, is_kamikadze, is_correct, is_castling, is_e_p, game_status, make_castling, make_e_p, another_color, create_move, commit_move
+from operations import convert_pawns, is_pawn_moved, is_kamikadze, is_castling, is_e_p, game_status, make_castling, another_color, create_move, commit_move
 from Electronic_Kasparov import GameBrains
 from game_status import *
 
