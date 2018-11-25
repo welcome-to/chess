@@ -1,7 +1,7 @@
 from board import Board, Coordinates, Move, figures_on_board
 from const import *
 from operations import possible_moves_from_position, is_e_p
-from run import GameProcessor
+from game_engine import GameProcessor
 
 import copy
 import sys
@@ -70,7 +70,7 @@ def decode_move(short_line, board, player_color, previous_move):
 
     final_pos = Coordinates.from_string(end_field)
     candidates = list(filter(
-        lambda item: final_pos in possible_moves_from_position(board, item[1], player_color, previous_move),
+        lambda item: final_pos in map(lambda move: move.end, possible_moves_from_position(board, item[1], player_color, previous_move)),
         candidates
     ))
 
@@ -86,7 +86,7 @@ def decode_move(short_line, board, player_color, previous_move):
     start_pos = candidates[0][1]
     if is_eating:
         attacked_field = final_pos
-        if is_e_p(Move(start_pos, final_pos), board):
+        if is_e_p(start_pos, final_pos, board):
             attacked_field = Coordinates(final_pos.x, start_pos.y)
         eaten_figure = board.figure_on_position(attacked_field)
         if eaten_figure is None:
