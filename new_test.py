@@ -2,9 +2,9 @@ import unittest
 
 from board import Board, Coordinates, Figure, Move, figures_on_board
 from const import *
-from exception import InternalError
+from exception import InternalError, InvalidMove
 
-from operations import game_status, is_kamikadze, is_pawn_jump
+from operations import create_move, game_status, is_castling, is_castling_correct, is_e_p, is_kamikadze, is_pawn_jump
 from possible_moves import *
 
 
@@ -154,8 +154,49 @@ class TestAll(unittest.TestCase):
             is_pawn_jump(board, Move(H6, H4), BLACK)
 
 
+    def test_e_p(self):
+        board = empty_board()
+        wp1 = Figure(WHITE, PAWN)
+        wp2 = Figure(WHITE, PAWN)
+        bp = Figure(BLACK, PAWN)
+        board.put(E4, wp1)
+        board.put(E5, wp2)
+        board.put(D4, bp)
+        self.assertTrue(is_e_p(E4, D5, board))
+        self.assertFalse(is_e_p(D4, E5, board))
+
+
+    def test_castling(self):
+        board = Board()
+        self.assertTrue(is_castling(E1, C1, board))
+        self.assertFalse(is_castling(G8, E8, board))
+        board.move(H8, E8)
+        self.assertFalse(is_castling(E8, C8, board))
+
+        # FIXME: assertRaises for incorrect Move object
+
+        board = empty_board()
+        king = Figure(BLACK, KING)
+        rook = Figure(BLACK, ROOK)
+        board.put(E8, king)
+        board.put(H8, rook)
+        self.assertTrue(is_castling_correct(create_move(E8, G8, board, BLACK), board, BLACK))
+        with self.assertRaises(InvalidMove):
+            result = is_castling_correct(create_move(E1, G1, board, WHITE), board, WHITE)
+
+        enemy_queen = Figure(WHITE, QUEEN)
+        board.put(E3, enemy_queen)
+        self.assertFalse(is_castling_correct(create_move(E8, G8, board, BLACK), board, BLACK))
+        board.move(E3, F3)
+        self.assertFalse(is_castling_correct(create_move(E8, G8, board, BLACK), board, BLACK))
+
+        pawn = Figure(BLACK, PAWN)
+        board.put(F6, pawn)
+        self.assertTrue(is_castling_correct(create_move(E8, G8, board, BLACK), board, BLACK))
+
+
     def test_kamikadze(self):
-     # first move is correct
+        # first move is correct
         self.assertEqual(
             is_kamikadze(Board(), Move(E2, E4, type=COMMON_MOVE), None),
             False
