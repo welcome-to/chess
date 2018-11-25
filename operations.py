@@ -60,8 +60,10 @@ def is_castling_correct(king_move, board, player_color):
 
     castling_data = CASTLING_DATA[str(king_move)]
     rook_move = king_move.extra_move
+    assert(rook_move is not None)
 
     king = board.figure_on_position(king_move.start)
+    assert(king is not None)
     if king.color != player_color or king.color != CASTLING_DATA[str(king_move)]['color']:
         return False
 
