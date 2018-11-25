@@ -58,13 +58,6 @@ class Cell(FloatLayout):
     def updateimage(self,source):
         self.image.source = source
 
-#создание специализированной кнопки (большой кастыль) кнопка помнит где она                                                исправить!!!!!!!!!!
-class ButtonRC(Button):
-    def loadroadandcolumn(self,row,column):
-        self.row = row
-        self.column = 7- column
-    def getrowandcolumn(self):
-        return (self.column,self.row)
 
 
 #виджет доски 
@@ -94,7 +87,7 @@ class  BoardWidget(GridLayout):
                     colorB = COLOROFCELL1
                 cell = Cell(bcolor = colorB)
 
-                button = ButtonRC(text = '',
+                button = Button(text = '',
                                   background_color = [0,0,0,0],
                                   background_normal = '',
                                   on_press = self.InputMove,
@@ -135,6 +128,7 @@ class  BoardWidget(GridLayout):
         for i in range(10):
             self.celllist[k].text=orientated_objects[k]
             k+=1
+
     def InputMove(self,button):
         marked = zip(range(len(self.children)), self.children)
         index = list(
@@ -146,8 +140,8 @@ class  BoardWidget(GridLayout):
                 )
             )
         )[0][0]
-        # FIXME: do something else
         self.button_function(index)
+
     def LightRed(self,index):
         self.children[index].bcolor = [255, 0, 0, 1]
     def LightGreen(self,index):
