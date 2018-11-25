@@ -1,7 +1,7 @@
 from board import Board, Move
 from const import *
 from exception import InvalidMove, InternalError, NotImplementedError
-from operations import convert_pawns, is_pawn_moved, is_kamikadze, is_castling, is_e_p, game_status, make_castling, another_color, create_move, commit_move
+from operations import convert_pawns, allowed_moves, is_pawn_moved, is_kamikadze, is_castling, is_e_p, game_status, make_castling, another_color, create_move, commit_move
 from Electronic_Kasparov import GameBrains
 from game_status import *
 
@@ -40,6 +40,7 @@ class GameProcessor(object):
             self.game_condition.add_move_info(self.board,not is_pawn_moved(self.board,move))
         except:
             self._run_technical_defeat()
+        print(list(map(str,allowed_moves(self.board,another_color(self.current_player),self.last_move()))))
 
 
 

@@ -93,13 +93,34 @@ def allowed_moves_from_position(board, position, player_color, previous_turn):
     ))
 
 
-def allowed_moves(board, previous_turn):
+def allowed_moves(board, current_player, previous_turn):
     # FIXME: this won't work.
-    figures = figures_on_board(board, color=player_color)
-    return sum(
-        [(allowed_moves_from_position(board, start[1], player_color, previous_move)) for start in figures],
-        []
-    )
+    all_moves = list(filterfalse(
+        lambda turn: is_kamikadze(board, turn, previous_turn),
+        possible_moves(board, current_player, previous_turn)
+    ))
+    return all_moves
+def posible_castling_from_position(board,position,current_player):
+    figure = board.figure_on_position(position)
+    if current_player == BLACK:
+        move1 = create_move(position,Coordinates.from_string('G8'),board,current_player)
+        move2 = create_move(position,Coordinates.from_string('C8'),board,current_player)
+    else:
+        move1 = create_move(position,Coordinates.from_string('G1'),board,current_player)
+        move2 = create_move(position,Coordinates.from_string('C1'),board,current_player)
+    ans = []
+    try:
+        if is_castling_correct(move1, board, current_player):
+            ans.append(move1)
+    except:
+        pass
+    try:
+        if is_castling_correct(move2, board,current_player):
+            ans.append(move2)
+    except:
+        pass
+    return ans
+
 
 
 def convert_pawns(board):
@@ -176,6 +197,7 @@ def possible_moves_from_position(board, position, player_color, previous_move):
         result.append(Move(position, item, type=COMMON_MOVE,eaten_position = eaten_position))
     for turn in possible_e_p_from_position(board, position, player_color, previous_move):
         result.append(Move(position, turn, type=E_P_MOVE, eaten_position=Coordinates(position.x, item.y)))
+    result.extend(posible_castling_from_position(board, position, player_color))
     return(result)
 
 
