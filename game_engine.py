@@ -13,7 +13,7 @@ from datetime import datetime
 
 
 class GameProcessor(object):
-    def __init__(self,game_mode):
+    def __init__(self,game_mode): # FIXME: game_mode
         self.board = Board()
         self.log = False
         self.boards = []

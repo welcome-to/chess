@@ -1,6 +1,6 @@
 from board import Board, Coordinates, Move, figures_on_board
 from const import *
-from operations import possible_moves_from_position, is_e_p
+from operations import possible_moves_from_position, is_e_p, create_move
 from game_engine import GameProcessor
 
 import copy
@@ -107,7 +107,7 @@ def decode_game(line, raise_if_incomplete=True):
     game_results = ['1-0', '0-1', '1/2']
     human_readable = []
     n = 1
-    gp = GameProcessor()
+    gp = GameProcessor(None)
     previous_move = None
     while line:
         print("Turn #{0}".format(n), file=sys.stderr)
@@ -131,11 +131,9 @@ def decode_game(line, raise_if_incomplete=True):
         except:
             raise
         human_readable += [decoded]
-        gp.make_turn(
-            Coordinates.from_string(decoded[:2]),
-            Coordinates.from_string(decoded[2:])
-        )
-        previous_move = Move.from_string(decoded)
+        start, end = map(Coordinates.from_string, (decoded[:2], decoded[2:]))
+        previous_move = create_move(start, end, gp.board, gp.current_player)
+        gp.make_move(start, end)
 
         line = line[next_space:].lstrip(' ')
         for game_result in game_results:
@@ -156,11 +154,9 @@ def decode_game(line, raise_if_incomplete=True):
         except:
             raise
         human_readable += [decoded]
-        gp.make_turn(
-            Coordinates.from_string(decoded[:2]),
-            Coordinates.from_string(decoded[2:])
-        )
-        previous_move = Move.from_string(decoded)
+        start, end = map(Coordinates.from_string, (decoded[:2], decoded[2:]))
+        previous_move = create_move(start, end, gp.board, gp.current_player)
+        gp.make_move(start, end)
         line = line[next_space:].lstrip(' ')
 
         n += 1
