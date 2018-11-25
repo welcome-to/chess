@@ -35,7 +35,7 @@ class LabelB(Label):
 
 
 
-#Добавление свойства цвета коетке
+#Добавление свойства цвета клетке
 Builder.load_string("""
 <Cell>:
     canvas:
