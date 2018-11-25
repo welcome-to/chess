@@ -4,13 +4,10 @@ from kivy.config import Config
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
-from kivy.uix.filechooser import FileChooserIconView
 
 from const import *
 from widgets import LabelB, BoardWidget
 from game_engine import GameProcessor
-from copy import copy
-
 from board import Coordinates
 from operations import another_color
 
