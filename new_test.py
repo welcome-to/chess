@@ -4,7 +4,7 @@ from board import Board, Coordinates, Figure, Move, figures_on_board
 from const import *
 from exception import InternalError, InvalidMove
 
-from operations import create_move, game_status, is_castling, is_castling_correct, is_e_p, is_kamikadze, is_pawn_jump
+from operations import create_move, game_status, is_castling, is_castling_correct, is_e_p, is_e_p_correct, is_kamikadze, is_pawn_jump, possible_e_p_from_position
 from possible_moves import *
 
 from decode import decode_move, decode_game
@@ -68,11 +68,9 @@ class TestEngine(unittest.TestCase):
         self.assertEqual(str(a1.top_right()), 'b2')
 
 
-    def test_possible_moves(self):
+    def test_raw_possible_moves(self):
         self.empty_board = empty_board()
         self.full_board = Board()
-
-        # raw possible moves
 
         # king
         moves = sorted(raw_possible_moves_king(A1), key=lambda x: str(x))
@@ -123,9 +121,14 @@ class TestEngine(unittest.TestCase):
         moves = sorted(raw_possible_moves_pawn(D4, board), key=lambda x: str(x))
         self.assertEqual(list(map(str, moves)), ['d3'])
 
-        # all possible moves
-        pass
 
+    def test_possible_moves(self):
+        board = Board()
+        previous_move = create_move(B2, B4, board, WHITE)
+        board.move(B2, B4)
+        board.move(C7, C4)
+        possible_e_p_s = possible_e_p_from_position(board, C4, BLACK, previous_move)
+        self.assertEqual(len(possible_e_p_s), 1)
 
     def test_game_status(self):
         ch_board = children_board()
@@ -166,6 +169,14 @@ class TestEngine(unittest.TestCase):
         board.put(D4, bp)
         self.assertTrue(is_e_p(E4, D5, board))
         self.assertFalse(is_e_p(D4, E5, board))
+
+        board = empty_board()
+        wp = Figure(WHITE, PAWN)
+        bp = Figure(BLACK, PAWN)
+        board.put(B4, wp)
+        board.put(C4, bp)
+        self.assertTrue(is_e_p_correct(board, C4, B3, Move(B2, B4), BLACK))
+        self.assertFalse(is_e_p_correct(board, C4, D3, Move(B2, B4), BLACK))
 
 
     def test_castling(self):

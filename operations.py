@@ -191,14 +191,12 @@ def possible_moves(board, player_color, previous_move):
 
 def possible_moves_from_position(board, position, player_color, previous_move):
     result = []
+    #FIXME: not end points but moevs should be returned
+
     for item in possible_common_moves_from_position(board, position, player_color):
-        if board.figure_on_position(item) is not None:
-            eaten_position = item
-        else:
-            eaten_position = None
-        result.append(Move(position, item, type=COMMON_MOVE,eaten_position = eaten_position))
+        result.append(create_move(position, item, board, player_color))
     for turn in possible_e_p_from_position(board, position, player_color, previous_move):
-        result.append(Move(position, turn, type=E_P_MOVE, eaten_position=Coordinates(position.x, item.y)))
+        result.append(create_move(position, turn, board, player_color))
     result.extend(posible_castling_from_position(board, position, player_color))
     return(result)
 
@@ -234,16 +232,16 @@ def possible_common_moves_from_position(board, position, player_color):
     return moves
 
 def possible_e_p_from_position(board, position, player_color, previous_move):
-    if not previous_move or not position.x in [1, 6] or not is_pawn_jump(board, previous_move, another_color(player_color)):
+    if not previous_move or not position.y in [3, 4] or not is_pawn_jump(board, previous_move, another_color(player_color)):
         return []
 
-    return filter(
+    return list(filter(
         lambda end: is_e_p_correct(board, position, end, previous_move, player_color),
         filter(bool, [
             position.top_left(), position.top_right(),
             position.bottom_left(), position.bottom_right()
         ])
-    )
+    ))
 
 def is_e_p(start, end, board):
     figure = board.figure_on_position(start)
@@ -259,7 +257,9 @@ def is_e_p_correct(board, start, end, prev_move, player_color):
         return False
     if abs(prev_move.start.x - start.x) != 1 or \
        prev_move.start.y - end.y != end.y - prev_move.end.y or \
-       abs(prev_move.start.y - end.y) != 1:
+       abs(prev_move.start.y - end.y) != 1 or \
+       prev_move.start.x != end.x:
+
        return False
     return True
 
