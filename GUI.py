@@ -381,16 +381,11 @@ class MainApp(App):
             for move in posible_moves:
                 if move[:2]==str(self.start):
                     posible_moves_from_position.append(Coordinates.from_string(move[2:4]))
-            print(posible_moves_from_position)
             for cord in posible_moves_from_position:
-                print(cord)
                 cord = self.Orienteer.oriented_coordinates([cord.x,cord.y])
                 cord[0]+=1
                 cord[1]+=1
-                print(cord[1])
                 index1 = (cord[1])*10+(9-cord[0])
-
-                print(index1)
                 self.board.LightBlue(index1)
             self.index = index
 
@@ -411,6 +406,5 @@ class MainApp(App):
         self.GameProcessor.make_move(self.start,self.end)
         self.board.draw(self.Orienteer.oriented_board(self.get_board()))
         result = self.GameProcessor.game_result()
-        print(result)
         if not result == None:
             self.gameover(result)
