@@ -1,5 +1,7 @@
 import unittest
 
+import cProfile
+
 from board import Board, Coordinates, Figure, Move, figures_on_board
 from const import *
 from exception import InternalError, InvalidMove
@@ -272,6 +274,7 @@ class TestEngine(unittest.TestCase):
 
 
 class TestDecode(unittest.TestCase):
+#class TestDecode:
     def test_decode_move(self):
         board = Board()
         self.assertEqual(decode_move('e4', board, WHITE, None), 'e2e4')
@@ -340,4 +343,5 @@ class TestDecode(unittest.TestCase):
 
 
 if __name__ == "__main__":
+    #cProfile.run("unittest.main()")
     unittest.main()

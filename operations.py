@@ -148,17 +148,16 @@ def make_castling(board, king_move):
 # this is a class-functor. it can be used as a function: instance(arg) === __call__(self, arg).
 class NotBeatingSameColor(object):
     def __init__(self, board, initial_position):
-        figure_color = board.figure_on_position(initial_position).color
-        figure_set = figures_on_board(board, color=figure_color)
-        self.position_set = []
-        for i in figure_set:
-            self.position_set.append(i[1])
+        figure = board.figure_on_position(initial_position)
+        assert(figure is not None)
+        self.color = figure.color
+        self.board = board
 
     def __call__(self, final_position):
-        if not (final_position in self.position_set):
+        if self.board.figure_on_position(final_position) is None:
             return True
-        else:
-            return False
+        return self.board.figure_on_position(final_position).color != self.color
+
 
 # FIXME: fields_under_attack
 def fields_under_attack(board, enemy_color):
