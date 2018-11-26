@@ -9,7 +9,7 @@ DATE_FORMAT = "%d.%m.%Y"
 
 
 if __name__ == "__main__":
-    f = open('1800plus.txt')
+    f = open('txt_all7mln.txt')
     gamenumber = 0
     players_line = ''
     date_line = ''

@@ -15,10 +15,7 @@ import sys
 # current_player: the one whose turn is next
 def game_status(board, current_player, previous_turn):
     # are there possible moves for `current_player'?
-    all_moves = list(filterfalse(
-        lambda turn: is_kamikadze(board, turn, previous_turn),
-        possible_moves(board, current_player, previous_turn)
-    ))
+    all_moves = allowed_moves(board,current_player,previous_turn)
     if all_moves: # there are moves, so the game is not over
         return None
 
@@ -26,7 +23,7 @@ def game_status(board, current_player, previous_turn):
     king_position = figures_on_board(board, type=KING, color=current_player)[0][1]
 
     enemy_moves = possible_moves(board, enemy_color, None)
-    if list(filter(lambda item: item.end == king_position, enemy_moves)): # king can be eaten. checkmate
+    if list(filter(lambda move: move.end == king_position, enemy_moves)): # king can be eaten. checkmate
         print("It's checkmate.", file=sys.stderr)
         if current_player == WHITE:
             return BLACK_WIN
@@ -52,23 +49,23 @@ def is_castling(start, end, board):
     figure = board.figure_on_position(start)
     if figure is None or figure.type is not KING:
         return False
-    return (str(start) + str(end)) in CASTLING_DATA.keys()
+    return (start,end) in CASTLING_DATA.keys()
 
 
 def is_castling_correct(king_move, board, player_color):
     assert(king_move.type == CASTLING_MOVE)
 
-    castling_data = CASTLING_DATA[str(king_move)]
+    castling_data = CASTLING_DATA[(king_move.start,king_move.end)]
     rook_move = king_move.extra_move
     assert(rook_move is not None)
 
     king = board.figure_on_position(king_move.start)
     assert(king is not None)
-    if king.color != player_color or king.color != CASTLING_DATA[str(king_move)]['color']:
+    if king.color != player_color or king.color != CASTLING_DATA[(king_move.start,king_move.end)]['color']:
         return False
 
     rook = board.figure_on_position(rook_move.start)
-    if rook is None or rook.color != player_color or rook.color != CASTLING_DATA[str(king_move)]['color']:
+    if rook is None or rook.color != player_color or rook.color != CASTLING_DATA[(king_move.start,king_move.end)]['color']:
         return False
 
     if king.has_moved or rook.has_moved:
@@ -76,12 +73,12 @@ def is_castling_correct(king_move, board, player_color):
 
     # no figures between king and rook
     for inner_field in castling_data['inner_fields']:
-        if not board.figure_on_position(Coordinates.from_string(inner_field)) is None:
+        if not board.figure_on_position(inner_field) is None:
             return False
 
     # 3. Check the king's way is not under attack.
     under_attack = fields_under_attack(board, another_color(player_color))
-    if set(map(Coordinates.from_string, castling_data['safe_fields'])) & set(under_attack):
+    if set(castling_data['safe_fields']) & set(under_attack):
         return False
 
     return True
@@ -105,20 +102,22 @@ def allowed_moves(board, current_player, previous_turn):
 def posible_castling_from_position(board,position,current_player):
     figure = board.figure_on_position(position)
     if current_player == BLACK:
-        move1 = create_move(position,Coordinates.from_string('G8'),board,current_player)
-        move2 = create_move(position,Coordinates.from_string('C8'),board,current_player)
+        move1 = create_move(position, Coordinates.from_string('G8'), board, current_player)
+        move2 = create_move(position, Coordinates.from_string('C8'), board, current_player)
     else:
-        move1 = create_move(position,Coordinates.from_string('G1'),board,current_player)
-        move2 = create_move(position,Coordinates.from_string('C1'),board,current_player)
+        move1 = create_move(position, Coordinates.from_string('G1'), board, current_player)
+        move2 = create_move(position, Coordinates.from_string('C1'), board, current_player)
     ans = []
     try:
-        if is_castling_correct(move1, board, current_player):
-            ans.append(move1)
+        if move1.type == CASTLING_MOVE:
+            if is_castling_correct(move1, board, current_player):
+                ans.append(move1)
     except:
         pass
     try:
-        if is_castling_correct(move2, board,current_player):
-            ans.append(move2)
+        if move2.type == CASTLING_MOVE:
+            if is_castling_correct(move2, board,current_player):
+                ans.append(move2)
     except:
         pass
     return ans
@@ -134,15 +133,6 @@ def convert_pawns(board):
         figure = board.figure_on_position(Coordinates(i, 0))
         if figure is not None and figure.type == PAWN:
             board.put(Coordinates(i,0),Figure(BLACK, QUEEN))
-
-
-def make_castling(board, king_move):
-    rook_move = Move.from_string(CASTLING_DATA[str(king_move)]['rook_move'])
-    try:
-        board.move(rook_move.start, rook_move.end)
-        board.move(king_move.start, king_move.end)
-    except:
-        raise InternalError("Castling suddenly failed")
 
 
 # this is a class-functor. it can be used as a function: instance(arg) === __call__(self, arg).
@@ -278,10 +268,9 @@ def create_move(start, end, board, player_color):
     if figure is None or figure.color != player_color:
         raise InvalidMove("No valid figure at {0}".format(start))
     if is_castling(start, end, board):
-        king_move = str(start) + str(end)
 
-        rook_move = CASTLING_DATA[king_move]['rook_move']
-        extra_move = Move(*map(Coordinates.from_string, rook_move))
+        rook_move = CASTLING_DATA[(start, end)]['rook_move']
+        extra_move = Move(*rook_move)
         return Move(start, end, type=CASTLING_MOVE, extra_move=extra_move)
 
     eaten_position = Coordinates(end.x, start.y)
@@ -349,3 +338,53 @@ def commit_move(move, board, prev_move, player_color):
             restored_figure=eaten_figure,
             lost_virginity=lost_virginity
         )
+
+
+
+A1, A2, A3, A4, A5, A6, A7, A8, \
+B1, B2, B3, B4, B5, B6, B7, B8, \
+C1, C2, C3, C4, C5, C6, C7, C8, \
+D1, D2, D3, D4, D5, D6, D7, D8, \
+E1, E2, E3, E4, E5, E6, E7, E8, \
+F1, F2, F3, F4, F5, F6, F7, F8, \
+G1, G2, G3, G4, G5, G6, G7, G8, \
+H1, H2, H3, H4, H5, H6, H7, H8 = \
+map(Coordinates.from_string, [
+    'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8',
+    'b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8',
+    'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8',
+    'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8',
+    'e1', 'e2', 'e3', 'e4', 'e5', 'e6', 'e7', 'e8',
+    'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8',
+    'g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7', 'g8',
+    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8'
+])
+CASTLING_DATA = {
+    (E1,G1): {
+        'rook_move': (H1, F1),
+        'inner_fields': [F1, G1],
+        'safe_fields': [E1, F1, G1],
+        'color': WHITE
+    },
+    (E8,G8): {
+        'rook_move': (H8, F8),
+        'inner_fields': [F8, G8],
+        'safe_fields': [E8, F8, G8],
+        'color': BLACK
+    },
+    (E1,C1): {
+        'rook_move': (A1, D1),
+        'inner_fields': [B1, C1, D1],
+        'safe_fields': [E1, D1, C1],
+        'color': WHITE
+    },
+    (E8,C8): {
+        'rook_move': (A8, D8),
+        'inner_fields': [B8, C8, D8],
+        'safe_fields': [E8, D8, C8],
+        'color': BLACK
+    }
+}
+
+
+

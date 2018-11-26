@@ -99,7 +99,7 @@ class Coordinates(object):
 
     def __hash__(self):
         return hash(str(self))
-
+        
     def __repr__(self):
         if not self:
             raise InternalError("Invalid coordinates")
