@@ -38,12 +38,13 @@ class GameProcessor(object):
             commit_move(move,self.board,self.last_move(),self.current_player)
             self.turns.append(move)
             self.game_condition.add_move_info(self.board,not is_pawn_moved(self.board,move))
+            self.update_game_status()
         except:
             self._run_technical_defeat()
 
 
 
-        self.update_game_status()
+        
         self.current_player = another_color(self.current_player)
 
     def update_game_status(self):  
