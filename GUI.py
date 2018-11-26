@@ -37,7 +37,7 @@ class Orienteer(object):
     def oriented_coordinates(self,coordinates):
         if not self.orientation:
             return coordinates
-        return 7 - coordinates[0], 7 - coordinates[1]
+        return [7 - coordinates[0], 7 - coordinates[1]]
 
     def oriented_board(self,board):
         if self.orientation:
@@ -376,8 +376,29 @@ class MainApp(App):
             self.board.LightRed(index)
             self.clicks = 1
             self.move_label.text = (str(coordinates)+' -> ').upper()
+            posible_moves = self.GameProcessor.cur_allowed_moves()
+            posible_moves_from_position = []
+            for move in posible_moves:
+                if move[:2]==str(self.start):
+                    posible_moves_from_position.append(Coordinates.from_string(move[2:4]))
+            print(posible_moves_from_position)
+            for cord in posible_moves_from_position:
+                print(cord)
+                cord = self.Orienteer.oriented_coordinates([cord.x,cord.y])
+                cord[0]+=1
+                cord[1]+=1
+                print(cord[1])
+                index1 = (cord[1])*10+(9-cord[0])
+
+                print(index1)
+                self.board.LightBlue(index1)
+            self.index = index
+
+                
         else:
             self.end = coordinates
+            self.board.UnlightAll()
+            self.board.LightRed(self.index)
             self.board.LightGreen(index)
             self.clicks = 0
             self.move_label.text += str(coordinates).upper()

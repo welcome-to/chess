@@ -51,7 +51,8 @@ class GameProcessor(object):
         if self.game_status is None:
             if satisfies_tie_conditions(self.game_condition):
                 self.game_status = TIE
-
+    def cur_allowed_moves(self):
+        return list(map(str,allowed_moves(self.board,self.current_player,self.last_move())))
 
 
     def game_result(self):
