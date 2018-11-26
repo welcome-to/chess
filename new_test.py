@@ -11,6 +11,7 @@ from possible_moves import *
 
 from decode import decode_move, decode_game
 
+from game_engine import GameProcessor
 
 A1, A2, A3, A4, A5, A6, A7, A8, \
 B1, B2, B3, B4, B5, B6, B7, B8, \
@@ -50,6 +51,21 @@ def empty_board():
         for j in range(8):
             board.put(Coordinates(i, j), None)
     return board
+
+
+def board_after(moves_list):
+    gp = GameProcessor(None)
+    for move in moves_list:
+        if move in ['1/2', '1-0', '0-1']:
+            if gp.game_result() is not None:
+                return gp.board
+            raise RuntimeError("It's not gameover but the game trancription says it is")
+        if gp.game_result() is not None:
+            raise RuntimeError("It's gameover but the game continues")
+        start, end = map(Coordinates.from_string, (move[:2], move[2:]))
+        gp.make_move(start, end)
+
+    return gp.board
 
 
 class TestEngine(unittest.TestCase):
@@ -291,6 +307,7 @@ class TestDecode(unittest.TestCase):
         board.move(G8, F6)
         self.assertEqual(decode_move('Qxf7#', board, WHITE, None), 'h5f7')
 
+    """
     def test_decode_line(self):
         line = "1.g3 Nf6 2.Bg2 g6 3.d4 Bg7 4.Nf3 0-0 5.0-0 d6 6.c3 Nbd7 7.Na3 c6 8.b4 Re8 9.Nc4 Nb6 10.Ne3 Nfd5 " + \
             "11.Qc2 Nxe3 12.fxe3 d5 13.e4 a5 14.e5 Bf5 15.Qb3 axb4 16.cxb4 Nc4 17.Ng5 f6 18.e4 Bc8 19.exd5 cxd5 20.Qf3 Nb6 " + \
@@ -339,6 +356,23 @@ class TestDecode(unittest.TestCase):
                "32.Rxb3 Qa6 33.Qc5 Rdd8 34.Kf2 g6 35.Rb6 Qa4 36.Qb4 Ra8 37.Qxa4 Rxa4 38.Rc3 Rda8 39.Rbb3 Kg7 40.Ke2 h5 " + \
                "41.Kd2 Kf6 42.Kc2 R4a6 43.Kb2 g5 44.Rb7 g4 45.f4 h4 46.Ka2 Rc8 47.Kb3 Rca8 48.Ka2 Rc8 49.Kb3 Rca8 50.Ka2 1/2"
         game = decode_game(line)
+    """
+
+    def test_decode_line_7(self):
+        line = "1.e4 c5 2.Nf3 Nc6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 d6 6.f3 e5 7.Nb3 Be7 8.Be3 0-0 9.Qd2 a5 10.Bb5 Be6 " + \
+               "11.Rd1 Na7 12.Be2 Nc8 13.f4 Ng4 14.f5 Nxe3 15.Qxe3 Bh4+ 16.g3 Bg5 17.Qf2 Bd7 18.Nd5 a4 19.Nd2 Qa5 20.c3 Bc6 " + \
+               "21.Nc4 Qa7 22.Bf3 b5 23.Nce3 Rd8 24.h4 Bxe3 25.Nxe3 Qb7 26.Qg2 Nb6 27.f6 g6 28.h5 Nd7 29.Rxd6 Qc7 30.Rxc6 Qxc6 " + \
+               "31.Nd5 Qe6 32.hxg6 fxg6 33.Nc7 Qxa2 34.Nxa8 Qb1+ 35.Bd1 Nxf6 36.Qc2 Qxc2 37.Bxc2 Rxa8 38.Ke2 Rc8 39.Bd3 a3 40.bxa3 Rxc3 " + \
+               "41.Ra1 h5 42.Kd2 Rc5 43.Rb1 Kg7 44.Ke3 Rc3 45.Ra1 Kh6 46.Kd2 Rc5 47.Rb1 Kg5 48.Rb3 h4 49.gxh4+ Kxh4 50.Rxb5 Nxe4+ " + \
+               "51.Ke3 Rxb5 52.Bxb5 Nd6 53.a4 g5 54.Bf1 g4 55.a5 g3 56.a6 Nc4+ 57.Kf3 e4+ 58.Kxe4 Nd2+ 59.Kf4 Nxf1 60.a7 Kh3 " + \
+               "61.a8Q Kh2 "
+        end_game = "62.Qh8+ Kg1 63.Qd4+ Kh1 64.Qh8+ Kg2 65.Qb2+ Kh3 66.Qe2 Nh2 67.Qd3 1-0"
+
+        game_beginning = decode_game(line, raise_if_incomplete=False)
+        board = board_after(game_beginning)
+        print(board)
+
+        #game = decode_game(line)
 
 
 
