@@ -36,6 +36,7 @@ class GameProcessor(object):
             if is_kamikadze(self.board, move, self.last_move()):
                 self.technical_winner = another_color( self.current_player)
             commit_move(move,self.board,self.last_move(),self.current_player)
+            convert_pawns(self.board)
             self.turns.append(move)
             self.game_condition.add_move_info(self.board,not is_pawn_moved(self.board,move))
             self.update_game_status()
@@ -44,7 +45,6 @@ class GameProcessor(object):
 
 
 
-        
         self.current_player = another_color(self.current_player)
 
     def update_game_status(self):  
