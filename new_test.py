@@ -52,7 +52,8 @@ def board_after(moves_list):
     return gp.board
 
 
-class TestEngine(unittest.TestCase):
+#class TestEngine(unittest.TestCase):
+class TestEngine:
     def test_coordinates(self):
         word = 'e2'
         coord = Coordinates.from_string(word)
@@ -340,7 +341,6 @@ class TestDecode(unittest.TestCase):
                "32.Rxb3 Qa6 33.Qc5 Rdd8 34.Kf2 g6 35.Rb6 Qa4 36.Qb4 Ra8 37.Qxa4 Rxa4 38.Rc3 Rda8 39.Rbb3 Kg7 40.Ke2 h5 " + \
                "41.Kd2 Kf6 42.Kc2 R4a6 43.Kb2 g5 44.Rb7 g4 45.f4 h4 46.Ka2 Rc8 47.Kb3 Rca8 48.Ka2 Rc8 49.Kb3 Rca8 50.Ka2 1/2"
         game = decode_game(line)
-    """
 
     def test_decode_line_7(self):
         line = "1.e4 c5 2.Nf3 Nc6 3.d4 cxd4 4.Nxd4 Nf6 5.Nc3 d6 6.f3 e5 7.Nb3 Be7 8.Be3 0-0 9.Qd2 a5 10.Bb5 Be6 " + \
@@ -349,8 +349,23 @@ class TestDecode(unittest.TestCase):
                "31.Nd5 Qe6 32.hxg6 fxg6 33.Nc7 Qxa2 34.Nxa8 Qb1+ 35.Bd1 Nxf6 36.Qc2 Qxc2 37.Bxc2 Rxa8 38.Ke2 Rc8 39.Bd3 a3 40.bxa3 Rxc3 " + \
                "41.Ra1 h5 42.Kd2 Rc5 43.Rb1 Kg7 44.Ke3 Rc3 45.Ra1 Kh6 46.Kd2 Rc5 47.Rb1 Kg5 48.Rb3 h4 49.gxh4+ Kxh4 50.Rxb5 Nxe4+ " + \
                "51.Ke3 Rxb5 52.Bxb5 Nd6 53.a4 g5 54.Bf1 g4 55.a5 g3 56.a6 Nc4+ 57.Kf3 e4+ 58.Kxe4 Nd2+ 59.Kf4 Nxf1 60.a7 Kh3 " + \
-               "61.a8Q Kh2 "
-        end_game = "62.Qh8+ Kg1 63.Qd4+ Kh1 64.Qh8+ Kg2 65.Qb2+ Kh3 66.Qe2 Nh2 67.Qd3 1-0"
+               "61.a8Q Kh2 62.Qh8+ Kg1 63.Qd4+ Kh1 64.Qh8+ Kg2 65.Qb2+ Kh3 66.Qe2 Nh2 67.Qd3 1-0"
+        #end_game = "62.Qh8+ Kg1 63.Qd4+ Kh1 64.Qh8+ Kg2 65.Qb2+ Kh3 66.Qe2 Nh2 67.Qd3 1-0"
+
+        #game_beginning = decode_game(line, raise_if_incomplete=False)
+        #board = board_after(game_beginning)
+        #print(board)
+
+        game = decode_game(line)
+    """
+
+    def test_decode_line_8(self):
+        line = "1.e4 e5 2.Nf3 Nc6 3.Bb5 a6 4.Ba4 Nf6 5.0-0 Nxe4 6.d4 "#b5 "
+        end_game = "7.Bb3 d5 8.dxe5 Be6 9.Be3 Bc5 10.Bxc5 Nxc5 " + \
+               "11.Nd4 Nxd4 12.Qxd4 Nb7 13.c3 c5 14.Qf4 Na5 15.Bc2 h6 16.Nd2 Qg5 17.Qxg5 hxg5 18.Nb3 Nxb3 19.axb3 Kd7 20.Rfd1 Kc7 " + \
+               "21.b4 cxb4 22.cxb4 Rh4 23.Bb3 Rxb4 24.Bxd5 Bxd5 25.Rxd5 Rxb2 26.Rc1+ Kb6 27.Rd6+ Ka5 28.Rd7 b4 29.Ra1+ Kb6 30.h4 Ra7 " + \
+               "31.Rd6+ Kb5 32.hxg5 a5 33.Rd5+ Kc4 34.Rdxa5 Rxa5 35.Rxa5 b3 36.Ra7 Re2 37.Rc7+ Kd5 38.Rb7 b2 39.Kh2 Rxf2 40.Kg3 Re2 " + \
+               "41.g6 fxg6 42.Kf4 g5+ 43.Kf5 Rf2+ 44.Kg6 Rxg2 45.Rb5+ Ke6 0-1"
 
         game_beginning = decode_game(line, raise_if_incomplete=False)
         board = board_after(game_beginning)
@@ -361,5 +376,5 @@ class TestDecode(unittest.TestCase):
 
 
 if __name__ == "__main__":
-    cProfile.run("unittest.main()")
-    #unittest.main()
+    #cProfile.run("unittest.main()")
+    unittest.main()
