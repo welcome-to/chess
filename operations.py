@@ -2,13 +2,69 @@ from board import Figure, Move, Coordinates, figures_on_board
 from const import *
 from exception import InternalError, InvalidMove
 
+
+from common_operations import NotBeatingSameColor,another_color
+from castling_moves import *
+from e_p_moves import *
 from possible_moves import *
+from fucking_cord_const import *
+from common_moves import *
 
 from copy import deepcopy
-from functools import reduce
 from itertools import filterfalse
 
 import sys
+'''
+Хуйня!!! Пофиксить.. Не использовать create_move
+'''
+def posible_castling_from_position(board,position,current_player):
+    figure = board.figure_on_position(position)
+    if current_player == BLACK:
+        move1 = create_move(position, Coordinates.from_string('G8'), board, current_player)
+        move2 = create_move(position, Coordinates.from_string('C8'), board, current_player)
+    else:
+        move1 = create_move(position, Coordinates.from_string('G1'), board, current_player)
+        move2 = create_move(position, Coordinates.from_string('C1'), board, current_player)
+    ans = []
+    try:
+        if move1.type == CASTLING_MOVE:
+            if is_castling_correct(move1, board, current_player):
+                ans.append(move1)
+    except:
+        pass
+    try:
+        if move2.type == CASTLING_MOVE:
+            if is_castling_correct(move2, board,current_player):
+                ans.append(move2)
+    except:
+        pass
+    return ans
+
+def possible_moves(board, player_color, previous_move):
+    figures = figures_on_board(board, color=player_color)
+    return sum(
+        [(possible_moves_from_position(board, start[1], player_color, previous_move)) for start in figures],
+        []
+    )
+
+
+
+
+
+
+def possible_moves_from_position(board, position, player_color, previous_move):
+    result = []
+    #FIXME: not end points but moevs should be returned
+
+    for item in possible_common_moves_from_position(board, position, player_color):
+        result.append(create_move(position, item, board, player_color))
+    for turn in possible_e_p_from_position(board, position, player_color, previous_move):
+        result.append(create_move(position, turn, board, player_color))
+    result.extend(posible_castling_from_position(board, position, player_color))
+    return(result)
+
+
+
 
 
 # has the game finished with a result? return this result if yes
@@ -34,54 +90,8 @@ def game_status(board, current_player, previous_turn):
     return TIE
 
 
-def is_pawn_moved(board,move):
-    figure = board.figure_on_position(move.end)
-    if figure is not None and figure.type == PAWN:
-        return True
-    return False
 
 
-def another_color(color):
-    return WHITE if color == BLACK else BLACK
-
-
-def is_castling(start, end, board):
-    figure = board.figure_on_position(start)
-    if figure is None or figure.type is not KING:
-        return False
-    return (start,end) in CASTLING_DATA.keys()
-
-
-def is_castling_correct(king_move, board, player_color):
-    assert(king_move.type == CASTLING_MOVE)
-
-    castling_data = CASTLING_DATA[(king_move.start,king_move.end)]
-    rook_move = king_move.extra_move
-    assert(rook_move is not None)
-
-    king = board.figure_on_position(king_move.start)
-    assert(king is not None)
-    if king.color != player_color or king.color != CASTLING_DATA[(king_move.start,king_move.end)]['color']:
-        return False
-
-    rook = board.figure_on_position(rook_move.start)
-    if rook is None or rook.color != player_color or rook.color != CASTLING_DATA[(king_move.start,king_move.end)]['color']:
-        return False
-
-    if king.has_moved or rook.has_moved:
-        return False
-
-    # no figures between king and rook
-    for inner_field in castling_data['inner_fields']:
-        if not board.figure_on_position(inner_field) is None:
-            return False
-
-    # 3. Check the king's way is not under attack.
-    under_attack = fields_under_attack(board, another_color(player_color))
-    if set(castling_data['safe_fields']) & set(under_attack):
-        return False
-
-    return True
 
 
 def allowed_moves_from_position(board, position, player_color, previous_turn):
@@ -99,29 +109,6 @@ def allowed_moves(board, current_player, previous_turn):
         possible_moves(board, current_player, previous_turn)
     ))
     return all_moves
-def posible_castling_from_position(board,position,current_player):
-    figure = board.figure_on_position(position)
-    if current_player == BLACK:
-        move1 = create_move(position, Coordinates.from_string('G8'), board, current_player)
-        move2 = create_move(position, Coordinates.from_string('C8'), board, current_player)
-    else:
-        move1 = create_move(position, Coordinates.from_string('G1'), board, current_player)
-        move2 = create_move(position, Coordinates.from_string('C1'), board, current_player)
-    ans = []
-    try:
-        if move1.type == CASTLING_MOVE:
-            if is_castling_correct(move1, board, current_player):
-                ans.append(move1)
-    except:
-        pass
-    try:
-        if move2.type == CASTLING_MOVE:
-            if is_castling_correct(move2, board,current_player):
-                ans.append(move2)
-    except:
-        pass
-    return ans
-
 
 
 def convert_pawns(board):
@@ -135,25 +122,6 @@ def convert_pawns(board):
             board.put(Coordinates(i,0),Figure(BLACK, QUEEN))
 
 
-# this is a class-functor. it can be used as a function: instance(arg) === __call__(self, arg).
-class NotBeatingSameColor(object):
-    def __init__(self, board, initial_position):
-        figure = board.figure_on_position(initial_position)
-        assert(figure is not None)
-        self.color = figure.color
-        self.board = board
-
-    def __call__(self, final_position):
-        if self.board.figure_on_position(final_position) is None:
-            return True
-        return self.board.figure_on_position(final_position).color != self.color
-
-
-# FIXME: fields_under_attack
-def fields_under_attack(board, enemy_color):
-    attacked = [possible_common_moves_from_position(board, item[1], enemy_color) for item in figures_on_board(board, color=enemy_color)]
-    # FIXME: e_p_moves
-    return reduce(lambda x,y: set(x) | set(y), attacked, set())
 
 
 def is_kamikadze(board, move, previous_move):
@@ -170,97 +138,9 @@ def is_kamikadze(board, move, previous_move):
     return False
 
 
-def possible_moves(board, player_color, previous_move):
-    figures = figures_on_board(board, color=player_color)
-    return sum(
-        [(possible_moves_from_position(board, start[1], player_color, previous_move)) for start in figures],
-        []
-    )
 
 
-def possible_moves_from_position(board, position, player_color, previous_move):
-    result = []
-    #FIXME: not end points but moevs should be returned
 
-    for item in possible_common_moves_from_position(board, position, player_color):
-        result.append(create_move(position, item, board, player_color))
-    for turn in possible_e_p_from_position(board, position, player_color, previous_move):
-        result.append(create_move(position, turn, board, player_color))
-    result.extend(posible_castling_from_position(board, position, player_color))
-    return(result)
-
-
-def possible_common_moves_from_position(board, position, player_color):
-    figure = board.figure_on_position(position)
-
-    if figure is None:
-        return []
-
-    type_to_handler = {
-        PAWN: raw_possible_moves_pawn,
-        ROOK: raw_possible_moves_rook,
-        KNIGHT: raw_possible_moves_knight,
-        BISHOP: raw_possible_moves_bishop,
-        QUEEN: raw_possible_moves_queen,
-        KING: raw_possible_moves_king
-    }
-    given_args = {
-        PAWN: [position,board],
-        ROOK: [position,board],
-        KNIGHT: [position],
-        BISHOP: [position,board],
-        QUEEN: [position,board],
-        KING: [position]
-    }
-
-    not_beating_same_color = NotBeatingSameColor(board, position)
-
-    moves = type_to_handler[figure.type](*given_args[figure.type])
-    moves = list(filter(not_beating_same_color, moves))
-
-    return moves
-
-def possible_e_p_from_position(board, position, player_color, previous_move):
-    if not previous_move or not position.y in [3, 4] or not is_pawn_jump(board, previous_move, another_color(player_color)):
-        return []
-
-    return list(filter(
-        lambda end: is_e_p_correct(board, position, end, previous_move, player_color),
-        filter(bool, [
-            position.top_left(), position.top_right(),
-            position.bottom_left(), position.bottom_right()
-        ])
-    ))
-
-def is_e_p(start, end, board):
-    figure = board.figure_on_position(start)
-    if not figure.type == PAWN:
-        return False
-    if start.x == end.x:
-        return False
-    return board.figure_on_position(end) is None
-
-
-def is_e_p_correct(board, start, end, prev_move, player_color):
-    if not is_pawn_jump(board, prev_move, another_color(player_color)):
-        return False
-    if abs(prev_move.start.x - start.x) != 1 or \
-       prev_move.start.y - end.y != end.y - prev_move.end.y or \
-       abs(prev_move.start.y - end.y) != 1 or \
-       prev_move.start.x != end.x:
-
-       return False
-    return True
-
-
-def is_pawn_jump(board, move, color):
-    figure = board.figure_on_position(move.end)
-    if figure is None or figure.color != color:
-        raise InternalError("This could not happen")
-    if figure.type != PAWN:
-        return False
-
-    return (color == WHITE and move.end.y - move.start.y == 2) or (color == BLACK and move.end.y - move.start.y == -2)
 
 
 def create_move(start, end, board, player_color):
@@ -268,7 +148,7 @@ def create_move(start, end, board, player_color):
     if figure is None or figure.color != player_color:
         raise InvalidMove("No valid figure at {0}".format(start))
     if is_castling(start, end, board):
-
+        print(start,type(end))
         rook_move = CASTLING_DATA[(start, end)]['rook_move']
         extra_move = Move(*rook_move)
         return Move(start, end, type=CASTLING_MOVE, extra_move=extra_move)
@@ -338,53 +218,4 @@ def commit_move(move, board, prev_move, player_color):
             restored_figure=eaten_figure,
             lost_virginity=lost_virginity
         )
-
-
-
-A1, A2, A3, A4, A5, A6, A7, A8, \
-B1, B2, B3, B4, B5, B6, B7, B8, \
-C1, C2, C3, C4, C5, C6, C7, C8, \
-D1, D2, D3, D4, D5, D6, D7, D8, \
-E1, E2, E3, E4, E5, E6, E7, E8, \
-F1, F2, F3, F4, F5, F6, F7, F8, \
-G1, G2, G3, G4, G5, G6, G7, G8, \
-H1, H2, H3, H4, H5, H6, H7, H8 = \
-map(Coordinates.from_string, [
-    'a1', 'a2', 'a3', 'a4', 'a5', 'a6', 'a7', 'a8',
-    'b1', 'b2', 'b3', 'b4', 'b5', 'b6', 'b7', 'b8',
-    'c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8',
-    'd1', 'd2', 'd3', 'd4', 'd5', 'd6', 'd7', 'd8',
-    'e1', 'e2', 'e3', 'e4', 'e5', 'e6', 'e7', 'e8',
-    'f1', 'f2', 'f3', 'f4', 'f5', 'f6', 'f7', 'f8',
-    'g1', 'g2', 'g3', 'g4', 'g5', 'g6', 'g7', 'g8',
-    'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'h7', 'h8'
-])
-CASTLING_DATA = {
-    (E1,G1): {
-        'rook_move': (H1, F1),
-        'inner_fields': [F1, G1],
-        'safe_fields': [E1, F1, G1],
-        'color': WHITE
-    },
-    (E8,G8): {
-        'rook_move': (H8, F8),
-        'inner_fields': [F8, G8],
-        'safe_fields': [E8, F8, G8],
-        'color': BLACK
-    },
-    (E1,C1): {
-        'rook_move': (A1, D1),
-        'inner_fields': [B1, C1, D1],
-        'safe_fields': [E1, D1, C1],
-        'color': WHITE
-    },
-    (E8,C8): {
-        'rook_move': (A8, D8),
-        'inner_fields': [B8, C8, D8],
-        'safe_fields': [E8, D8, C8],
-        'color': BLACK
-    }
-}
-
-
 
