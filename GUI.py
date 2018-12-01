@@ -376,7 +376,7 @@ class MainApp(App):
             self.board.LightRed(index)
             self.clicks = 1
             self.move_label.text = (str(coordinates)+' -> ').upper()
-            posible_moves = self.GameProcessor.cur_allowed_moves()
+            posible_moves = self.GameProcessor.current_allowed_moves()
             posible_moves_from_position = []
             for move in posible_moves:
                 if move[:2]==str(self.start):

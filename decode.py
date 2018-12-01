@@ -1,6 +1,7 @@
 from board import Board, Coordinates, Move, figures_on_board
 from const import *
-from operations import possible_moves_from_position, is_e_p, create_move
+from common_operations import is_e_p, create_move
+from operations import possible_moves_from_position
 from game_engine import GameProcessor
 
 import copy

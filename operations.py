@@ -2,11 +2,9 @@ from board import Figure, Move, Coordinates, figures_on_board
 from const import *
 from exception import InternalError, InvalidMove
 
-
-from common_operations import NotBeatingSameColor,another_color
+from common_operations import another_color, create_move, convert_pawns
 from castling_moves import *
 from e_p_moves import *
-from possible_moves import *
 from fucking_cord_const import *
 from common_moves import *
 
@@ -14,6 +12,9 @@ from copy import deepcopy
 from itertools import filterfalse
 
 import sys
+
+__all__ = ["game_status", "possible_moves", "is_kamikadze", "create_move", "commit_move", "convert_pawns"]
+
 '''
 Хуйня!!! Пофиксить.. Не использовать create_move
 '''
@@ -40,16 +41,19 @@ def posible_castling_from_position(board,position,current_player):
         pass
     return ans
 
-def possible_moves(board, player_color, previous_move):
+def possible_moves(board, player_color, previous_move, kamikadze_allowed=False):
     figures = figures_on_board(board, color=player_color)
-    return sum(
+    all_moves = sum(
         [(possible_moves_from_position(board, start[1], player_color, previous_move)) for start in figures],
         []
     )
+    if not kamikadze_allowed:
+        all_moves = list(filterfalse(
+            lambda turn: is_kamikadze(board, turn, previous_move),
+            all_moves
+        ))
 
-
-
-
+    return all_moves
 
 
 def possible_moves_from_position(board, position, player_color, previous_move):
@@ -64,21 +68,18 @@ def possible_moves_from_position(board, position, player_color, previous_move):
     return(result)
 
 
-
-
-
 # has the game finished with a result? return this result if yes
 # current_player: the one whose turn is next
 def game_status(board, current_player, previous_turn):
     # are there possible moves for `current_player'?
-    all_moves = allowed_moves(board,current_player,previous_turn)
+    all_moves = possible_moves(board, current_player, previous_turn, kamikadze_allowed=False)
     if all_moves: # there are moves, so the game is not over
         return None
 
     enemy_color = another_color(current_player)
     king_position = figures_on_board(board, type=KING, color=current_player)[0][1]
 
-    enemy_moves = possible_moves(board, enemy_color, None)
+    enemy_moves = possible_moves(board, enemy_color, None, kamikadze_allowed=True)
     if list(filter(lambda move: move.end == king_position, enemy_moves)): # king can be eaten. checkmate
         print("It's checkmate.", file=sys.stderr)
         if current_player == WHITE:
@@ -88,40 +89,6 @@ def game_status(board, current_player, previous_turn):
     # king is safe. stalemate
     print("It's stalemate.", file=sys.stderr)
     return TIE
-
-
-
-
-
-
-def allowed_moves_from_position(board, position, player_color, previous_turn):
-    list_of_moves = possible_moves_from_position(board, position, player_color, previous_turn)
-    return list(filterfalse(
-        lambda move: is_kamikadze(board, move, previous_turn),
-        list_of_moves
-    ))
-
-
-def allowed_moves(board, current_player, previous_turn):
-    # FIXME: this won't work.
-    all_moves = list(filterfalse(
-        lambda turn: is_kamikadze(board, turn, previous_turn),
-        possible_moves(board, current_player, previous_turn)
-    ))
-    return all_moves
-
-
-def convert_pawns(board):
-    for i in range(8):
-        figure = board.figure_on_position(Coordinates(i, 7))
-        if figure is not None and figure.type == PAWN: # it can be only white
-            board.put(Coordinates(i,7), Figure(WHITE, QUEEN))
-
-        figure = board.figure_on_position(Coordinates(i, 0))
-        if figure is not None and figure.type == PAWN:
-            board.put(Coordinates(i,0),Figure(BLACK, QUEEN))
-
-
 
 
 def is_kamikadze(board, move, previous_move):
@@ -136,32 +103,6 @@ def is_kamikadze(board, move, previous_move):
 
     commit_move(back_move, board, previous_move, player_color)
     return False
-
-
-
-
-
-
-
-def create_move(start, end, board, player_color):
-    figure = board.figure_on_position(start)
-    if figure is None or figure.color != player_color:
-        raise InvalidMove("No valid figure at {0}".format(start))
-    if is_castling(start, end, board):
-        print(start,type(end))
-        rook_move = CASTLING_DATA[(start, end)]['rook_move']
-        extra_move = Move(*rook_move)
-        return Move(start, end, type=CASTLING_MOVE, extra_move=extra_move)
-
-    eaten_position = Coordinates(end.x, start.y)
-    if is_e_p(start, end, board):
-        return Move(start, end, type=E_P_MOVE, eaten_position=eaten_position)
-
-    if board.figure_on_position(end) is not None:
-        eaten_position = end
-    else:
-        eaten_position = None
-    return Move(start, end, type=COMMON_MOVE, eaten_position=eaten_position)
 
 
 def commit_move(move, board, prev_move, player_color):
@@ -204,7 +145,7 @@ def commit_move(move, board, prev_move, player_color):
         elif move.type == COMMON_MOVE:
             eaten_figure = board.figure_on_position(move.end)
             if move.end not in possible_common_moves_from_position(board, move.start, player_color):
-                raise InvalidMove("Incorrect move")
+                raise InvalidMove("Incorrect move: {0}".format(move))
             else:
                 board.move(move.start, move.end)
 

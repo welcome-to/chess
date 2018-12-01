@@ -11,6 +11,9 @@ from common_operations import another_color, is_pawn_jump
 
 
 def is_e_p_correct(board, start, end, prev_move, player_color):
+    figure = board.figure_on_position(start)
+    if figure.type != PAWN or figure.color != player_color:
+        return False
     if not is_pawn_jump(board, prev_move, another_color(player_color)):
         return False
     if abs(prev_move.start.x - start.x) != 1 or \
@@ -20,16 +23,6 @@ def is_e_p_correct(board, start, end, prev_move, player_color):
 
        return False
     return True
-
-def is_e_p(start, end, board):
-    figure = board.figure_on_position(start)
-    if not figure.type == PAWN:
-        return False
-    if start.x == end.x:
-        return False
-    return board.figure_on_position(end) is None
-
-
 
 
 def possible_e_p_from_position(board, position, player_color, previous_move):
@@ -43,5 +36,5 @@ def possible_e_p_from_position(board, position, player_color, previous_move):
             position.bottom_left(), position.bottom_right()
         ])
     ))
-
+    
 

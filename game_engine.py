@@ -1,12 +1,13 @@
 from board import Board, Move
 from const import *
 from exception import InvalidMove, InternalError, NotImplementedError
-from operations import allowed_moves, is_kamikadze, game_status, create_move, commit_move
+from operations import *
 from common_operations import is_pawn_moved, another_color
 from Electronic_Kasparov import GameBrains
 from game_status import *
 
 import os
+import sys
 
 from copy import deepcopy
 from datetime import datetime
@@ -31,30 +32,34 @@ class GameProcessor(object):
         if self.game_result() is not None:
             raise RuntimeError("Game over")
 
-        print("Make move: ", start, end, " player: ", self.current_player)
+        #print("Make move: ", start, end, " player: ", self.current_player)
+
         try:
+            #FIXME
             move = create_move(start, end, self.board, self.current_player)
-            if is_kamikadze(self.board, move, self.last_move()):
-                self.technical_winner = another_color( self.current_player)
-            commit_move(move,self.board,self.last_move(),self.current_player)
+            has_pawn_moved = is_pawn_moved(self.board, move)
+            if is_kamikadze(self.board, move, self._last_move()):
+                self.technical_winner = another_color(self.current_player)
+            commit_move(move,self.board, self._last_move(), self.current_player)
+            # FIXME: this should be done in commit_move
             convert_pawns(self.board)
             self.turns.append(move)
-            self.game_condition.add_move_info(self.board,not is_pawn_moved(self.board,move))
-            self.update_game_status()
-        except:
+            self.game_condition.add_move_info(self.board, not has_pawn_moved)
+            self._update_game_status()
+        except Exception as exc:
+            print(exc, file=sys.stderr)
             self._run_technical_defeat()
-
-
 
         self.current_player = another_color(self.current_player)
 
-    def update_game_status(self):  
-        self.game_status = game_status(self.board, another_color(self.current_player), self.last_move())
+    def _update_game_status(self):  
+        self.game_status = game_status(self.board, another_color(self.current_player), self._last_move())
         if self.game_status is None:
             if satisfies_tie_conditions(self.game_condition):
                 self.game_status = TIE
-    def cur_allowed_moves(self):
-        return list(map(str,allowed_moves(self.board,self.current_player,self.last_move())))
+
+    def current_allowed_moves(self):
+        return list(map(str,possible_moves(self.board,self.current_player,self._last_move())))
 
 
     def game_result(self):
@@ -62,7 +67,7 @@ class GameProcessor(object):
             return self.technical_winner # dirty
         return self.game_status
 
-    def last_move(self):
+    def _last_move(self):
         result = None
         if self.turns:
             result = self.turns[-1]

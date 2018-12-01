@@ -7,9 +7,11 @@ from const import *
 from exception import InternalError, InvalidMove
 
 from operations import *
-from possible_moves import *
 from common_operations import *
 from fucking_cord_const import *
+from common_moves import *
+from e_p_moves import *
+from castling_moves import *
 
 from decode import decode_move, decode_game
 
@@ -52,8 +54,8 @@ def board_after(moves_list):
     return gp.board
 
 
-#class TestEngine(unittest.TestCase):
-class TestEngine:
+class TestEngine(unittest.TestCase):
+#class TestEngine:
     def test_coordinates(self):
         word = 'e2'
         coord = Coordinates.from_string(word)
@@ -292,7 +294,6 @@ class TestDecode(unittest.TestCase):
         board.move(G8, F6)
         self.assertEqual(decode_move('Qxf7#', board, WHITE, None), 'h5f7')
 
-    """
     def test_decode_line(self):
         line = "1.g3 Nf6 2.Bg2 g6 3.d4 Bg7 4.Nf3 0-0 5.0-0 d6 6.c3 Nbd7 7.Na3 c6 8.b4 Re8 9.Nc4 Nb6 10.Ne3 Nfd5 " + \
             "11.Qc2 Nxe3 12.fxe3 d5 13.e4 a5 14.e5 Bf5 15.Qb3 axb4 16.cxb4 Nc4 17.Ng5 f6 18.e4 Bc8 19.exd5 cxd5 20.Qf3 Nb6 " + \
@@ -357,19 +358,18 @@ class TestDecode(unittest.TestCase):
         #print(board)
 
         game = decode_game(line)
-    """
 
     def test_decode_line_8(self):
-        line = "1.e4 e5 2.Nf3 Nc6 3.Bb5 a6 4.Ba4 Nf6 5.0-0 Nxe4 6.d4 "#b5 "
+        line = "1.e4 e5 2.Nf3 Nc6 3.Bb5 a6 4.Ba4 Nf6 5.0-0 Nxe4 6.d4 b5 "
         end_game = "7.Bb3 d5 8.dxe5 Be6 9.Be3 Bc5 10.Bxc5 Nxc5 " + \
                "11.Nd4 Nxd4 12.Qxd4 Nb7 13.c3 c5 14.Qf4 Na5 15.Bc2 h6 16.Nd2 Qg5 17.Qxg5 hxg5 18.Nb3 Nxb3 19.axb3 Kd7 20.Rfd1 Kc7 " + \
                "21.b4 cxb4 22.cxb4 Rh4 23.Bb3 Rxb4 24.Bxd5 Bxd5 25.Rxd5 Rxb2 26.Rc1+ Kb6 27.Rd6+ Ka5 28.Rd7 b4 29.Ra1+ Kb6 30.h4 Ra7 " + \
                "31.Rd6+ Kb5 32.hxg5 a5 33.Rd5+ Kc4 34.Rdxa5 Rxa5 35.Rxa5 b3 36.Ra7 Re2 37.Rc7+ Kd5 38.Rb7 b2 39.Kh2 Rxf2 40.Kg3 Re2 " + \
                "41.g6 fxg6 42.Kf4 g5+ 43.Kf5 Rf2+ 44.Kg6 Rxg2 45.Rb5+ Ke6 0-1"
 
-        game_beginning = decode_game(line, raise_if_incomplete=False)
-        board = board_after(game_beginning)
-        print(board)
+        game_beginning = decode_game(line + end_game)
+        #board = board_after(game_beginning)
+        #print(board)
 
         #game = decode_game(line)
 

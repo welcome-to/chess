@@ -3,16 +3,16 @@ from const import *
 from exception import InternalError, InvalidMove
 from fucking_cord_const import *
 from common_operations import another_color
-from common_moves import fields_under_attack
+from common_moves import possible_common_moves_from_position
+
+from functools import reduce
 
 
+def fields_under_attack(board, enemy_color):
+    attacked = [possible_common_moves_from_position(board, item[1], enemy_color) for item in figures_on_board(board, color=enemy_color)] 
+    # FIXME: e_p_moves
+    return reduce(lambda x,y: set(x) | set(y), attacked, set())
 
-
-def is_castling(start, end, board):
-    figure = board.figure_on_position(start)
-    if figure is None or figure.type is not KING:
-        return False
-    return (start,end) in CASTLING_DATA.keys()
 
 def is_castling_correct(king_move, board, player_color):
     assert(king_move.type == CASTLING_MOVE)
