@@ -8,8 +8,11 @@ import sys
 DATE_FORMAT = "%d.%m.%Y"
 
 
-if __name__ == "__main__":
-    f = open('txt_all7mln.txt')
+
+
+
+def parse(filename)
+    f = open(filename)
     gamenumber = 0
     players_line = ''
     date_line = ''
@@ -43,3 +46,12 @@ if __name__ == "__main__":
                 pass
 
     f.close()
+
+
+
+
+
+if __name__ == "__main__":
+    inputfile = input('Input file name: ')
+
+    parse(inputfile)
