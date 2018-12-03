@@ -193,7 +193,7 @@ class Board(object):
 
     def __str__(self):
         return '\n'.join(reversed(
-            [' '.join(str(element) for element in lst) for lst in self.data]
+            [' '.join(str(element).rjust(12, " ") for element in lst) for lst in self.data]
         ))
     def __eq__(self,other_board):
         for i in range(8):
