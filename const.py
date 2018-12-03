@@ -16,7 +16,8 @@ KING = 'KING'
 
 WHITE_WIN = "White"
 BLACK_WIN = "Black"
-TIE = "TIE"
+TIE = "Tie"
+POSSIBLE_TIE = "Possible tie"
 
 COMMON_MOVE = "common_move"
 CASTLING_MOVE = "castling_move"

@@ -116,7 +116,7 @@ def decode_game(line, raise_if_incomplete=True):
             if line.startswith(game_result):
                 human_readable += [game_result]
                 return human_readable
-        if gp.game_result() is not None:
+        if gp.is_game_over():
             raise DecodeError("Expected end of game")
 
         prefix = str(n) + '.'
@@ -141,7 +141,7 @@ def decode_game(line, raise_if_incomplete=True):
             if line.startswith(game_result):
                 human_readable += [game_result]
                 return human_readable
-        if gp.game_result() is not None:
+        if gp.is_game_over():
             raise DecodeError("Expected end of game")
 
         next_space = end_word(line)

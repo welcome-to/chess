@@ -29,7 +29,7 @@ class GameProcessor(object):
 
     # `start, end' are two Coordinates objects
     def make_move(self, start, end):
-        if self.game_result() is not None:
+        if self.is_game_over():
             raise RuntimeError("Game over")
 
         #print("Make move: ", start, end, " player: ", self.current_player)
@@ -52,20 +52,32 @@ class GameProcessor(object):
 
         self.current_player = another_color(self.current_player)
 
-    def _update_game_status(self):  
+    def _update_game_status(self):
         self.game_status = game_status(self.board, another_color(self.current_player), self._last_move())
         if self.game_status is None:
             if satisfies_tie_conditions(self.game_condition):
-                self.game_status = TIE
+                self.game_status = POSSIBLE_TIE
 
     def current_allowed_moves(self):
         return list(map(str,possible_moves(self.board,self.current_player,self._last_move())))
 
-
     def game_result(self):
         if self.technical_winner is not None:
-            return self.technical_winner # dirty
+            #print("Technical winner: ", self.technical_winner)
+            return self.technical_winner # dirty. FIXME
+        #if self.game_status is not None:
+            #print("Game status: ", self.game_status)
         return self.game_status
+
+    def is_game_over(self):
+        if self.technical_winner is not None:
+            return True
+        if self.game_status is None or self.game_status == POSSIBLE_TIE:
+            return False
+        return True
+
+    def is_tie_possible(self):
+        return self.technical_winner is None and self.game_status == POSSIBLE_TIE
 
     def _last_move(self):
         result = None
