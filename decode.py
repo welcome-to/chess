@@ -36,7 +36,7 @@ def decode_move(short_line, board, player_color, previous_move):
         short_line = short_line[:-1]
 
     is_conversion = False
-    if short_line[-1] in ['Q', 'R', 'N', 'B']:
+    if short_line[-1] in ['Q', 'R', 'N', 'B']: # FIXMEEEEE (gp)
         is_conversion = True
         short_line = short_line[:-1]
 
