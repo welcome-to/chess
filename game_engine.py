@@ -54,7 +54,7 @@ class GameProcessor(object):
 
     def _update_game_status(self):
         self.game_status = game_status(self.board, another_color(self.current_player), self._last_move())
-        if self.game_status is None:
+        if not self.is_game_over():
             if satisfies_tie_conditions(self.game_condition):
                 self.game_status = POSSIBLE_TIE
 
