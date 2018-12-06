@@ -3,6 +3,7 @@ from decode import decode_game
 from datetime import datetime
 from multiprocessing import Process
 import sys
+import os
 
 
 DATE_FORMAT = "%d.%m.%Y"
@@ -56,6 +57,7 @@ def parse_conrtoler(filename,proceses):
     lines = a
     lines_in_file = lines//proceses
     f = open(filename)
+    os.system('mkdir to_parse')
     for i in range(proceses):
         out = open('to_parse/out_{0}'.format(i+1),'w')
         for j in range(lines_in_file):
@@ -71,5 +73,8 @@ def parse_conrtoler(filename,proceses):
 
 
 if __name__ == "__main__":
-    inputfile = input('Input file name: ')
-    parse_conrtoler(inputfile,int(input('Input count of processes: ')))
+    try:
+        inputfile = input('Input file name: ')
+        parse_conrtoler(inputfile,int(input('Input count of processes: ')))
+    except:
+        print("try again... You are an idiot!")
