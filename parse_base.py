@@ -11,7 +11,7 @@ DATE_FORMAT = "%d.%m.%Y"
 
 
 
-def parse(filename)
+def parse(filename):
     f = open(filename)
     gamenumber = 0
     players_line = ''
@@ -53,5 +53,4 @@ def parse(filename)
 
 if __name__ == "__main__":
     inputfile = input('Input file name: ')
-
     parse(inputfile)
