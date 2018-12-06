@@ -17,23 +17,30 @@ class DecodeError(Exception):
 
 
 def decode_move(short_line, board, player_color, previous_move):
-    # FIXME: castling may be followed by gameover
-    if short_line == '0-0':
-        return 'e1g1' if player_color == WHITE else 'e8g8'
+    def extract_threat(short_line):
+        is_checkmate = False
+        is_check = False
+        if short_line[-1] == '#':
+            is_checkmate = True
+            short_line = short_line[:-1]
+        elif short_line[-1] == '+':
+            is_check = True
+            short_line = short_line[:-1]
+        return short_line, is_check, is_checkmate
 
-    if short_line == '0-0-0':
+    if short_line.startswith('0-0-0'):
+        if len(short_line) > 5:
+            short_line, is_check, is_checkmate = extract_threat(short_line[5:])
         return 'e1c1' if player_color == WHITE else 'e8c8'
+
+    if short_line.startswith('0-0'):
+        if len(short_line) > 3:
+            short_line, is_check, is_checkmate = extract_threat(short_line[3:])
+        return 'e1g1' if player_color == WHITE else 'e8g8'
 
     # FIXME: add checks that +, #, x are correct: really suspense, or gameover, or figure eaten
     # and exceptions
-    is_checkmate = False
-    is_check = False
-    if short_line[-1] == '#':
-        is_checkmate = True
-        short_line = short_line[:-1]
-    elif short_line[-1] == '+':
-        is_check = True
-        short_line = short_line[:-1]
+    short_line, is_check, is_checkmate = extract_threat(short_line)
 
     is_conversion = False
     if short_line[-1] in ['Q', 'R', 'N', 'B']: # FIXMEEEEE (gp)

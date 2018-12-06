@@ -303,7 +303,6 @@ class TestDecode(unittest.TestCase):
         board.move(G8, F6)
         self.assertEqual(decode_move('Qxf7#', board, WHITE, None), 'h5f7')
 
-    """
     def test_decode_line(self):
         line = "1.g3 Nf6 2.Bg2 g6 3.d4 Bg7 4.Nf3 0-0 5.0-0 d6 6.c3 Nbd7 7.Na3 c6 8.b4 Re8 9.Nc4 Nb6 10.Ne3 Nfd5 " + \
             "11.Qc2 Nxe3 12.fxe3 d5 13.e4 a5 14.e5 Bf5 15.Qb3 axb4 16.cxb4 Nc4 17.Ng5 f6 18.e4 Bc8 19.exd5 cxd5 20.Qf3 Nb6 " + \
@@ -372,7 +371,6 @@ class TestDecode(unittest.TestCase):
                "41.g6 fxg6 42.Kf4 g5+ 43.Kf5 Rf2+ 44.Kg6 Rxg2 45.Rb5+ Ke6 0-1"
 
         game_beginning = decode_game(line + end_game)
-    """
 
     def test_decode_line_9(self):
         line = "1.e4 e6 2.d4 d5 3.Nd2 h6 4.Bd3 Nf6 5.e5 Nfd7 6.c3 c5 7.Ne2 Nc6 8.0-0 Qb6 9.Nf3 a5 10.a3 a4 " + \
@@ -382,8 +380,8 @@ class TestDecode(unittest.TestCase):
                "41.Rc5 Bc4 42.Bd2 Rc8 43.Ra5 Qc6 44.Qa7+ Kc7 45.Bxh6 Ra8 46.Qxa8 Rxa8 47.Rxa8 Nd8 48.Ra7+ Kb6 49.Re7 Qa4 50.Be3 Qxa3 0-1"
         game = decode_game(line)
 
-    def _test_decode_line_10(self):
-        # Fails. Contains castling with check and pawn conversion.
+    def test_decode_line_10(self):
+        # Contains castling with check and pawn conversion.
         # FIXME 1: check board after pawn conversion
         # FIXME 2: find a game with non-queen conversion
         line = "1.d4 d5 2.c4 c6 3.cxd5 cxd5 4.Nc3 e5 5.dxe5 d4 6.Ne4 Qa5+ 7.Nd2 Qxe5 8.Ngf3 Qd5 9.Nb3 Nc6 10.Nfxd4 Bf5 " + \
