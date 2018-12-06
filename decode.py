@@ -105,71 +105,82 @@ def decode_move(short_line, board, player_color, previous_move):
     return str(start_pos) + end_field
 
 
-def decode_game(line, raise_if_incomplete=True):
-    def end_word(line):
-        result = line.find(' ')
-        if result == -1:
-            return len(line)
-        return result
+GAME_RESULTS = ['1-0', '0-1', '1/2']
 
-    game_results = ['1-0', '0-1', '1/2']
-    human_readable = []
-    n = 1
-    gp = GameProcessor(None)
-    previous_move = None
-    while line:
-        print("Turn #{0}".format(n), file=sys.stderr)
-        for game_result in game_results:
-            if line.startswith(game_result):
-                human_readable += [game_result]
-                return human_readable
-        if gp.is_game_over():
-            raise DecodeError("Expected end of game")
 
-        prefix = str(n) + '.'
-        if not line.startswith(prefix):
-            raise DecodeError("Expected turn number: {0}".format(line))
-        line = line[len(prefix):]
+class Decoder(object):
+    def __init__(self, raise_if_incomplete=True):
+        self.raise_if_incomplete = raise_if_incomplete
+        self._reset()
+
+    def __call__(self, line):
+        self._reset()
+
+        while line and not self.gp.is_game_over():
+            line = self._call_once(line)
+
+        if line and self.raise_if_incomplete:
+            raise DecodeError("Expected game result")
+
+        return self.human_readable_game
+
+    def _reset(self):
+        self.gp = GameProcessor(None)
+        self.previous_move = None
+        self.move_number = 1
+        self.human_readable_game = []
+
+    def _player_color(self):
+        if self.move_number % 2 == 1:
+            return WHITE
+        return BLACK
+
+    def _call_once(self, line):
+        def _end_word(line):
+            result = line.find(' ')
+            if result == -1:
+                return len(line)
+            return result
+
+        turn_number = self.move_number // 2 + 1
+        if self._player_color() == WHITE:
+            print("Turn #{0}".format(turn_number), file=sys.stderr)
 
         line = line.lstrip(' ')
-        next_space = end_word(line)
-        white_turn = line[:next_space]
-        try:
-            decoded = decode_move(white_turn, gp.board, WHITE, previous_move)
-        except:
-            raise
-        human_readable += [decoded]
-        start, end = map(Coordinates.from_string, (decoded[:2], decoded[2:]))
-        previous_move = create_move(start, end, gp.board, gp.current_player)
-        gp.make_move(start, end)
-
-        line = line[next_space:].lstrip(' ')
-        for game_result in game_results:
+        for game_result in GAME_RESULTS:
             if line.startswith(game_result):
-                human_readable += [game_result]
-                return human_readable
-        if gp.is_game_over():
+                self.human_readable_game += [game_result]
+                return '' #FIXME
+
+        if self.gp.is_game_over():
             raise DecodeError("Expected end of game")
 
-        next_space = end_word(line)
-        black_turn = line[:next_space]
-        if not black_turn:
-            if raise_if_incomplete:
+        if self._player_color() == WHITE:
+            prefix = str(turn_number) + '.'
+            if not line.startswith(prefix):
+                raise DecodeError("Expected turn number: {0} in '{1}'".format(turn_number, line))
+            line = line[len(prefix):]
+
+        next_space = _end_word(line)
+        first_word = line[:next_space]
+        if not first_word:
+            if self.raise_if_incomplete:
                 raise DecodeError("Expected game result")
-            return human_readable
+            return self.human_readable_game
         try:
-            decoded = decode_move(black_turn, gp.board, BLACK, previous_move)
+            decoded = decode_move(first_word, self.gp.board, self._player_color(), self.previous_move)
         except:
             raise
-        human_readable += [decoded]
+        self.human_readable_game += [decoded]
         start, end = map(Coordinates.from_string, (decoded[:2], decoded[2:]))
-        previous_move = create_move(start, end, gp.board, gp.current_player)
-        gp.make_move(start, end)
+        self.previous_move = create_move(start, end, self.gp.board, self.gp.current_player)
+        self.gp.make_move(start, end)
+
         line = line[next_space:].lstrip(' ')
+        self.move_number += 1
+        return line
 
-        n += 1
 
-    if raise_if_incomplete:
-        raise DecodeError("Expected game result")
-
-    return human_readable
+def decode_game(line, raise_if_incomplete=True):
+    decode = Decoder(raise_if_incomplete)
+    return decode(line)
