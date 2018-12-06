@@ -1,7 +1,7 @@
 from decode import decode_game
 
 from datetime import datetime
-
+from multiprocessing import Process
 import sys
 
 
@@ -10,8 +10,7 @@ DATE_FORMAT = "%d.%m.%Y"
 
 
 
-
-def parse(filename):
+def parse(filename,proces_id):
     f = open(filename)
     gamenumber = 0
     players_line = ''
@@ -25,7 +24,7 @@ def parse(filename):
             try:
                 print("Game {0}".format(gamenumber), file=sys.stderr)
                 game = decode_game(lines)
-                gamefile = open('gamebase/game{0}'.format(gamenumber),'w')
+                gamefile = open('gamebase/game_{0}_{1}'.format(proces_id,gamenumber),'w')
                 gamefile.write('\n')
                 for i in game:
                     gamefile.write('\n'+str(i))
@@ -48,9 +47,29 @@ def parse(filename):
     f.close()
 
 
+def parse_conrtoler(filename,proceses):
+    f = open(filename)
+    a=0
+    for lines in f:
+        a+=1
+    f.close()
+    lines = a
+    lines_in_file = lines//proceses
+    f = open(filename)
+    for i in range(proceses):
+        out = open('to_parse/out_{0}'.format(i+1),'w')
+        for j in range(lines_in_file):
+            out.write(f.readline())
+        out.close()
+    out = open('to_parse/out_{0}'.format(proceses),'w')
+    for i in range(lines%proceses):
+        out.write(f.readline())
+    out.close()
+    for i in range(proceses):
+        Process(target=parse,args = ('to_parse/out_{0}'.format(i+1),i+1)).start()
 
 
 
 if __name__ == "__main__":
     inputfile = input('Input file name: ')
-    parse(inputfile)
+    parse_conrtoler(inputfile,int(input('Input count of processes: ')))
