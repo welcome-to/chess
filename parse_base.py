@@ -61,7 +61,7 @@ def parse_conrtoler(filename,proceses):
         for j in range(lines_in_file):
             out.write(f.readline())
         out.close()
-    out = open('to_parse/out_{0}'.format(proceses),'w')
+    out = open('to_parse/out_{0}'.format(proceses),'a')
     for i in range(lines%proceses):
         out.write(f.readline())
     out.close()
