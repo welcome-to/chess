@@ -163,10 +163,11 @@ class Decoder(object):
 
         next_space = _end_word(line)
         first_word = line[:next_space]
+        line = line[next_space:].lstrip(' ')
         if not first_word:
             if self.raise_if_incomplete:
                 raise DecodeError("Expected game result")
-            return self.human_readable_game
+            return line
         try:
             decoded = decode_move(first_word, self.gp.board, self._player_color(), self.previous_move)
         except:
@@ -176,7 +177,6 @@ class Decoder(object):
         self.previous_move = create_move(start, end, self.gp.board, self.gp.current_player)
         self.gp.make_move(start, end)
 
-        line = line[next_space:].lstrip(' ')
         self.move_number += 1
         return line
 
