@@ -47,6 +47,9 @@ def parse(filename,proces_id):
 
     f.close()
 
+# FIXME
+# I have found games separated into several lines. So at the moment they 1. may be split into several processes and 2. will be separately decoded...
+# Also player name should be in the same file as the game
 
 def parse_conrtoler(filename,proceses):
     f = open(filename)

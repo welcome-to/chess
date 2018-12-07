@@ -17,30 +17,38 @@ class DecodeError(Exception):
 
 
 def decode_move(short_line, board, player_color, previous_move):
-    def extract_threat(short_line):
+    def extract_comment(short_line):
         is_checkmate = False
         is_check = False
+        is_idiotic = False
         if short_line[-1] == '#':
             is_checkmate = True
             short_line = short_line[:-1]
         elif short_line[-1] == '+':
             is_check = True
             short_line = short_line[:-1]
-        return short_line, is_check, is_checkmate
+        # let's consider all graded moves the same way (FIXME if it stops being isopenisual)
+        elif short_line.endswith('??') or short_line.endswith('!!') or short_line.endswith('!?') or short_line.endswith('?!'):
+            is_idiotic = True
+            short_line = short_line[:-2]
+        elif short_line.endswith('?') or short_line.endswith('!'):
+            is_idiotic = True
+            short_line = short_line[:-1]
+        return short_line, is_check, is_checkmate, is_idiotic
 
     if short_line.startswith('0-0-0'):
         if len(short_line) > 5:
-            short_line, is_check, is_checkmate = extract_threat(short_line[5:])
+            short_line, is_check, is_checkmate, is_idiotic = extract_comment(short_line[5:])
         return 'e1c1' if player_color == WHITE else 'e8c8'
 
     if short_line.startswith('0-0'):
         if len(short_line) > 3:
-            short_line, is_check, is_checkmate = extract_threat(short_line[3:])
+            short_line, is_check, is_checkmate, is_idiotic = extract_comment(short_line[3:])
         return 'e1g1' if player_color == WHITE else 'e8g8'
 
     # FIXME: add checks that +, #, x are correct: really suspense, or gameover, or figure eaten
     # and exceptions
-    short_line, is_check, is_checkmate = extract_threat(short_line)
+    short_line, is_check, is_checkmate, is_idiotic = extract_comment(short_line)
 
     is_conversion = False
     if short_line[-1] in ['Q', 'R', 'N', 'B']: # FIXMEEEEE (gp)
