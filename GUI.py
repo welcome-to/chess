@@ -10,6 +10,7 @@ from widgets import LabelB, BoardWidget
 from game_engine import GameProcessor
 from board import Coordinates
 from operations import another_color
+from Electronic_Kasparov import GameBrains
 
 
 # Window configuration
@@ -155,8 +156,9 @@ class MainApp(App):
             self.game_mode = ONEPLAYER
         else:
             self.game_mode = TWOPLAYERS
-        self.GameProcessor = GameProcessor(self.game_mode)
+        self.GameProcessor = GameProcessor()
         self.GameProcessor.savelog(self.savelog)
+        self.Algorithm = GameBrains(BLACK)
         self.Orienteer = Orienteer()
         self.clicks = 0
 
@@ -404,6 +406,9 @@ class MainApp(App):
         self.board.UnlightAll()
         self.move_label.text = ''
         self.GameProcessor.make_move(self.start,self.end)
+        if self.game_mode != TWOPLAYERS:
+            move_start, move_end = self.Algorithm.get_move(self.GameProcessor.board,self.GameProcessor._last_move())
+            self.GameProcessor.make_move(move_start,move_end)
         self.board.draw(self.Orienteer.oriented_board(self.get_board()))
         result = self.GameProcessor.game_result()
         if not result == None:

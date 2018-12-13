@@ -1,18 +1,16 @@
 from random import choice
 from board import *
-from operations import *
+from operations import possible_moves
 
 
 class GameBrains(object):
 	def __init__(self,color):
 		self.color = color
-	def makemove(self,board):
+	def get_move(self,board,last_move):
 		
-		pos_moves = possible_moves(board,self.color,None)
-		pos_moves_filterd = list(filterfalse(lambda item: IsKamikadze(board, item[0])(item[1]), pos_moves))
-
-		move = choice(pos_moves_filterd)
-		return(move[0],move[1])
+		pos_moves = possible_moves(board,self.color,last_move)
+		move = choice(pos_moves)
+		return(move.start,move.end)
 
 
 
