@@ -15,7 +15,7 @@ from datetime import datetime
 
 
 class GameProcessor(object):
-    def __init__(self): # FIXME: game_mode
+    def __init__(self):
         self.board = Board()
         self.log = False
         self.boards = []
@@ -44,8 +44,6 @@ class GameProcessor(object):
             if is_kamikadze(self.board, move, self._last_move()):
                 self.technical_winner = another_color(self.current_player)
             commit_move(move,self.board, self._last_move(), self.current_player)
-            # FIXME: this should be done in commit_move
-            #convert_pawns(self.board)
             self.turns.append(move)
             self.game_condition.add_move_info(self.board, not has_pawn_moved)
             self._update_game_status()
@@ -66,10 +64,7 @@ class GameProcessor(object):
 
     def game_result(self):
         if self.technical_winner is not None:
-            #print("Technical winner: ", self.technical_winner)
-            return self.technical_winner # dirty. FIXME
-        #if self.game_status is not None:
-            #print("Game status: ", self.game_status)
+           return WINNER_BY_COLOR[self.technical_winner] # dirty. FIXME
         return self.game_status
 
     def is_game_over(self):

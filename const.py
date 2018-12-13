@@ -18,6 +18,8 @@ WHITE_WIN = "White"
 BLACK_WIN = "Black"
 TIE = "Tie"
 POSSIBLE_TIE = "Possible tie"
+WINNER_BY_COLOR = {WHITE : WHITE_WIN,
+                  BLACK : BLACK_WIN}
 
 COMMON_MOVE = "common_move"
 CASTLING_MOVE = "castling_move"

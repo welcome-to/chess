@@ -2,7 +2,7 @@ from board import Figure, Move, Coordinates, figures_on_board
 from const import *
 from exception import InternalError, InvalidMove
 
-from common_operations import another_color, create_move, convert_pawns
+from common_operations import another_color, create_move
 from castling_moves import *
 from e_p_moves import *
 from fucking_cord_const import *
@@ -13,7 +13,7 @@ from itertools import filterfalse
 
 import sys
 
-__all__ = ["game_status", "possible_moves", "is_kamikadze", "create_move", "commit_move", "convert_pawns"]
+__all__ = ["game_status", "possible_moves", "is_kamikadze", "create_move", "commit_move"]
 
 '''
 Хуйня!!! Пофиксить.. Не использовать create_move

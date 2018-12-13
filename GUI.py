@@ -9,7 +9,6 @@ from const import *
 from widgets import LabelB, BoardWidget
 from game_engine import GameProcessor
 from board import Coordinates
-from operations import another_color
 from Electronic_Kasparov import GameBrains
 
 
@@ -238,13 +237,15 @@ class MainApp(App):
         self.main_layout.remove_widget(self.gameplay)
         if reason != TIE:
             source = WIN_IMAGE
-            color = another_color(reason)
+            if reason == WHITE_WIN:
+                color = BLACK_WIN
+            else:
+                color = WHITE_WIN
             text = ' You Lose ('+ color + ') '
         else:
             source = TIE_IMAGE
             text = ' potom '
         self.Gameover = FloatLayout()
-        print(source)
         self.Gameover.add_widget(Image(
             source = source,
             size_hint = (1,1),

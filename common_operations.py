@@ -29,17 +29,6 @@ def is_pawn_jump(board, move, color):
     return (color == WHITE and move.end.y - move.start.y == 2) or (color == BLACK and move.end.y - move.start.y == -2)
 
 
-def convert_pawns(board):
-    for i in range(8):
-        figure = board.figure_on_position(Coordinates(i, 7))
-        if figure is not None and figure.type == PAWN: # it can be only white
-            board.put(Coordinates(i,7), Figure(WHITE, QUEEN))
-
-        figure = board.figure_on_position(Coordinates(i, 0))
-        if figure is not None and figure.type == PAWN:
-            board.put(Coordinates(i,0),Figure(BLACK, QUEEN))
-
-
 def another_color(color):
     return WHITE if color == BLACK else BLACK
 
