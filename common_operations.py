@@ -7,6 +7,11 @@ from fucking_cord_const import *
 
 
 
+def is_pawn_conversion(board,move_start,move_end):
+    if (board.figure_on_position(move_start).type != PAWN) or move_end.y not in [0,7]:
+        return False
+    return True
+
 
 def is_pawn_moved(board,move):
     figure = board.figure_on_position(move.end)
@@ -55,7 +60,7 @@ def is_e_p(start, end, board):
     return board.figure_on_position(end) is None
 
 
-def create_move(start, end, board, player_color):
+def create_move(start, end, board, player_color,figure_to_create=None):
     figure = board.figure_on_position(start)
     if figure is None or figure.color != player_color:
         raise InvalidMove("No valid figure at {0}".format(start))
@@ -72,4 +77,6 @@ def create_move(start, end, board, player_color):
         eaten_position = end
     else:
         eaten_position = None
-    return Move(start, end, type=COMMON_MOVE, eaten_position=eaten_position)
+    if figure_to_create != None:
+        figure_to_create = Figure(player_color,figure_to_create)
+    return Move(start, end, type=COMMON_MOVE, eaten_position=eaten_position,after_conversion=figure_to_create)

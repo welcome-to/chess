@@ -148,6 +148,8 @@ def commit_move(move, board, prev_move, player_color):
                 raise InvalidMove("Incorrect move: {0}".format(move))
             else:
                 board.move(move.start, move.end)
+            if move.after_conversion != None:
+                board.put(move.end,move.after_conversion)
 
         else:
             raise InternalError("Wrong move type. This couldn't happen")
@@ -157,6 +159,7 @@ def commit_move(move, board, prev_move, player_color):
             is_back_move=True,
             eaten_position=move.eaten_position,
             restored_figure=eaten_figure,
-            lost_virginity=lost_virginity
+            lost_virginity=lost_virginity,
+            after_conversion=move.after_conversion
         )
 

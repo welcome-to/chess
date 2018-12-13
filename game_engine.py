@@ -2,7 +2,7 @@ from board import Board, Move
 from const import *
 from exception import InvalidMove, InternalError, NotImplementedError
 from operations import *
-from common_operations import is_pawn_moved, another_color
+from common_operations import is_pawn_moved, another_color, is_pawn_conversion
 from Electronic_Kasparov import GameBrains
 from game_status import *
 
@@ -28,7 +28,7 @@ class GameProcessor(object):
         self.game_status = None
 
     # `start, end' are two Coordinates objects
-    def make_move(self, start, end):
+    def make_move(self, start, end, figure_to_create=None):
         if self.is_game_over():
             raise RuntimeError("Game over")
 
@@ -36,13 +36,16 @@ class GameProcessor(object):
 
         try:
             #FIXME
-            move = create_move(start, end, self.board, self.current_player)
+            if is_pawn_conversion(self.board,start,end):
+                if figure_to_create is None:
+                    figure_to_create = QUEEN
+            move = create_move(start, end, self.board, self.current_player, figure_to_create)
             has_pawn_moved = is_pawn_moved(self.board, move)
             if is_kamikadze(self.board, move, self._last_move()):
                 self.technical_winner = another_color(self.current_player)
             commit_move(move,self.board, self._last_move(), self.current_player)
             # FIXME: this should be done in commit_move
-            convert_pawns(self.board)
+            #convert_pawns(self.board)
             self.turns.append(move)
             self.game_condition.add_move_info(self.board, not has_pawn_moved)
             self._update_game_status()

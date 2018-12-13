@@ -30,7 +30,8 @@ class Move(object):
         eaten_position=None,
         extra_move=None,
         lost_virginity=False,
-        restored_figure=None
+        restored_figure=None,
+        after_conversion=None
     ):
         if restored_figure is not None and eaten_position is None:
             raise RuntimeError("Look! Shit.")
@@ -42,6 +43,7 @@ class Move(object):
         self.extra_move = extra_move
         self.lost_virginity = lost_virginity
         self.restored_figure = restored_figure
+        self.after_conversion = after_conversion
 
     """
     @staticmethod
