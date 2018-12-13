@@ -2,7 +2,7 @@ from board import Figure, Move, Coordinates, figures_on_board
 from const import *
 from exception import InternalError, InvalidMove
 from fucking_cord_const import *
-from common_operations import another_color, is_pawn_jump
+from common_operations import another_color, is_pawn_jump, create_move
 
 
 
@@ -29,12 +29,16 @@ def possible_e_p_from_position(board, position, player_color, previous_move):
     if not previous_move or not position.y in [3, 4] or not is_pawn_jump(board, previous_move, another_color(player_color)):
         return []
 
-    return list(filter(
+    final_pos = list(filter(
         lambda end: is_e_p_correct(board, position, end, previous_move, player_color),
         filter(bool, [
             position.top_left(), position.top_right(),
             position.bottom_left(), position.bottom_right()
         ])
     ))
+    ans = []
+    for pos in final_pos:
+        ans.append(create_move(position, pos, board, player_color))
+    return ans
     
 

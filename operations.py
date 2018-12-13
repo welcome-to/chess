@@ -15,31 +15,6 @@ import sys
 
 __all__ = ["game_status", "possible_moves", "is_kamikadze", "create_move", "commit_move"]
 
-'''
-Хуйня!!! Пофиксить.. Не использовать create_move
-'''
-def posible_castling_from_position(board,position,current_player):
-    figure = board.figure_on_position(position)
-    if current_player == BLACK:
-        move1 = create_move(position, Coordinates.from_string('G8'), board, current_player)
-        move2 = create_move(position, Coordinates.from_string('C8'), board, current_player)
-    else:
-        move1 = create_move(position, Coordinates.from_string('G1'), board, current_player)
-        move2 = create_move(position, Coordinates.from_string('C1'), board, current_player)
-    ans = []
-    try:
-        if move1.type == CASTLING_MOVE:
-            if is_castling_correct(move1, board, current_player):
-                ans.append(move1)
-    except:
-        pass
-    try:
-        if move2.type == CASTLING_MOVE:
-            if is_castling_correct(move2, board,current_player):
-                ans.append(move2)
-    except:
-        pass
-    return ans
 
 def possible_moves(board, player_color, previous_move, kamikadze_allowed=False):
     figures = figures_on_board(board, color=player_color)
@@ -59,11 +34,8 @@ def possible_moves(board, player_color, previous_move, kamikadze_allowed=False):
 def possible_moves_from_position(board, position, player_color, previous_move):
     result = []
     #FIXME: not end points but moevs should be returned
-
-    for item in possible_common_moves_from_position(board, position, player_color):
-        result.append(create_move(position, item, board, player_color))
-    for turn in possible_e_p_from_position(board, position, player_color, previous_move):
-        result.append(create_move(position, turn, board, player_color))
+    result.extend(possible_common_moves_from_position(board, position, player_color))
+    result.extend(possible_e_p_from_position(board, position, player_color, previous_move))
     result.extend(posible_castling_from_position(board, position, player_color))
     return(result)
 

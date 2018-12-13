@@ -2,7 +2,7 @@ from board import Figure, Move, Coordinates, figures_on_board
 from const import *
 from exception import InternalError, InvalidMove
 from fucking_cord_const import *
-from common_operations import another_color
+from common_operations import another_color, create_move
 from common_moves import possible_common_moves_from_position
 
 from functools import reduce
@@ -44,6 +44,29 @@ def is_castling_correct(king_move, board, player_color):
         return False
 
     return True
+
+def posible_castling_from_position(board,position,current_player):
+    figure = board.figure_on_position(position)
+    if current_player == BLACK:
+        move1 = create_move(position, Coordinates.from_string('G8'), board, current_player)
+        move2 = create_move(position, Coordinates.from_string('C8'), board, current_player)
+    else:
+        move1 = create_move(position, Coordinates.from_string('G1'), board, current_player)
+        move2 = create_move(position, Coordinates.from_string('C1'), board, current_player)
+    ans = []
+    try:
+        if move1.type == CASTLING_MOVE:
+            if is_castling_correct(move1, board, current_player):
+                ans.append(move1)
+    except:
+        pass
+    try:
+        if move2.type == CASTLING_MOVE:
+            if is_castling_correct(move2, board,current_player):
+                ans.append(move2)
+    except:
+        pass
+    return ans
 
 
 

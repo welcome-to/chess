@@ -1,5 +1,5 @@
 from const import *
-
+from common_operations import create_move
 from fucking_cord_const import *
 
 
@@ -160,7 +160,10 @@ def possible_common_moves_from_position(board, position, player_color):
 
     not_beating_same_color = NotBeatingSameColor(board, position)
 
-    moves = type_to_handler[figure.type](*given_args[figure.type])
-    moves = list(filter(not_beating_same_color, moves))
-
-    return moves
+    final_pos = type_to_handler[figure.type](*given_args[figure.type])
+    final_pos = list(filter(not_beating_same_color, final_pos))
+    ans = []
+    for pos in final_pos:
+        ans.append(create_move(position, pos, board, player_color))
+    return ans
+    
