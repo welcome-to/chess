@@ -85,6 +85,9 @@ def commit_move(move, board, prev_move, player_color):
             board.move(move.extra_move.start, move.extra_move.end)
             board.figure_on_position(move.end).has_moved = False
             board.figure_on_position(move.extra_move.end).has_moved = False
+        if move.after_conversion is not None:
+            board.figure_on_position(move.end).type = PAWN
+            board.figure_on_position(move.end).has_moved = True
 
     elif move.type == CASTLING_MOVE:
         if is_castling_correct(move, board, player_color):
@@ -113,7 +116,7 @@ def commit_move(move, board, prev_move, player_color):
 
         elif move.type == COMMON_MOVE:
             eaten_figure = board.figure_on_position(move.end)
-            if move.end not in map(lambda m: m.end, possible_common_moves_from_position(board, move.start, player_color)):
+            if move.end not in list(map(lambda m: m.end, possible_common_moves_from_position(board, move.start, player_color))):
                 raise InvalidMove("Incorrect move: {0}".format(move))
             else:
                 board.move(move.start, move.end)

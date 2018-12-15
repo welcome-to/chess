@@ -57,6 +57,8 @@ class Move(object):
         result = str(self.start) + str(self.end)
         if self.eaten_position is not None:
             result += " eaten:" + str(self.eaten_position)
+        if self.after_conversion is not None:
+            result += " to convert:" + str(self.after_conversion)
         return result
 
 
