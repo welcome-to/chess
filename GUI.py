@@ -416,8 +416,8 @@ class MainApp(App):
             self.gameover(result)
             return
         if self.game_mode != TWOPLAYERS:
-            move_start, move_end = self.Algorithm.get_move(self.GameProcessor.board,self.GameProcessor._last_move())
-            self.GameProcessor.make_move(move_start,move_end)
+            move_start, move_end, figure_to_create = self.Algorithm.get_move(self.GameProcessor.board,self.GameProcessor._last_move())
+            self.GameProcessor.make_move(move_start,move_end,figure_to_create=figure_to_create)
         self.board.draw(self.Orienteer.oriented_board(self.get_board()))
         result = self.GameProcessor.game_result()
         if not result == None:

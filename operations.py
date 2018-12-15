@@ -121,7 +121,7 @@ def commit_move(move, board, prev_move, player_color):
             else:
                 board.move(move.start, move.end)
             if move.after_conversion != None:
-                board.put(move.end,move.after_conversion)
+                board.figure_on_position(move.end).type = move.after_conversion
 
         else:
             raise InternalError("Wrong move type. This couldn't happen")

@@ -66,6 +66,4 @@ def create_move(start, end, board, player_color,figure_to_create=None):
         eaten_position = end
     else:
         eaten_position = None
-    if figure_to_create != None:
-        figure_to_create = Figure(player_color,figure_to_create)
     return Move(start, end, type=COMMON_MOVE, eaten_position=eaten_position,after_conversion=figure_to_create)

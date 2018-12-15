@@ -10,7 +10,11 @@ class GameBrains(object):
         pos_moves = possible_moves(board,self.color,last_move)
         move = choice(pos_moves)
         print("Kasparov says ", move)
-        return(move.start,move.end)
+        if move.after_conversion is not None:
+            type=move.after_conversion.type
+        else:
+            type=None
+        return(move.start,move.end,type)
 
 
 
