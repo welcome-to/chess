@@ -133,7 +133,7 @@ class Decoder(object):
         return self.human_readable_game
 
     def _reset(self):
-        self.gp = GameProcessor(None)
+        self.gp = GameProcessor()
         self.previous_move = None
         self.move_number = 1
         self.human_readable_game = []

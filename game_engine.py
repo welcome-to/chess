@@ -32,7 +32,7 @@ class GameProcessor(object):
         if self.is_game_over():
             raise RuntimeError("Game over")
 
-        #print("Make move: ", start, end, " player: ", self.current_player)
+        print("Make move: ", start, end, " player: ", self.current_player)
 
         try:
             #FIXME
@@ -98,7 +98,7 @@ class GameProcessor(object):
     @staticmethod
     def loadfromGC(dir):
         GC = load_from_file(dir)
-        GameProcessor =  GameProcessor(GC.game_type)
+        GameProcessor =  GameProcessor()
         GameProcessor.log = GC.log
         GameProcessor.current_player = GC.current_player
         GameProcessor.board = GC.current_board

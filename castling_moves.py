@@ -9,7 +9,10 @@ from functools import reduce
 
 
 def fields_under_attack(board, enemy_color):
-    attacked = [possible_common_moves_from_position(board, item[1], enemy_color) for item in figures_on_board(board, color=enemy_color)] 
+    attacked = [
+        map(lambda move: move.end, possible_common_moves_from_position(board, item[1], enemy_color))
+        for item in figures_on_board(board, color=enemy_color)
+    ]
     # FIXME: e_p_moves
     return reduce(lambda x,y: set(x) | set(y), attacked, set())
 
@@ -45,14 +48,15 @@ def is_castling_correct(king_move, board, player_color):
 
     return True
 
-def posible_castling_from_position(board,position,current_player):
+
+def possible_castlings_from_position(board, position, current_player):
     figure = board.figure_on_position(position)
     if current_player == BLACK:
-        move1 = create_move(position, Coordinates.from_string('G8'), board, current_player)
-        move2 = create_move(position, Coordinates.from_string('C8'), board, current_player)
+        move1 = create_move(position, G8, board, current_player)
+        move2 = create_move(position, C8, board, current_player)
     else:
-        move1 = create_move(position, Coordinates.from_string('G1'), board, current_player)
-        move2 = create_move(position, Coordinates.from_string('C1'), board, current_player)
+        move1 = create_move(position, G1, board, current_player)
+        move2 = create_move(position, C1, board, current_player)
     ans = []
     try:
         if move1.type == CASTLING_MOVE:

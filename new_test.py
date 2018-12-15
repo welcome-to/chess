@@ -13,6 +13,8 @@ from common_moves import *
 from e_p_moves import *
 from castling_moves import *
 
+from operations import possible_moves_from_position
+
 from decode import decode_move, decode_game
 
 from game_engine import GameProcessor
@@ -40,7 +42,7 @@ def empty_board():
 
 
 def board_after(moves_list):
-    gp = GameProcessor(None)
+    gp = GameProcessor()
     for move in moves_list:
         if move in ['1/2', '1-0', '0-1']:
             if gp.game_result() is not None:
@@ -58,7 +60,16 @@ class TestGP(unittest.TestCase):
     # FIXME:
     # -- test that 'possible tie' is possible and may be reverted
     # -- test that pawn conversion happens correctly
-    pass
+    def test_strange_shit(self):
+        board = empty_board()
+        board.put(E8, Figure(BLACK, KING))
+        board.put(E1, Figure(WHITE, KING))
+        pawn = Figure(WHITE, PAWN)
+        pawn.has_moved = True
+        board.put(F7, pawn)
+        result = game_status(board, WHITE, None)
+        print(result)
+
 
 
 class TestEngine(unittest.TestCase):
@@ -134,6 +145,13 @@ class TestEngine(unittest.TestCase):
         self.assertEqual(list(map(str, moves)), ['d3'])
 
 
+    def test_fields_under_attack(self):
+        # FIXME: e.p. in this function won't work. add test!
+        board = Board()
+        result = fields_under_attack(board, BLACK)
+        print(result)
+
+
     def test_possible_moves(self):
         board = Board()
         previous_move = create_move(B2, B4, board, WHITE)
@@ -141,6 +159,21 @@ class TestEngine(unittest.TestCase):
         board.move(C7, C4)
         possible_e_p_s = possible_e_p_from_position(board, C4, BLACK, previous_move)
         self.assertEqual(len(possible_e_p_s), 1)
+
+
+    def test_conversion(self):
+        board = empty_board()
+        king = Figure(BLACK, KING)
+        pawn = Figure(WHITE, PAWN)
+        pawn.has_moved = True
+        rook = Figure(WHITE, ROOK)
+        board.put(A8, king)
+        board.put(D7, pawn)
+        board.put(E7, rook)
+        moves = possible_moves_from_position(board, D7, WHITE, None)
+        self.assertEqual(len(moves), 4)
+
+
 
 
     def test_game_status(self):
@@ -284,8 +317,8 @@ class TestEngine(unittest.TestCase):
         )
 
 
-class TestDecode(unittest.TestCase):
-#class TestDecode:
+#class TestDecode(unittest.TestCase):
+class TestDecode:
 
     def test_decode_move(self):
         board = Board()

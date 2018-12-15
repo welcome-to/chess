@@ -162,8 +162,11 @@ def possible_common_moves_from_position(board, position, player_color):
 
     final_pos = type_to_handler[figure.type](*given_args[figure.type])
     final_pos = list(filter(not_beating_same_color, final_pos))
-    ans = []
-    for pos in final_pos:
-        ans.append(create_move(position, pos, board, player_color))
-    return ans
+    
+    if figure.type == PAWN and (figure.color == BLACK and position.y == 1 or figure.color == WHITE and position.y == 6):
+        types = [KNIGHT, ROOK, QUEEN, BISHOP]
+        result = sum([[create_move(position, pos, board, player_color, figure_to_create=figure_type) for figure_type in types] for pos in final_pos], [])
+    else:
+        result = list(map(lambda pos: create_move(position, pos, board, player_color), final_pos))
+    return result
     

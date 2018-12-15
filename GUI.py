@@ -108,13 +108,16 @@ class MainApp(App):
         self.start_screen.add_widget(background_image)
         self.start_screen.add_widget(game_label)
 
-
-
         self.start_screen.add_widget(self.buttons)
         self.main_layout = FloatLayout()
         self.main_layout.add_widget(self.start_screen)
 
         return self.main_layout
+
+    def commit_game_mode(self,button):
+        self.game_type = button.text
+        self.draw_game_screen(button)
+
     def c_game_mode(self,button):
         self.start_screen.remove_widget(self.start_screen.children[0])
         self.game_mode = BoxLayout(
@@ -125,14 +128,14 @@ class MainApp(App):
         )
         one_player = Button(
             text='1 Player',
-            on_press=self.draw_game_screen,
+            on_press=self.commit_game_mode,
             background_normal='',
             background_color=INITIAL_BUTTON_COLOR,
             color=[0, 0, 0, 1]
         )
         two_players = Button(
             text='2 Player',
-            on_press=self.draw_game_screen,
+            on_press=self.commit_game_mode,
             background_normal='',
             background_color=INITIAL_BUTTON_COLOR,
             color=[0, 0, 0, 1]
@@ -151,7 +154,7 @@ class MainApp(App):
 
     def draw_game_screen(self,button):
         self.main_layout.remove_widget(self.main_layout.children[0])
-        if button.text == '1 Player':
+        if self.game_type == '1 Player':
             self.game_mode = ONEPLAYER
         else:
             self.game_mode = TWOPLAYERS
@@ -245,6 +248,7 @@ class MainApp(App):
         else:
             source = TIE_IMAGE
             text = ' potom '
+        del self.GameProcessor 
         self.Gameover = FloatLayout()
         self.Gameover.add_widget(Image(
             source = source,
@@ -407,6 +411,10 @@ class MainApp(App):
         self.board.UnlightAll()
         self.move_label.text = ''
         self.GameProcessor.make_move(self.start,self.end)
+        result = self.GameProcessor.game_result()
+        if not result == None:
+            self.gameover(result)
+            return
         if self.game_mode != TWOPLAYERS:
             move_start, move_end = self.Algorithm.get_move(self.GameProcessor.board,self.GameProcessor._last_move())
             self.GameProcessor.make_move(move_start,move_end)

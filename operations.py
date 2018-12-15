@@ -32,12 +32,9 @@ def possible_moves(board, player_color, previous_move, kamikadze_allowed=False):
 
 
 def possible_moves_from_position(board, position, player_color, previous_move):
-    result = []
-    #FIXME: not end points but moevs should be returned
-    result.extend(possible_common_moves_from_position(board, position, player_color))
-    result.extend(possible_e_p_from_position(board, position, player_color, previous_move))
-    result.extend(posible_castling_from_position(board, position, player_color))
-    return(result)
+    return possible_common_moves_from_position(board, position, player_color) + \
+           possible_e_p_from_position(board, position, player_color, previous_move) + \
+           possible_castlings_from_position(board, position, player_color)
 
 
 # has the game finished with a result? return this result if yes
@@ -116,7 +113,7 @@ def commit_move(move, board, prev_move, player_color):
 
         elif move.type == COMMON_MOVE:
             eaten_figure = board.figure_on_position(move.end)
-            if move.end not in possible_common_moves_from_position(board, move.start, player_color):
+            if move.end not in map(lambda m: m.end, possible_common_moves_from_position(board, move.start, player_color)):
                 raise InvalidMove("Incorrect move: {0}".format(move))
             else:
                 board.move(move.start, move.end)
