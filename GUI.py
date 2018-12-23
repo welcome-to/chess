@@ -406,18 +406,12 @@ class MainApp(App):
             self.figure_to_create = None
             self.clicks = 1
             self.move_label.text = (str(coordinates)+' -> ').upper()
-            posible_moves = self.GameProcessor.current_allowed_moves()
-            posible_moves_from_position = []
-            for move in posible_moves:
+            possible_moves = self.GameProcessor.current_allowed_moves()
+            possible_moves_from_position = []
+            for move in possible_moves:
                 if move[:2]==str(self.start):
-                    posible_moves_from_position.append(Coordinates.from_string(move[2:4]))
-            finalfigurechoser = False
-            for move in posible_moves:
-                if move[(4+9):(4+9+3)] == ' to' or move[4:(4+3)] == ' to':
-                    finalfigurechoser = True
-            if finalfigurechoser:
-                self.figure_input()
-            for cord in posible_moves_from_position:
+                    possible_moves_from_position.append(Coordinates.from_string(move[2:4]))
+            for cord in possible_moves_from_position:
                 cord = self.Orienteer.oriented_coordinates([cord.x,cord.y])
                 cord[0]+=1
                 cord[1]+=1
@@ -425,7 +419,6 @@ class MainApp(App):
                 self.board.LightBlue(index1)
             self.index = index
 
-                
         else:
             self.end = coordinates
             self.board.UnlightAll()
@@ -433,6 +426,15 @@ class MainApp(App):
             self.board.LightGreen(index)
             self.clicks = 0
             self.move_label.text += str(coordinates).upper()
+
+            possible_moves = self.GameProcessor.current_allowed_moves()
+            move_strs = list(filter(lambda m: m.startswith(str(self.start) + str(self.end)), possible_moves))
+            if move_strs:
+                move_str = move_strs[0]
+                if move_str[(4+9):(4+9+3)] == ' to' or move_str[4:(4+3)] == ' to':
+                    self.figure_input()
+
+
 
     def commit_move(self, button):
         if self.game_mode == TWOPLAYERS:
