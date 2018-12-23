@@ -60,7 +60,7 @@ class GameProcessor(object):
                 self.game_status = POSSIBLE_TIE
 
     def current_allowed_moves(self):
-        return list(map(str,possible_moves(self.board,self.current_player,self._last_move())))
+        return possible_moves(self.board,self.current_player,self._last_move())
 
     def game_result(self):
         if self.technical_winner is not None:

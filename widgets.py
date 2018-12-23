@@ -142,12 +142,8 @@ class  BoardWidget(GridLayout):
         )[0][0]
         self.button_function(index)
 
-    def LightRed(self,index):
-        self.children[index].bcolor = [255, 0, 0, 1]
-    def LightGreen(self,index):
-        self.children[index].bcolor = [0, 255,0,1]
-    def LightBlue(self,index):
-        self.children[index].bcolor = [0,0,255,1]
+    def Light(self,index,color):
+        self.children[index].bcolor = color
     def UnlightAll(self):
         for i in range(8):
             for j in range(8):

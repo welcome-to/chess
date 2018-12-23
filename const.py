@@ -7,12 +7,12 @@ TWOPLAYERS = 1
 MAX_IDLE_MOVES = 50
 MAX_REPETITIONS = 3
 
-PAWN = 'PAWN'
-ROOK = 'ROOK'
-KNIGHT = 'KNIGHT'
-BISHOP = 'BISHOP'
-QUEEN = 'QUEEN'
-KING = 'KING'
+PAWN = 'Pawn'
+ROOK = 'Rook'
+KNIGHT = 'Knight'
+BISHOP = 'Bishop'
+QUEEN = 'Queen'
+KING = 'King'
 
 WHITE_WIN = "White"
 BLACK_WIN = "Black"
@@ -100,7 +100,11 @@ figuretypeback = {
   '_queen.png'  : QUEEN,
   '_king.png'   : KING
 }
-
+COLORS = {
+  'RED':[255,0,0,1],
+  'GREEN':[0,255,0,1],
+  'BLUE':[0,0,255,1],
+}
 figuretype = {
               PAWN    : '_pawn.png',
               ROOK    : '_rook.png',

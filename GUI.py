@@ -8,7 +8,7 @@ from kivy.uix.image import Image
 from const import *
 from widgets import LabelB, BoardWidget,Cell
 from game_engine import GameProcessor
-from board import Coordinates
+from board import Coordinates, Move
 from Electronic_Kasparov import GameBrains
 
 
@@ -377,7 +377,6 @@ class MainApp(App):
         self.inputer = BoxLayout(orientation='horizontal',pos_hint={'center_x':0.5, 'center_y': 0.5},size_hint = (1,0.5))
         color = figurecolor[BLACK]
         source_list = [color+figuretype[types] for types in [QUEEN,KNIGHT,ROOK,BISHOP]]
-        print(source_list)
         for source in source_list:
             cell = Cell(COLOROFCELL1)
             cell.add_widget(Button(text = '',
@@ -393,47 +392,47 @@ class MainApp(App):
         for Cell in self.inputer.children:
             if Cell.children[0] == button:
                 self.figure_to_create = figuretypeback[Cell.image.source[5:]]
+                self.move_label.text += ' figure: '+ self.figure_to_create
                 break  
         self.gameplay.remove_widget(self.inputer)
 
     def input_move(self, index):
         coordinates =  7-((index%10)-1),(index//10)-1
-        coordinates = Coordinates(self.Orienteer.oriented_coordinates(coordinates)[0],self.Orienteer.oriented_coordinates(coordinates)[1])
+        coordinates = Coordinates(self.Orienteer.oriented_coordinates(coordinates)[0],
+                                  self.Orienteer.oriented_coordinates(coordinates)[1]
+                                  )
         if self.clicks == 0:
             self.board.UnlightAll()
             self.start = coordinates
-            self.board.LightRed(index)
+            self.board.Light(index,COLORS['RED'])
             self.figure_to_create = None
             self.clicks = 1
             self.move_label.text = (str(coordinates)+' -> ').upper()
-            possible_moves = self.GameProcessor.current_allowed_moves()
-            possible_moves_from_position = []
-            for move in possible_moves:
-                if move[:2]==str(self.start):
-                    possible_moves_from_position.append(Coordinates.from_string(move[2:4]))
-            for cord in possible_moves_from_position:
+            posible_moves = self.GameProcessor.current_allowed_moves()
+            posible_moves_from_position = []
+            for move in posible_moves:
+                if move.start==self.start:
+                    posible_moves_from_position.append(move.end)
+            self.finalfigurechoser = False
+            for move in posible_moves:
+                if move.after_conversion is not None:
+                    self.finalfigurechoser = True
+            for cord in posible_moves_from_position:
                 cord = self.Orienteer.oriented_coordinates([cord.x,cord.y])
                 cord[0]+=1
                 cord[1]+=1
                 index1 = (cord[1])*10+(9-cord[0])
-                self.board.LightBlue(index1)
+                self.board.Light(index1,COLORS['BLUE'])
             self.index = index
-
-        else:
-            self.end = coordinates
-            self.board.UnlightAll()
-            self.board.LightRed(self.index)
-            self.board.LightGreen(index)
-            self.clicks = 0
-            self.move_label.text += str(coordinates).upper()
-
-            possible_moves = self.GameProcessor.current_allowed_moves()
-            move_strs = list(filter(lambda m: m.startswith(str(self.start) + str(self.end)), possible_moves))
-            if move_strs:
-                move_str = move_strs[0]
-                if move_str[(4+9):(4+9+3)] == ' to' or move_str[4:(4+3)] == ' to':
-                    self.figure_input()
-
+            return
+        self.end = coordinates
+        self.board.UnlightAll()
+        self.board.Light(self.index,COLORS['RED'])
+        self.board.Light(index,COLORS['GREEN'])
+        self.clicks = 0
+        self.move_label.text += str(coordinates).upper()
+        if self.finalfigurechoser:
+            self.figure_input()
 
 
     def commit_move(self, button):
