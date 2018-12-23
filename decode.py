@@ -17,10 +17,11 @@ class DecodeError(Exception):
 
 
 class MoveInfo(object):
-    def __init__(self, is_check=False, is_checkmate=False, is_idiotic=False):
+    def __init__(self, is_check=False, is_checkmate=False, is_idiotic=False, convert_to=None):
         self.is_check = is_check
         self.is_checkmate = is_checkmate
         self.is_idiotic = is_idiotic
+        self.convert_to = convert_to
 
 
 def decode_move(short_line, board, player_color, previous_move):
@@ -57,9 +58,12 @@ def decode_move(short_line, board, player_color, previous_move):
     # and exceptions
     short_line, move_info = extract_comment(short_line)
 
+    LETTER_TO_FIGURE_TYPE = {'p': PAWN, 'K': KING, 'Q': QUEEN, 'N': KNIGHT, 'B': BISHOP, 'R': ROOK}
+
     is_conversion = False
     if short_line[-1] in ['Q', 'R', 'N', 'B']: # FIXMEEEEE (gp)
         is_conversion = True
+        move_info.convert_to = LETTER_TO_FIGURE_TYPE[short_line[-1]]
         short_line = short_line[:-1]
     # FIXME: check that it's really pawn move to the last horizontal
 
@@ -84,7 +88,7 @@ def decode_move(short_line, board, player_color, previous_move):
     if not short_line:
         figure_type = PAWN
     else:
-        figure_type = {'p': PAWN, 'K': KING, 'Q': QUEEN, 'N': KNIGHT, 'B': BISHOP, 'R': ROOK}[short_line[-1]]
+        figure_type = LETTER_TO_FIGURE_TYPE[short_line[-1]]
 
     candidates = figures_on_board(board, type=figure_type, color=player_color)
     if initial_x:
@@ -135,10 +139,7 @@ class Decoder(object):
         while line:
             line = self._call_once(line)
 
-        if not line and not self.game_over:
-            raise DecodeError("Game is not over but no more moves")
-
-        if not self.game_over and self.raise_if_incomplete:
+        if not self.game_over and self.raise_if_incomplete: # there was no game result at the end of the line
             raise DecodeError("Expected game result")
 
         self.human_readable_game += line
@@ -197,8 +198,8 @@ class Decoder(object):
             raise
         self.human_readable_game += [decoded]
         start, end = map(Coordinates.from_string, (decoded[:2], decoded[2:]))
-        self.previous_move = create_move(start, end, self.gp.board, self.gp.current_player)
-        self.gp.make_move(start, end)
+        self.previous_move = create_move(start, end, self.gp.board, self.gp.current_player, figure_to_create=move_info.convert_to)
+        self.gp.make_move(start, end, figure_to_create=move_info.convert_to)
 
         self.move_number += 1
         return line
