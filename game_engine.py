@@ -64,7 +64,7 @@ class GameProcessor(object):
 
     def game_result(self):
         if self.technical_winner is not None:
-           return WINNER_BY_COLOR[self.technical_winner] # dirty. FIXME
+           return WINNER_BY_COLOR[self.technical_winner]
         return self.game_status
 
     def is_game_over(self):

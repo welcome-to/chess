@@ -6,7 +6,7 @@ from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.image import Image
 
 from const import *
-from widgets import LabelB, BoardWidget
+from widgets import LabelB, BoardWidget,Cell
 from game_engine import GameProcessor
 from board import Coordinates
 from Electronic_Kasparov import GameBrains
@@ -373,6 +373,28 @@ class MainApp(App):
             board_list.append(i)
         board_list.append('')
         return board_list
+    def figure_input(self):
+        self.inputer = BoxLayout(orientation='horizontal',pos_hint={'center_x':0.5, 'center_y': 0.5},size_hint = (1,0.5))
+        color = figurecolor[BLACK]
+        source_list = [color+figuretype[types] for types in [QUEEN,KNIGHT,ROOK,BISHOP]]
+        print(source_list)
+        for source in source_list:
+            cell = Cell(COLOROFCELL1)
+            cell.add_widget(Button(text = '',
+                                   background_color = [0,0,0,0],
+                                   background_normal = '',
+                                   on_press = self.choser,
+                                   size_hint = (1,1),
+                                   pos_hint = {'center_x': 0.5, 'center_y': 0.5}))
+            cell.updateimage(source)
+            self.inputer.add_widget(cell)
+        self.gameplay.add_widget(self.inputer)
+    def choser(self,button):
+        for Cell in self.inputer.children:
+            if Cell.children[0] == button:
+                self.figure_to_create = figuretypeback[Cell.image.source[5:]]
+                break  
+        self.gameplay.remove_widget(self.inputer)
 
     def input_move(self, index):
         coordinates =  7-((index%10)-1),(index//10)-1
@@ -381,6 +403,7 @@ class MainApp(App):
             self.board.UnlightAll()
             self.start = coordinates
             self.board.LightRed(index)
+            self.figure_to_create = None
             self.clicks = 1
             self.move_label.text = (str(coordinates)+' -> ').upper()
             posible_moves = self.GameProcessor.current_allowed_moves()
@@ -388,6 +411,12 @@ class MainApp(App):
             for move in posible_moves:
                 if move[:2]==str(self.start):
                     posible_moves_from_position.append(Coordinates.from_string(move[2:4]))
+            finalfigurechoser = False
+            for move in posible_moves:
+                if move[(4+9):(4+9+3)] == ' to' or move[4:(4+3)] == ' to':
+                    finalfigurechoser = True
+            if finalfigurechoser:
+                self.figure_input()
             for cord in posible_moves_from_position:
                 cord = self.Orienteer.oriented_coordinates([cord.x,cord.y])
                 cord[0]+=1
@@ -410,7 +439,8 @@ class MainApp(App):
             self.Orienteer.invert()
         self.board.UnlightAll()
         self.move_label.text = ''
-        self.GameProcessor.make_move(self.start,self.end)
+        self.GameProcessor.make_move(self.start,self.end,figure_to_create=self.figure_to_create)
+        self.figure_to_create = None
         result = self.GameProcessor.game_result()
         if not result == None:
             self.gameover(result)
