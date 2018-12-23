@@ -16,44 +16,52 @@ class DecodeError(Exception):
         return str(self.value)
 
 
+class MoveInfo(object):
+    def __init__(self, is_check=False, is_checkmate=False, is_idiotic=False):
+        self.is_check = is_check
+        self.is_checkmate = is_checkmate
+        self.is_idiotic = is_idiotic
+
+
 def decode_move(short_line, board, player_color, previous_move):
     def extract_comment(short_line):
-        is_checkmate = False
-        is_check = False
-        is_idiotic = False
+        move_info = MoveInfo()
         if short_line[-1] == '#':
-            is_checkmate = True
+            move_info.is_checkmate = True
             short_line = short_line[:-1]
         elif short_line[-1] == '+':
-            is_check = True
+            move_info.is_check = True
             short_line = short_line[:-1]
         # let's consider all graded moves the same way (FIXME if it stops being isopenisual)
         elif short_line.endswith('??') or short_line.endswith('!!') or short_line.endswith('!?') or short_line.endswith('?!'):
-            is_idiotic = True
+            move_info.is_idiotic = True
             short_line = short_line[:-2]
         elif short_line.endswith('?') or short_line.endswith('!'):
-            is_idiotic = True
+            move_info.is_idiotic = True
             short_line = short_line[:-1]
-        return short_line, is_check, is_checkmate, is_idiotic
+        return short_line, move_info
 
+    move_info = MoveInfo()
     if short_line.startswith('0-0-0'):
+        # FIXME: there could be a length assertion here
         if len(short_line) > 5:
-            short_line, is_check, is_checkmate, is_idiotic = extract_comment(short_line[5:])
-        return 'e1c1' if player_color == WHITE else 'e8c8'
+            short_line, move_info = extract_comment(short_line[5:])
+        return ('e1c1', move_info) if player_color == WHITE else ('e8c8', move_info)
 
     if short_line.startswith('0-0'):
         if len(short_line) > 3:
-            short_line, is_check, is_checkmate, is_idiotic = extract_comment(short_line[3:])
-        return 'e1g1' if player_color == WHITE else 'e8g8'
+            short_line, move_info = extract_comment(short_line[3:])
+        return ('e1g1', move_info) if player_color == WHITE else ('e8g8', move_info)
 
     # FIXME: add checks that +, #, x are correct: really suspense, or gameover, or figure eaten
     # and exceptions
-    short_line, is_check, is_checkmate, is_idiotic = extract_comment(short_line)
+    short_line, move_info = extract_comment(short_line)
 
     is_conversion = False
     if short_line[-1] in ['Q', 'R', 'N', 'B']: # FIXMEEEEE (gp)
         is_conversion = True
         short_line = short_line[:-1]
+    # FIXME: check that it's really pawn move to the last horizontal
 
     end_field = short_line[-2:]
     short_line = short_line[:-2]
@@ -110,7 +118,7 @@ def decode_move(short_line, board, player_color, previous_move):
         if eaten_figure.color == player_color:
             raise DecodeError("Expected figure of another color at {0}".format(attacked_field))
 
-    return str(start_pos) + end_field
+    return (str(start_pos) + end_field), move_info
 
 
 GAME_RESULTS = ['1-0', '0-1', '1/2']
@@ -124,12 +132,16 @@ class Decoder(object):
     def __call__(self, line):
         self._reset()
 
-        while line and not self.gp.is_game_over():
+        while line:
             line = self._call_once(line)
 
-        if line and self.raise_if_incomplete:
+        if not line and not self.game_over:
+            raise DecodeError("Game is not over but no more moves")
+
+        if not self.game_over and self.raise_if_incomplete:
             raise DecodeError("Expected game result")
 
+        self.human_readable_game += line
         return self.human_readable_game
 
     def _reset(self):
@@ -137,6 +149,7 @@ class Decoder(object):
         self.previous_move = None
         self.move_number = 1
         self.human_readable_game = []
+        self.game_over = False
 
     def _player_color(self):
         if self.move_number % 2 == 1:
@@ -158,6 +171,7 @@ class Decoder(object):
         for game_result in GAME_RESULTS:
             if line.startswith(game_result):
                 self.human_readable_game += [game_result]
+                self.game_over = True
                 return '' #FIXME
 
         if self.gp.is_game_over():
@@ -177,7 +191,8 @@ class Decoder(object):
                 raise DecodeError("Expected game result")
             return line
         try:
-            decoded = decode_move(first_word, self.gp.board, self._player_color(), self.previous_move)
+            # FIXME: check move_info
+            decoded, move_info = decode_move(first_word, self.gp.board, self._player_color(), self.previous_move)
         except:
             raise
         self.human_readable_game += [decoded]
