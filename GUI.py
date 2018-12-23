@@ -413,25 +413,25 @@ class MainApp(App):
             for move in posible_moves:
                 if move.start==self.start:
                     posible_moves_from_position.append(move.end)
-            self.finalfigurechoser = False
+            self.final_figure_choser = False
             for move in posible_moves:
                 if move.after_conversion is not None:
-                    self.finalfigurechoser = True
-            for cord in posible_moves_from_position:
-                cord = self.Orienteer.oriented_coordinates([cord.x,cord.y])
-                cord[0]+=1
-                cord[1]+=1
-                index1 = (cord[1])*10+(9-cord[0])
+                    self.final_figure_choser = True
+            for coord in posible_moves_from_position:
+                coord = self.Orienteer.oriented_coordinates([coord.x,coord.y])
+                coord[0]+=1
+                coord[1]+=1
+                index1 = (coord[1])*10+(9-coord[0])
                 self.board.Light(index1,COLORS['BLUE'])
-            self.index = index
+            self.start_index = index
             return
         self.end = coordinates
         self.board.UnlightAll()
-        self.board.Light(self.index,COLORS['RED'])
+        self.board.Light(self.start_index,COLORS['RED'])
         self.board.Light(index,COLORS['GREEN'])
         self.clicks = 0
         self.move_label.text += str(coordinates).upper()
-        if self.finalfigurechoser:
+        if self.final_figure_choser:
             self.figure_input()
 
 
