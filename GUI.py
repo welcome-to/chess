@@ -408,16 +408,16 @@ class MainApp(App):
             self.figure_to_create = None
             self.clicks = 1
             self.move_label.text = (str(coordinates)+' -> ').upper()
-            posible_moves = self.GameProcessor.current_allowed_moves()
-            posible_moves_from_position = []
-            for move in posible_moves:
+            possible_moves = self.GameProcessor.current_allowed_moves()
+            possible_moves_from_position = []
+            for move in possible_moves:
                 if move.start==self.start:
-                    posible_moves_from_position.append(move.end)
+                    possible_moves_from_position.append(move.end)
             self.final_figure_choser = False
-            for move in posible_moves:
+            for move in possible_moves:
                 if move.after_conversion is not None:
                     self.final_figure_choser = True
-            for coord in posible_moves_from_position:
+            for coord in possible_moves_from_position:
                 coord = self.Orienteer.oriented_coordinates([coord.x,coord.y])
                 coord[0]+=1
                 coord[1]+=1

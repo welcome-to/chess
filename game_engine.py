@@ -32,7 +32,7 @@ class GameProcessor(object):
         if self.is_game_over():
             raise RuntimeError("Game over")
 
-        print("Make move: ", start, end, " player: ", self.current_player)
+        print("Make move #", len(self.turns), ": ", start, end, " player: ", self.current_player)
 
         try:
             #FIXME
@@ -41,9 +41,9 @@ class GameProcessor(object):
                     figure_to_create = QUEEN
             move = create_move(start, end, self.board, self.current_player, figure_to_create)
             has_pawn_moved = is_pawn_moved(self.board, move)
-            if is_kamikadze(self.board, move, self._last_move()):
+            if is_kamikadze(self.board, move, self.last_move()):
                 self.technical_winner = another_color(self.current_player)
-            commit_move(move,self.board, self._last_move(), self.current_player)
+            commit_move(move,self.board, self.last_move(), self.current_player)
             self.turns.append(move)
             self.game_condition.add_move_info(self.board, not has_pawn_moved)
             self._update_game_status()
@@ -54,13 +54,13 @@ class GameProcessor(object):
         self.current_player = another_color(self.current_player)
 
     def _update_game_status(self):
-        self.game_status = game_status(self.board, another_color(self.current_player), self._last_move())
+        self.game_status = game_status(self.board, another_color(self.current_player), self.last_move())
         if not self.is_game_over():
             if satisfies_tie_conditions(self.game_condition):
                 self.game_status = POSSIBLE_TIE
 
     def current_allowed_moves(self):
-        return possible_moves(self.board,self.current_player,self._last_move())
+        return possible_moves(self.board,self.current_player,self.last_move())
 
     def game_result(self):
         if self.technical_winner is not None:
@@ -77,7 +77,7 @@ class GameProcessor(object):
     def is_tie_possible(self):
         return self.technical_winner is None and self.game_status == POSSIBLE_TIE
 
-    def _last_move(self):
+    def last_move(self):
         result = None
         if self.turns:
             result = self.turns[-1]
