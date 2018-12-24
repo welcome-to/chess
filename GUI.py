@@ -9,7 +9,7 @@ from const import *
 from widgets import LabelB, BoardWidget,Cell
 from game_engine import GameProcessor
 from board import Coordinates, Move
-from Electronic_Kasparov import GameBrains
+from Electronic_Kasparov_2 import GameBrains
 
 
 # Window configuration
