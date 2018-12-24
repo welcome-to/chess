@@ -14,7 +14,7 @@ class GameBrains(object):
         for move in pos_moves:
             back_move = commit_move(move,board,last_move,self.color)
             mesure = self._calc_board(board)
-            if game_status(board,another_color(self.color),move) is not None:
+            if game_status(board,another_color(self.color),move) is not None and game_status != TIE:
                 curen_opt_move = move
                 commit_move(back_move,board, last_move, self.color)
                 break
