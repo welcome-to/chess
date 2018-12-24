@@ -7,6 +7,7 @@ from const import *
 
 from copy import deepcopy
 
+from collections import Counter
 
 def run_game(white, black):
     gp = GameProcessor()
@@ -22,5 +23,6 @@ def run_game(white, black):
 
 
 if __name__ == "__main__":
-    result = run_game(DumbKasparov(WHITE), SlowDumbKasparov(BLACK))
-    print(result)
+    result_list = [run_game(DumbKasparov(WHITE), SlowDumbKasparov(BLACK)) for i in range(int(input('Number of games to test on: ')))]
+
+    print(Counter(result_list).most_common())
