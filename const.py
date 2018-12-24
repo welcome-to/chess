@@ -52,6 +52,13 @@ CASTLING_DATA = {
     }
 }
 
+FIGURE_COST = {
+  PAWN : 1,
+  KNIGHT : 3,
+  BISHOP : 3,
+  ROOK : 5,
+  QUEEN : 9,
+  KING : 999}
 # FIXME: this
 
 INDEX_TO_LETTER = {
