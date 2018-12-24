@@ -22,12 +22,14 @@ class GameBrains(object):
                 curen_opt_move = move
             commit_move(back_move,board, last_move, another_color(self.color))
         move = curen_opt_move
-        print("Kasparov says ", move)
-        if move.after_conversion is not None:
-            type=move.after_conversion
-        else:
+        print("Kasparov 2.0 says ", move)
+        try:
+            if move.after_conversion is not None:
+                type=move.after_conversion
+            else:
+                type=None
+        except:
             type=None
-
         return(move.start,move.end,type)
     def _calc_board(self,board):
         sum_self_color = 0
