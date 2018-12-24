@@ -1,4 +1,5 @@
-from Electronic_Kasparov import GameBrains
+from Electronic_Kasparov import GameBrains as DumbKasparov
+from Electronic_Kasparov_2 import GameBrains as SlowDumbKasparov
 
 from game_engine import GameProcessor
 
@@ -19,5 +20,5 @@ def run_game(white, black):
 
 
 if __name__ == "__main__":
-    result = run_game(GameBrains(WHITE), GameBrains(BLACK))
+    result = run_game(DumbKasparov(WHITE), SlowDumbKasparov(BLACK))
     print(result)
