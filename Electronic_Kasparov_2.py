@@ -1,6 +1,6 @@
 from random import choice
 from board import *
-from operations import possible_moves,commit_move
+from operations import possible_moves,commit_move,game_status
 from common_operations import another_color
 from const import *
 
@@ -14,6 +14,9 @@ class GameBrains(object):
         for move in pos_moves:
             back_move = commit_move(move,board,last_move,self.color)
             mesure = self._calc_board(board)
+            if game_status(board,another_color(self.color),move) is not None:
+                curen_opt_move = move
+                break
             if mesure > curent_max:
                 curent_max = mesure
                 curen_opt_move = move
