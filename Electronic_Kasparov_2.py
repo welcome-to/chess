@@ -16,11 +16,12 @@ class GameBrains(object):
             mesure = self._calc_board(board)
             if game_status(board,another_color(self.color),move) is not None:
                 curen_opt_move = move
+                commit_move(back_move,board, last_move, self.color)
                 break
             if mesure > curent_max:
                 curent_max = mesure
                 curen_opt_move = move
-            commit_move(back_move,board, last_move, another_color(self.color))
+            commit_move(back_move,board, last_move, self.color)
         move = curen_opt_move
         print("Kasparov 2.0 says ", move)
         try:
