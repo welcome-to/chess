@@ -69,7 +69,7 @@ class MainApp(App):
             font_name=FONT,
             font_size=100
         )
-        
+
         self.buttons = BoxLayout(
             orientation='vertical',
             spacing=10,
@@ -92,7 +92,7 @@ class MainApp(App):
             background_color=INITIAL_BUTTON_COLOR,
             color=[0, 0, 0, 1]
         )
-                           
+
         exit_button = Button(
             text='Quit',
             on_press=self.leave,
@@ -225,6 +225,10 @@ class MainApp(App):
             background_color=GAME_BUTTON_COLOR,
             background_normal=''
         ))
+        #FIXME Make some grouped separate procedure.
+        self.start = None
+        self.end = None
+
         self.Orienteer.invert()
         self.board = BoardWidget(self.Orienteer.oriented_board(self.get_board()),self.input_move)
         self.gameplay.add_widget(self.board)
@@ -232,6 +236,7 @@ class MainApp(App):
 
     def leave(self, button):
         exit()
+
     def back_to_main_menu(self,button):
         self.main_layout.remove_widget(self.main_layout.children[0])
         self.main_layout.add_widget(self.start_screen)
@@ -346,6 +351,7 @@ class MainApp(App):
         else:
             button.text = 'Loging: No'
             self.savelog = False
+
     def cancel_move(self, button):
         self.clicks = 0
         self.move_label.text = ''
@@ -373,6 +379,7 @@ class MainApp(App):
             board_list.append(i)
         board_list.append('')
         return board_list
+
     def figure_input(self):
         self.inputer = BoxLayout(orientation='horizontal',pos_hint={'center_x':0.5, 'center_y': 0.5},size_hint = (1,0.5))
         color = figurecolor[BLACK]
@@ -382,13 +389,14 @@ class MainApp(App):
             cell.add_widget(Button(text = '',
                                    background_color = [0,0,0,0],
                                    background_normal = '',
-                                   on_press = self.choser,
+                                   on_press = self.chooser,
                                    size_hint = (1,1),
                                    pos_hint = {'center_x': 0.5, 'center_y': 0.5}))
             cell.updateimage(source)
             self.inputer.add_widget(cell)
         self.gameplay.add_widget(self.inputer)
-    def choser(self,button):
+
+    def chooser(self,button):
         for Cell in self.inputer.children:
             if Cell.children[0] == button:
                 self.figure_to_create = figuretypeback[Cell.image.source[5:]]
@@ -413,10 +421,10 @@ class MainApp(App):
             for move in possible_moves:
                 if move.start==self.start:
                     possible_moves_from_position.append(move.end)
-            self.final_figure_choser = False
+            self.final_figure_chooser = False
             for move in possible_moves:
                 if move.after_conversion is not None:
-                    self.final_figure_choser = True
+                    self.final_figure_chooser = True
             for coord in possible_moves_from_position:
                 coord = self.Orienteer.oriented_coordinates([coord.x,coord.y])
                 coord[0]+=1
@@ -431,11 +439,14 @@ class MainApp(App):
         self.board.Light(index,COLORS['GREEN'])
         self.clicks = 0
         self.move_label.text += str(coordinates).upper()
-        if self.final_figure_choser:
+        if self.final_figure_chooser:
             self.figure_input()
 
-
     def commit_move(self, button):
+        # do nothing if move is not chosen
+        if self.start is None and self.end is None:
+            return
+
         if self.game_mode == TWOPLAYERS:
             self.Orienteer.invert()
         self.board.UnlightAll()
