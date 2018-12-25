@@ -22,8 +22,8 @@ class GameCondition(object):
 
 
 def satisfies_tie_conditions(game_condition):
-    return game_condition.idle_moves >= MAX_IDLE_MOVES #or \
-           #list(filter(lambda y: y[1] >= MAX_REPETITIONS, game_condition.board_list))
+    return game_condition.idle_moves >= MAX_IDLE_MOVES or \
+           list(filter(lambda y: y[1] >= MAX_REPETITIONS, game_condition.board_list))
 
 
 

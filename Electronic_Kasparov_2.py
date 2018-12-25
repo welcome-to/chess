@@ -37,16 +37,23 @@ class GameBrains(object):
         sum_self_color = 0
         sum_another_color = 0
         self_figure_set = figures_on_board(board,color=self.color)
+        enemy_figure_set = figures_on_board(board,color=another_color(self.color))
         for figure in self_figure_set:
             sum_self_color += FIGURE_COST[figure[0].type] 
         for figure in figures_on_board(board,color=another_color(self.color)):
             sum_another_color += FIGURE_COST[figure[0].type]
         under_atack = 0
+        enemy_fields_under_atack_list = fields_under_attack(board,self.color)
         fields_under_attack_list =fields_under_attack(board,another_color(self.color))
-        if figures_on_board(board,type=KING,color=another_color(self.color))[0][1] in fields_under_attack_list:
+        if figures_on_board(board,type=KING,color=another_color(self.color))[0][1] in enemy_fields_under_atack_list:
             under_atack += 1 
+        '''
+        for tup in enemy_figure_set:
+            if tup[1] in enemy_fields_under_atack_list:
+                under_atack += FIGURE_COST[tup[0].type] * 0.1
+        '''
         for tup in self_figure_set:
             if tup[1] in fields_under_attack_list:
-                under_atack -= FIGURE_COST[tup[0].type]*0.1
+                under_atack -= FIGURE_COST[tup[0].type]*0.5
         mesure = sum_self_color - sum_another_color + under_atack
         return mesure
