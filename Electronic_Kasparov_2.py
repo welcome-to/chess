@@ -12,21 +12,29 @@ class GameBrains(object):
     def get_move(self,board,last_move):
         pos_moves = possible_moves(board,self.color,last_move)
         curent_max = -999
-        curen_opt_move = choice(pos_moves)
+        curen_opt_move = [choice(pos_moves)]
+
         for move in pos_moves:
+
             back_move = commit_move(move,board,last_move,self.color)
             mesure = self._calc_board(board)
             game_stat = game_status(board,another_color(self.color),move) 
+
             if game_stat is not None and game_status != TIE:
-                curen_opt_move = move
+                curen_opt_move = [move]
                 commit_move(back_move,board, last_move, self.color)
                 break
+
             if game_stat != TIE:
                 if mesure > curent_max:
                     curent_max = mesure
-                    curen_opt_move = move
+                    curen_opt_move = [move]
+                elif mesure == curent_max:
+                    curen_opt_move.append(move)
             commit_move(back_move,board, last_move, self.color)
-        move = curen_opt_move
+
+        move = choice(curen_opt_move)
+
         print("Kasparov 2.0 says ", move)
         if move.after_conversion is not None:
             type=move.after_conversion
