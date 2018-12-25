@@ -52,14 +52,10 @@ class GameBrains(object):
             sum_another_color += FIGURE_COST[figure[0].type]
         under_atack = 0
         enemy_fields_under_atack_list = fields_under_attack(board,self.color)
-        fields_under_attack_list =fields_under_attack(board,another_color(self.color))
-        if figures_on_board(board,type=KING,color=another_color(self.color))[0][1] in enemy_fields_under_atack_list:
-            under_atack += 1 
-        '''
+        fields_under_attack_list =fields_under_attack(board,another_color(self.color)) 
         for tup in enemy_figure_set:
             if tup[1] in enemy_fields_under_atack_list:
                 under_atack += FIGURE_COST[tup[0].type] * 0.1
-        '''
         for tup in self_figure_set:
             if tup[1] in fields_under_attack_list:
                 under_atack -= FIGURE_COST[tup[0].type]*0.5

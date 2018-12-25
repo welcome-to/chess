@@ -58,7 +58,7 @@ FIGURE_COST = {
   BISHOP : 3,
   ROOK : 5,
   QUEEN : 9,
-  KING : 999}
+  KING : 9}
 # FIXME: this
 
 INDEX_TO_LETTER = {
