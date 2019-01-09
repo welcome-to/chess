@@ -23,6 +23,6 @@ def run_game(white, black):
 
 
 if __name__ == "__main__":
-    result_list = [run_game(DumbKasparov(WHITE), SlowDumbKasparov(BLACK)) for i in range(int(input('Number of games to test on: ')))]
+    result_list = [run_game(SlowDumbKasparov(WHITE,atack_cost=0.025,def_cost=0.7), SlowDumbKasparov(BLACK,atack_cost=0.05,def_cost=0.9)) for i in range(int(input('Number of games to test on: ')))]
 
     print(Counter(result_list).most_common())

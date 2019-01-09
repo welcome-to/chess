@@ -7,8 +7,10 @@ from castling_moves import fields_under_attack
 
 
 class GameBrains(object):
-    def __init__(self,color):
+    def __init__(self,color,def_cost=0.7,atack_cost=0.05):
         self.color = color
+        self.def_cost = def_cost
+        self.atack_cost = atack_cost
     def get_move(self,board,last_move):
         pos_moves = possible_moves(board,self.color,last_move)
         curent_max = -999
@@ -58,10 +60,10 @@ def calc_board(board,color):
     fields_under_attack_list =fields_under_attack(board,another_color(color)) 
     for tup in enemy_figure_set:
         if tup[1] in enemy_fields_under_atack_list:
-            under_atack_enemy += FIGURE_COST[tup[0].type] * 0.1
+            under_atack_enemy += FIGURE_COST[tup[0].type] * self.atack_cost
     for tup in self_figure_set:
         if tup[1] in fields_under_attack_list:
-            under_atack_my -= FIGURE_COST[tup[0].type]*0.5
+            under_atack_my -= FIGURE_COST[tup[0].type] * self.def_cost 
     print('under_atack mesure :'+ str(under_atack))
     print('field cost :' + str(sum_self_color - sum_another_color))
     return sum_self_color, sum_another_color, under_atack_enemy,under_atack_my
