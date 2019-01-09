@@ -17,7 +17,9 @@ class GameBrains(object):
         for move in pos_moves:
 
             back_move = commit_move(move,board,last_move,self.color)
-            mesure = self._calc_board(board)
+            print(move)
+            mesure = calc_board(board,self.color)
+            mesure = mesure[0]-mesure[1]+mesure[2]+mesure[3]
             game_stat = game_status(board,another_color(self.color),move) 
 
             if game_stat is not None and game_status != TIE:
@@ -41,23 +43,25 @@ class GameBrains(object):
         else:
             type=None
         return(move.start,move.end,type)
-    def _calc_board(self,board):
-        sum_self_color = 0
-        sum_another_color = 0
-        self_figure_set = figures_on_board(board,color=self.color)
-        enemy_figure_set = figures_on_board(board,color=another_color(self.color))
-        for figure in self_figure_set:
-            sum_self_color += FIGURE_COST[figure[0].type] 
-        for figure in figures_on_board(board,color=another_color(self.color)):
-            sum_another_color += FIGURE_COST[figure[0].type]
-        under_atack = 0
-        enemy_fields_under_atack_list = fields_under_attack(board,self.color)
-        fields_under_attack_list =fields_under_attack(board,another_color(self.color)) 
-        for tup in enemy_figure_set:
-            if tup[1] in enemy_fields_under_atack_list:
-                under_atack += FIGURE_COST[tup[0].type] * 0.1
-        for tup in self_figure_set:
-            if tup[1] in fields_under_attack_list:
-                under_atack -= FIGURE_COST[tup[0].type]*0.5
-        mesure = sum_self_color - sum_another_color + under_atack
-        return mesure
+def calc_board(board,color):
+    sum_self_color = 0
+    sum_another_color = 0
+    self_figure_set = figures_on_board(board,color=color)
+    enemy_figure_set = figures_on_board(board,color=another_color(color))
+    for figure in self_figure_set:
+        sum_self_color += FIGURE_COST[figure[0].type] 
+    for figure in figures_on_board(board,color=another_color(color)):
+        sum_another_color += FIGURE_COST[figure[0].type]
+    under_atack_my = 0
+    under_atack_enemy = 0
+    enemy_fields_under_atack_list = fields_under_attack(board,color)
+    fields_under_attack_list =fields_under_attack(board,another_color(color)) 
+    for tup in enemy_figure_set:
+        if tup[1] in enemy_fields_under_atack_list:
+            under_atack_enemy += FIGURE_COST[tup[0].type] * 0.1
+    for tup in self_figure_set:
+        if tup[1] in fields_under_attack_list:
+            under_atack_my -= FIGURE_COST[tup[0].type]*0.5
+    print('under_atack mesure :'+ str(under_atack))
+    print('field cost :' + str(sum_self_color - sum_another_color))
+    return sum_self_color, sum_another_color, under_atack_enemy,under_atack_my
