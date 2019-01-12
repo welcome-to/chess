@@ -452,6 +452,8 @@ class MainApp(App):
         self.board.UnlightAll()
         self.move_label.text = ''
         self.GameProcessor.make_move(self.start,self.end,figure_to_create=self.figure_to_create)
+        self.start = None
+        self.end = None
         self.figure_to_create = None
         result = self.GameProcessor.game_result()
         if not result == None:
