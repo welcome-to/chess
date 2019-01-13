@@ -50,13 +50,13 @@ def game_status(board, current_player, previous_turn):
 
     enemy_moves = possible_moves(board, enemy_color, None, kamikadze_allowed=True)
     if list(filter(lambda move: move.end == king_position, enemy_moves)): # king can be eaten. checkmate
-        print("It's checkmate.", file=sys.stderr)
+        #print("It's checkmate.", file=sys.stderr)
         if current_player == WHITE:
             return BLACK_WIN
         return WHITE_WIN
 
     # king is safe. stalemate
-    print("It's stalemate.", file=sys.stderr)
+    #print("It's stalemate.", file=sys.stderr)
     return TIE
 
 

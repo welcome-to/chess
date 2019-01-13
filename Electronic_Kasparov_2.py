@@ -7,12 +7,14 @@ from castling_moves import fields_under_attack
 
 
 class GameBrains(object):
-    def __init__(self,color,def_cost=0.7,atack_cost=0.05,figure_set_cost=1, enemy_figure_set_cost=1):
+    def __init__(self,color,def_cost=0.7,atack_cost=0.05,figure_set_cost=1, enemy_figure_set_cost=1, player_name=None):
         self.color = color
         self.def_cost = def_cost
         self.atack_cost = atack_cost
         self.figure_set_cost = figure_set_cost
         self.enemy_figure_set_cost = enemy_figure_set_cost
+        self.player_name = player_name
+
     def get_move(self,board,last_move):
         pos_moves = possible_moves(board,self.color,last_move)
         curent_max = -999
@@ -39,12 +41,13 @@ class GameBrains(object):
 
         move = choice(curen_opt_move)
 
-        print("Kasparov 2.0 says ", move)
+        #print("Kasparov 2.0 says ", move)
         if move.after_conversion is not None:
             type=move.after_conversion
         else:
             type=None
         return(move.start,move.end,type)
+    
     def calc_board(self,board,color):
         sum_self_color = 0
         sum_another_color = 0

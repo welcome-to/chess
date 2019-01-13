@@ -32,10 +32,11 @@ class GameProcessor(object):
         if self.is_game_over():
             raise RuntimeError("Game over")
 
-        print("Make move #", len(self.turns), ": ", start, end, " player: ", self.current_player)
+        #FIXME make this an option
+        #print("Make move #", len(self.turns), ": ", start, end, " player: ", self.current_player)
 
         try:
-            #FIXME
+            #FIXME (why is it here)
             if is_pawn_conversion(self.board,start,end):
                 if figure_to_create is None:
                     figure_to_create = QUEEN
@@ -66,6 +67,9 @@ class GameProcessor(object):
         if self.technical_winner is not None:
            return WINNER_BY_COLOR[self.technical_winner]
         return self.game_status
+
+    def game_length(self):
+        return (len(self.turns) - 1) // 2 + 1
 
     def is_game_over(self):
         if self.technical_winner is not None:
