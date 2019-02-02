@@ -6,6 +6,7 @@ from game_engine import GameProcessor
 
 import copy
 import sys
+import re
 
 
 class DecodeError(Exception):
@@ -135,6 +136,7 @@ class Decoder(object):
 
     def __call__(self, line):
         self._reset()
+        line = re.sub('\[.*?\]', '', line)
 
         while line:
             line = self._call_once(line)
